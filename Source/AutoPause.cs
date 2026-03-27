@@ -24,8 +24,6 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(Wnd_GameMain), "OnInit")]
 			public static void OnInit_Postfix(Wnd_GameMain __instance)
 			{
-				KLog.Dbg("#####################ONINIT AUTPAUSE!");
-
 				if (!_info.Enabled) return;
 
 				_doPause = true;

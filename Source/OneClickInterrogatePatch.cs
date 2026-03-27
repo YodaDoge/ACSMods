@@ -11,6 +11,7 @@ public class OneClickInterrogate : Mod
 {
 	public override Meta Info => _info;
 	private static Meta _info = new Meta("OneClickInterrogateUpgrade", "Interrogate about all known NPC", false);
+
 	[HarmonyPatch]
 	public static class Patch
 	{

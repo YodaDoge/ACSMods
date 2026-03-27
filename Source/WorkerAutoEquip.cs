@@ -19,6 +19,20 @@ public class WorkerAutoEquip : Mod
 		static HashSet<Npc> activeWorkers = new HashSet<Npc>();
 		const float checkInterval = 60f;
 
+		private static string[] genericTalisman = new string[] {
+		"Spell_MoveSpeed2", //SpiritTravel
+		"Spell_GlobalEfficiency",
+		"Spell_Fatigue",
+		"Spell_Lu" /*Everlasting Status: Butcher&Harvest YIeld; + movespeed*/ ,
+		"Spell_Nutrition1",
+		"Spell_Happy",
+		"Spell_LunHui_ShenShen", /*Prayer: -rec consum; +mood*/ 
+		"Spell_MoveSpeed1" };
+
+		private static string[] maybeTalisman = new string[] { "Spell_TongTian1", /*Heavensent: FiveAttributes*/  "Spell_Intelligence" /*Civil Prosperity: Learnspeed*/ };
+
+		private static string[] crafterTalisman = new string[] { "Spell_MadeQualityAddValue" /*Craftsmanship: Crafting QUality gain*/ };
+
 		[HarmonyPostfix]
 		[HarmonyPatch(typeof(NpcFeeling), "Step")]
 		public static void Step(float dt, NpcFeeling __instance, ref Npc ___me)
@@ -117,32 +131,6 @@ public class WorkerAutoEquip : Mod
 			}
 		}
 
-		//private static IEnumerable<ItemThing> GetTools()
-		//{
-		//	for (g_emEquipType toolSlot = g_emEquipType.Tool1; toolSlot < g_emEquipType._ToolEnd; toolSlot++)
-		//	{
-		//		ItemThing equip = me.Equip.GetEquip(toolSlot);
-		//		if (equip != null)
-		//		{
-		//			yield return equip;
-		//		}
-		//	}
-		//}
-
-		private static string[] genericTalisman = new string[] {
-		"Spell_MoveSpeed2", //SpiritTravel
-		"Spell_GlobalEfficiency",
-		"Spell_Fatigue",
-		"Spell_Lu" /*Everlasting Status: Butcher&Harvest YIeld; + movespeed*/ ,
-		"Spell_Nutrition1",
-		"Spell_Happy",
-		"Spell_LunHui_ShenShen", /*Prayer: -rec consum; +mood*/ 
-		"Spell_MoveSpeed1" };
-
-
-		private static string[] maybeTalisman = new string[] { "Spell_TongTian1", /*Heavensent: FiveAttributes*/  "Spell_Intelligence" /*Civil Prosperity: Learnspeed*/ };
-
-		private static string[] crafterTalisman = new string[] { "Spell_MadeQualityAddValue" /*Craftsmanship: Crafting QUality gain*/ };
 
 	}
 }

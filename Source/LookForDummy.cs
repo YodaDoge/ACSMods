@@ -11,6 +11,7 @@ public class LookForDummy : Mod
 {
 	public override Meta Info => _info;
 	private static Meta _info = new Meta("LookForDummy", "Outers searchrange for Dummy increase", true);
+
 	[HarmonyPatch]
 	public static class Patch
 	{

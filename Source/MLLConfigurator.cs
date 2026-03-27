@@ -15,7 +15,6 @@ namespace ACS_Yoda_Tweaks
 {
 	public class ACS_Yoda_Tweaks
 	{
-		//static EventCallback0 eventHandleConfig = new EventCallback0(HandleConfig);
 		private static List<Meta> mods = new List<Meta>()
 		{
 			new SpiritAnimalPlayFix().Info,
@@ -34,16 +33,16 @@ namespace ACS_Yoda_Tweaks
 		public static void OnInit()
 		{
 			KLog.Dbg("OnInit YodaDoge Tweaks and Fixes");
-			Configuration.Subscribe(ConfigUpdate);
+			Configuration.Subscribe(OnSave);
 			var usedHarmonyAssembly = typeof(Harmony).Assembly;
 			KLog.Dbg($"Harmony version {usedHarmonyAssembly.GetName().Version} location: {usedHarmonyAssembly.Location}");
 		}
 
 		public static void OnLoad()
 		{
-			KLog.Dbg("OnLoad YodaDoge Tweaks and Fixes Harmony is using Version ");
+			KLog.Dbg("OnLoad YodaDoge Tweaks and Fixes");
 			LoadConfig();
-			WarnHarmonyConflict();
+			//WarnHarmonyConflict();
 		}
 
 		private static void WarnHarmonyConflict()
@@ -74,12 +73,7 @@ namespace ACS_Yoda_Tweaks
 
 		public static void OnSave()
 		{
-			ConfigUpdate();
-		}
-
-		private static void ConfigUpdate()
-		{
-			KLog.Dbg("ConfigUpdate YodaDoge Tweaks and Fixes");
+			KLog.Dbg("YodaDoge Tweaks and Fixes ConfigUpdate");
 			foreach (var item in mods)
 			{
 				var checkState = Configuration.GetCheckBox(ConfigName, item.Name);
@@ -103,8 +97,6 @@ namespace ACS_Yoda_Tweaks
 				Configuration.AddCheckBox(ConfigName, mod.Name, mod.Description, mod.Enabled);
 			}
 		}
-
-
 	}
 
 	public abstract class Mod
@@ -126,7 +118,8 @@ namespace ACS_Yoda_Tweaks
 
 					if (last != _enabled)
 					{
-						KLog.Dbg($"YodaDoge Tweaks: {Name} enabled {value}");
+						string state = value ? "enabled" : "disabled";
+						KLog.Dbg($"YodaDoge Tweak {Name} changed to {state}");
 						OnEnableChanged?.Invoke(this);
 					}
 				}
