@@ -1,0 +1,13 @@
+{
+    "Name": "LoadPause",
+    "DisplayName": "Pause after Load",
+    "GameVersion": 1.23,
+    "Version": 0.1,
+    "Desc": "Pause game after loading a map.",
+    "Author": "YodaDoge",
+    "UIPackage": "",
+    "Tags": [
+        "Function"
+    ],
+    "IncreasedDesc": ""
+}

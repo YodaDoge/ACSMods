@@ -1,0 +1,13 @@
+{
+    "Name": "AutoEquip",
+    "DisplayName": "Worker Autoequip",
+    "GameVersion": 1.23,
+    "Version": 0.1,
+    "Desc": "Workers will now automatically equip: Bells, Handkerchiefs, generic useful talisman",
+    "Author": "YodaDoge",
+    "UIPackage": "",
+    "Tags": [
+        "Function"
+    ],
+    "IncreasedDesc": ""
+}

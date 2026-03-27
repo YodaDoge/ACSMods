@@ -1,0 +1,13 @@
+{
+    "Name": "ACS_Yoda_Tweaks",
+    "DisplayName": "Yodas Tweaks and Fixes",
+    "GameVersion": 1.23,
+    "Version": 0.2,
+    "Desc": "Lots of stuff",
+    "Author": "YodaDoge",
+    "UIPackage": "",
+    "Tags": [
+        "Function"
+    ],
+    "IncreasedDesc": ""
+}

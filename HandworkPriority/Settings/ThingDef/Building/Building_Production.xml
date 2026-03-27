@@ -1,0 +1,94 @@
+<ThingDefs><List>
+	<ThingDef Type="Building" Name="StoneMaker"  Parent="ProductionBase">	
+	<ThingName>Stonework</ThingName>
+	<Frags>		
+		<li Frag="HearTrain" />
+	</Frags>	
+
+	<Desc>A Workstation used to polish stone blocks into stone bricks</Desc>
+	<TexPath>res/Sprs/buildingnew/building_stonestation1a</TexPath>
+	<TexScale>0.8</TexScale>
+	<SelectAble>1</SelectAble>
+	<CastShadow>1</CastShadow>
+	<Beauty>5</Beauty>
+	<BlockLight>1</BlockLight>
+	<ShadowSize>
+		<x>1</x>
+		<y>0.2</y>
+	</ShadowSize>
+	<Collider>
+		<!--(0Empty 1Base)+(2EmptyCenter 4EmptyWorkspace)-->
+		<Data>
+		[1,1],
+		[7,1],
+		</Data>
+		<OffsetGroup>
+			<li><x>-0.57</x><y>-0.46</y></li><!--后-->
+			<li><x>-0.28</x><y>0.77</y></li><!--右-->
+			<li><x>0.61</x><y>1.05</y></li><!--前-->
+			<li><x>0.3</x><y>-0.27</y></li><!--左-->
+		</OffsetGroup>
+		<WorkOffset>
+			<li Index="0" X="0.96" Y="0" Ang="1" Dir="Down"/>
+			<li Index="0" X="-0.24" Y="-0.36" Ang="1" Dir="Left"/>
+			<li Index="0" X="-0.96" Y="0.2" Ang="1" Dir="Up"/>
+			<li Index="0" X="0.2" Y="0.7" Ang="1" Dir="Right"/>
+		</WorkOffset>
+	</Collider>
+	<Building>
+		<Orientation>F,B,R</Orientation>
+		<BePackage>1</BePackage>
+		<TerrainAffordanceNeeded>Ground</TerrainAffordanceNeeded>
+		<CanMakeRoom>0</CanMakeRoom>
+		<WorkAnimation>CutStone</WorkAnimation>
+		<BeMade>
+			<WorkToMake>1</WorkToMake>
+			<Quality>0</Quality>
+			<StuffCategories>
+				<Stuff name = "MetalBlock"/>
+				<Stuff name = "WoodBlock"/>
+				<Stuff name = "RockBlock"/>
+			</StuffCategories>
+			<CostStuffCount>16</CostStuffCount>
+		</BeMade>
+		<SnowRenderData>
+			<x>2.95</x>
+			<y>3.8</y>
+			<z>1</z>
+		</SnowRenderData>
+		<SelectProduceStuff>0</SelectProduceStuff>
+		<ProduceKind>StoneWork</ProduceKind>
+		<ProducePriority>2</ProducePriority>
+		<Produces>
+			<Produce>
+				<ThingDef>Item_BrownRockBlock</ThingDef>
+				<Count>4</Count>
+			</Produce>
+			<Produce>
+				<ThingDef>Item_GrayRockBlock</ThingDef>
+				<Count>4</Count>
+			</Produce>
+			<Produce>
+				<ThingDef>Item_MarbleBlock</ThingDef>
+				<Count>4</Count>
+			</Produce>
+			<Produce>
+				<ThingDef>Item_JadeBlock</ThingDef>
+				<Count>4</Count>
+			</Produce>
+			<Produce>
+				<ThingDef>Item_SkyStoneBlock</ThingDef>
+				<Count>4</Count>
+			</Produce>
+			<Produce>
+				<ThingDef>Item_LingStoneBlock</ThingDef>
+				<Count>4</Count>
+			</Produce>
+			<Produce>
+				<ThingDef>Item_LingCrystalBlock</ThingDef>
+				<Count>4</Count>
+			</Produce>
+		</Produces>
+	</Building>
+	</ThingDef>
+</List></ThingDefs>	

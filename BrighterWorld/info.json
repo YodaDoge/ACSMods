@@ -1,0 +1,13 @@
+{
+    "Name": "BrighterWorld",
+    "DisplayName": "Brighter Ambient",
+    "GameVersion": 1.23,
+    "Version": 0.3,
+    "Desc": "Increasing the Ambient light to offer better contrasts",
+    "Author": "YodaDoge",
+    "UIPackage": "",
+    "Tags": [
+        "Function"
+    ],
+    "IncreasedDesc": ""
+}
