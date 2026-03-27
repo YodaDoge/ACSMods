@@ -14,6 +14,10 @@ namespace ACS_Yoda_Tweaks
 		public override Meta Info => _info;
 		private static Meta _info = new Meta("HandworkPriority", "Handwork before Stonework", true);
 
+		public HandworkPriority(bool defaultEnabled) : base(defaultEnabled)
+		{
+		}
+
 		[HarmonyPatch]
 		public static class Patch
 		{

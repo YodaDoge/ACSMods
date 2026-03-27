@@ -13,10 +13,14 @@ namespace ACS_Yoda_Tweaks
 	public class AutoPause : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("AutoPause", "Auto Pause on Load", true);
+		private static Meta _info = new Meta("AutoPause", "Auto Pause on Load", false);
 
 		private static bool _doPause = false;
-		
+
+		public AutoPause(bool defaultEnabled) : base(defaultEnabled)
+		{
+		}
+
 		[HarmonyPatch]
 		public static class Patch
 		{

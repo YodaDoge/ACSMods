@@ -10,7 +10,11 @@ using XiaWorld.Fight;
 public class WorkerAutoEquip : Mod
 {
 	public override Meta Info => _info;
-	private static Meta _info = new Meta("WorkerAutoEquip", "Outers equip Trinkets", true);
+	private static Meta _info = new Meta("WorkerAutoEquip", "Outer Disciples Auto Equip Trinkets", true);
+
+	public WorkerAutoEquip(bool defaultEnabled) : base(defaultEnabled)
+	{
+	}
 
 	[HarmonyPatch]
 	public static class Patch

@@ -10,7 +10,11 @@ using static ACS_Yoda_Tweaks.Mod;
 public class LookForDummy : Mod
 {
 	public override Meta Info => _info;
-	private static Meta _info = new Meta("LookForDummy", "Outers searchrange for Dummy increase", true);
+	private static Meta _info = new Meta("LookForDummy", "Training Dummy searchrange increase", true);
+
+	public LookForDummy(bool defaultEnabled) : base(defaultEnabled)
+	{
+	}
 
 	[HarmonyPatch]
 	public static class Patch

@@ -10,7 +10,11 @@ using static ACS_Yoda_Tweaks.Mod;
 public class OneClickInterrogate : Mod
 {
 	public override Meta Info => _info;
-	private static Meta _info = new Meta("OneClickInterrogateUpgrade", "Interrogate about all known NPC", false);
+	private static Meta _info = new Meta("OneClickInterrogateUpgrade", "One Click Interrogate Extended", false);
+
+	public OneClickInterrogate(bool defaultEnabled) : base(defaultEnabled)
+	{
+	}
 
 	[HarmonyPatch]
 	public static class Patch

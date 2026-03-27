@@ -18,6 +18,10 @@ public class A2H_SortOrder : Mod
 	public override Meta Info => _info;
 	private static Meta _info = new Meta("ThoughtManagement", "Animal Thoughts QoL", true);
 
+	public A2H_SortOrder(bool defaultEnabled) : base(defaultEnabled)
+	{
+	}
+
 	[HarmonyPatch]
 	public static class Patch
 	{

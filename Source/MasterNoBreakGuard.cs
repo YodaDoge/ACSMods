@@ -10,8 +10,12 @@ using XiaWorld;
 public class MasterNoBreakGuard : Mod
 {
 	public override Meta Info => _info;
-	private static Meta _info = new Meta("MasterNoBreakGuard", "Mentor won't guard", false);
-	
+	private static Meta _info = new Meta("MasterNoBreakGuard", "Mentor Guard Disabled", false);
+
+	public MasterNoBreakGuard(bool defaultEnabled) : base(defaultEnabled)
+	{
+	}
+
 	[HarmonyPatch]
 	public static class Patch
 	{

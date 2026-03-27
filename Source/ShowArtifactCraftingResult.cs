@@ -17,6 +17,10 @@ public class ShowArtifactCraftingResult : Mod
 	public override Meta Info => _info;
 	private static Meta _info = new Meta("ArtifactCraftingResultMessageFix", "Fix Artifact crafting message", true);
 
+	public ShowArtifactCraftingResult(bool defaultEnabled) : base(defaultEnabled)
+	{
+	}
+
 	[HarmonyPatch]
 	public static class Patch
 	{
@@ -31,7 +35,7 @@ public class ShowArtifactCraftingResult : Mod
 		public static bool AddMessage(int msgid, List<Thing> things = null, string param = null, int brannum = -1, int targetkey = 0, int other = 0, string other2 = null, string tips = null, bool needUp = false)
 		{
 			if (!_info.Enabled) return true;
-
+			
 			bool isBrokenArtifactCraftingMessage = ArtifactCraftingMessageIds.Contains(msgid) && targetkey != 0 && things != null && things.Any() && things.FirstOrDefault() is Npc maker;
 			if (!isBrokenArtifactCraftingMessage)
 				return true;
@@ -51,7 +55,6 @@ public class ShowArtifactCraftingResult : Mod
 			if (ArtifactCraftingMessageIds.Contains(id))
 			{
 				__result._RemoveType = Message_RemoveType.Lookover;
-				KLog.Dbg($"YodaDoge: changed crafting message type");
 			}
 		}
 

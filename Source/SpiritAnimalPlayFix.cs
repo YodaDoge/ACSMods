@@ -15,8 +15,12 @@ using static XiaWorld.AuctionNpc;
 public class SpiritAnimalPlayFix : Mod
 {
 	public override Meta Info => _info;
-	private static Meta _info = new Meta("SpiritAnimalPlayFix", "Fix Spirit Animal Leisure", true);
-	
+	private static Meta _info = new Meta("SpiritAnimalPlayFix", "Spirit Animal Leisure fix", true);
+
+	public SpiritAnimalPlayFix(bool defaultEnabled) : base(defaultEnabled)
+	{
+	}
+
 	[HarmonyPatch]
 	public static class Patch
 	{

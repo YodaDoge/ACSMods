@@ -14,49 +14,52 @@ namespace ACS_Yoda_Tweaks
 	public class AmbientLightMod : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("AmbientLight", "Brighter Day lighting", true, x => Patch.Toggle(x.Enabled));
+		private static Meta _info = new Meta("AmbientLight", "Brighter Daylight", false, x => Patch.Toggle(x.Enabled));
+
+		public AmbientLightMod(bool defaultEnabled) : base(defaultEnabled)
+		{
+		}
 
 		[HarmonyPatch]
 		public static class Patch
 		{
-			internal static void Toggle(bool value)
+			internal static void Toggle(bool enabled)
 			{
-				KLog.Dbg("AMbient toggled " + value);
-				if (value)
+				if (enabled && World.Instance != null)
 				{
-					RenderSettings.ambientSkyColor = defaultLight;
+					UpdateAmbientLight(World.Instance);
 				}
 				else if (World.Instance != null)
 				{
-					UpdateAmbientLight(World.Instance);
+					RenderSettings.ambientSkyColor = defaultLight;
 				}
 			}
 
 
 			public static bool Disabled = false;
-			static float skyLightDay = 0.52f;
-			static float skyLightNight = 0.38f;
+			static float skyLightDay = 0.50f;
+			static float skyLightNight = 0.35f;
 
-			static float seasonTintStrength = 0.03f;
+			static float seasonTintStrength = 0.02f;
 
 			static float seasonTintStrengthNightFactor = 0.2f;
-			static float seasonTintStrengthDayFactor = 0.8f;
+			static float seasonTintStrengthDayFactor = 0.7f;
 
 			//TODO: Winter total darker => negative offset; Summer generally brighter => all positive offset
 			private static readonly Color[] SeasonalLightTints = new Color[]
 			{
-			new Color(0, seasonTintStrength, 0),      // Spring (Green)
-			new Color(seasonTintStrength, seasonTintStrength, 0),   //  Summer (Yellow)
-			new Color(seasonTintStrength, 0, 0),       //  Autumn (Red)
-			new Color(seasonTintStrength*0.2f, seasonTintStrength*0.2f, seasonTintStrength *0.7f)      //  Winter (Blue)
+				new Color(0, seasonTintStrength, 0),      // Spring (Green)
+				new Color(seasonTintStrength, seasonTintStrength, 0),   //  Summer (Yellow)
+				new Color(seasonTintStrength, 0, 0),       //  Autumn (Red)
+				new Color(seasonTintStrength*0.2f, seasonTintStrength*0.2f, seasonTintStrength *0.7f)      //  Winter (Blue)
 			};
 
 			private static float secsPerHour = 600f / 24f;
-			private static float dawnStart = 5.4f * secsPerHour;
-			private static float dawnEnd = 10.25f * secsPerHour;
+			private static float dawnStart = 5.7f * secsPerHour;
+			private static float dawnEnd = 9.0f * secsPerHour;
 
-			private static float duskStart = 16.5f * secsPerHour;
-			private static float duskEnd = 22.0f * secsPerHour;
+			private static float duskStart = 17.8f * secsPerHour;
+			private static float duskEnd = 21.0f * secsPerHour;
 
 			private static int lastSec;
 			public static Color defaultLight = new Color(0.35f, 0.35f, 0.35f);
@@ -65,6 +68,7 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(World), "Step")]
 			public static void Postfix(float dt, World __instance)
 			{
+				//KLog.Dbg($"Ambilight Hit { _info.Enabled} color {RenderSettings.ambientSkyColor}");
 				if (!_info.Enabled) return;
 
 				var daySecond = __instance.DaySecond;
