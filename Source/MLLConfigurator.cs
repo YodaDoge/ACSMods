@@ -56,6 +56,30 @@ namespace ACS_Yoda_Tweaks
 			LoadSavedConfig();
 		}
 
+		private static void ShowConflictMessage(string location)
+		{
+			if (location == null)
+				location = typeof(Harmony).Assembly.Location;
+
+			var txtWarn = $"Outdated Harmony version\nOpen Readme?";
+
+			var modId = Path.GetDirectoryName(location).Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries).Last();
+			var workShopURL = RootWorkshopUrl + modId;
+			var msg = Wnd_Message.Show("Prompt", title: ModName, txt: txtWarn, bnt: 2, mode: 0, act: x =>
+			{
+				if (x == "1")
+				{
+					Application.OpenURL(HarmonyConflictReadme);
+					GUIUtility.systemCopyBuffer = workShopURL;
+					MainManager.Instance.Pause();
+				}
+			});
+		}
+
+		public static string ModName = "Yoda's Tweaks and Fixes";
+		public static string RootWorkshopUrl = @"https://steamcommunity.com/sharedfiles/filedetails/?id=";
+		public static string HarmonyConflictReadme = @"https://github.com/YodaDoge/ACSMods?tab=readme-ov-file#harmony-warning";
+
 		private static void WarnIfHarmonyConflict()
 		{
 			try
@@ -64,10 +88,8 @@ namespace ACS_Yoda_Tweaks
 				if (usedHarmonyAssembly.Version < new Version(2, 2, 1, 0))
 				{
 					var location = typeof(Harmony).Assembly.Location;
-					GUIUtility.systemCopyBuffer = location.ToString();
-					var txtWarn = $"Outdated Harmony version {usedHarmonyAssembly.Version} Filepath was copied to clipboard";
-					KLog.Dbg(txtWarn + " " + location);
-					var msg = Wnd_Message.Show("Prompt", title: "Harmony Conflict", txt: txtWarn, bnt: 1, mode: 0);
+					ShowConflictMessage(location);
+					KLog.Dbg("Outdated Harmony at " + location);
 				}
 			}
 			catch (Exception ex)

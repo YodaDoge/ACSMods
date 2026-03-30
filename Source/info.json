@@ -2,7 +2,7 @@
     "Name": "ACS_Yoda_Tweaks",
     "DisplayName": "Yoda's Tweaks and Fixes",
     "GameVersion": 1.268,
-    "Version": 0.6,
+    "Version": 0.62,
     "Desc": "Restart Game after enabling this mod! \nCan be addd or removed from ongoing saves. \nMany features must be activated in the MLL Configurator per save. \nSource and full Description can be found [url=https://github.com/YodaDoge/ACSMods]here[/url] ",
     "Author": "YodaDoge",
     "UIPackage": "",
