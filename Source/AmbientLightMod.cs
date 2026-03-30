@@ -138,7 +138,6 @@ namespace ACS_Yoda_Tweaks
 				Color currentPeak = SeasonalLightTints[season];
 				Color nextPeak = SeasonalLightTints[(season + 1) % 4];
 
-				// 4. Use Mathf.SmoothStep for each channel
 				return new Color(
 					Mathf.SmoothStep(currentPeak.r, nextPeak.r, t),
 					Mathf.SmoothStep(currentPeak.g, nextPeak.g, t),
@@ -146,11 +145,10 @@ namespace ACS_Yoda_Tweaks
 				);
 			}
 
-
-
 			[HarmonyPatch(typeof(Wnd_GameMain), "__clickFengshui")]
 			public static void Postfix(EventContext context, Wnd_GameMain __instance)
 			{
+				//if kept enbabled feng shui mode is too bright
 				if (__instance.openFengshui && _info.Enabled)
 					Toggle(false);
 			}

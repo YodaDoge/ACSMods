@@ -13,6 +13,8 @@ using XiaWorld;
 using static ACS_Yoda_Tweaks.Mod;
 using static CSCallLua;
 using static System.Net.WebRequestMethods;
+using ACS_Yoda_Tweaks.AutoA2H;
+using rail;
 
 namespace ACS_Yoda_Tweaks
 {
@@ -40,6 +42,7 @@ namespace ACS_Yoda_Tweaks
 		};
 
 		private const string ConfigName = "ACS_Yoda_Tweaks";
+		private const string ModName = "Yoda's Tweaks and Fixes";
 
 		public static void OnInit()
 		{
@@ -56,6 +59,28 @@ namespace ACS_Yoda_Tweaks
 			LoadSavedConfig();
 		}
 
+		private static void ShowConflictMessage()
+		{
+			var location = typeof(Harmony).Assembly.Location;
+
+			var txtWarn = $"Outdated Harmony version\nOpen Readme?";
+
+			var modId = Path.GetDirectoryName(location).Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries).Last();
+			var workShopURL = RootWorkshopUrl + modId;
+			var msg = Wnd_Message.Show("Prompt", title: ModName, txt: txtWarn, bnt: 2, mode: 0, act: x =>
+			{
+				if (x == "1")
+				{
+					Application.OpenURL(HarmonyConflictReadme);
+					GUIUtility.systemCopyBuffer = workShopURL;
+					MainManager.Instance.Pause();
+				}
+			});
+		}
+
+		public static string RootWorkshopUrl = @"https://steamcommunity.com/sharedfiles/filedetails/?id=";
+		public static string HarmonyConflictReadme = @"https://github.com/YodaDoge/ACSMods?tab=readme-ov-file#harmony-warning";
+
 		private static void WarnIfHarmonyConflict()
 		{
 			try
@@ -64,16 +89,19 @@ namespace ACS_Yoda_Tweaks
 				if (usedHarmonyAssembly.Version < new Version(2, 2, 1, 0))
 				{
 					var location = typeof(Harmony).Assembly.Location;
-					GUIUtility.systemCopyBuffer = location.ToString();
-					var txtWarn = $"Outdated Harmony version {usedHarmonyAssembly.Version} Filepath was copied to clipboard";
-					KLog.Dbg(txtWarn + " " + location);
-					var msg = Wnd_Message.Show("Prompt", title: "Harmony Conflict", txt: txtWarn, bnt: 1, mode: 0);
+					ShowConflictMessage();
+					KLog.Dbg("Outdated Harmony at " + location);
 				}
 			}
 			catch (Exception ex)
 			{
 				KLog.Dbg(ex.ToString());
 			}
+		}
+
+		public static void ShowMessage(string text)
+		{
+			var msg = Wnd_Message.Show(text, title: "Harmony Conflict", txt: text, bnt: 1, mode: 0);
 		}
 
 		public static void OnSave()
@@ -85,7 +113,15 @@ namespace ACS_Yoda_Tweaks
 				KLog.Dbg($"Saved {item.Name} enabled {checkState}");
 				item.Enabled = checkState;
 			}
+
 			MLLMain.AddOrOverWriteSave(ConfigName, mods.ToDictionary(key => key.Name, va => va.Enabled));
+
+			bool v = MLLMain.AddOrOverWriteSave(A2H.Name, A2H.AutoNPC);
+			foreach (var item in A2H.AutoNPC)
+			{
+				KLog.Dbg("saved a2h " + item.Key + " vals: " + string.Join(",", item.Value.ToArray()));
+			}
+
 		}
 
 		private static void LoadSavedConfig()
@@ -104,7 +140,17 @@ namespace ACS_Yoda_Tweaks
 
 				Configuration.SetCheckBox(ConfigName, mod.Name, mod.Enabled);
 			}
+			var a2h = MLLMain.GetSaveOrDefault<Dictionary<int, List<string>>>(AutoA2H.A2H.Name);
+			if (a2h != null)
+			{
+				foreach (var item in a2h)
+				{
+					KLog.Dbg("loaded a2h " + item.Key + " vals: " + string.Join(",", item.Value.ToArray()));
+				}
+			}
+			A2H.InitNpcCache(a2h);
 		}
+		protected static bool IsYodaMachine => Environment.MachineName == "YODADOGE";
 	}
 
 	public abstract class Mod
@@ -114,11 +160,17 @@ namespace ACS_Yoda_Tweaks
 			Info.Enabled = defaultEnabled;
 		}
 
+		protected static bool IsYodaMachine => A2H.IsYodaMachine;
+
+		public static void ShowMessage(string message) => ACS_Yoda_Tweaks.ShowMessage(message);
+
 		public abstract Meta Info { get; }
 		public class Meta
 		{
 			public string Name { get; set; }
 			public string Description { get; set; }
+
+			public static bool LogStateChange = false;
 
 			protected bool _enabled;
 			public bool Enabled
@@ -131,8 +183,11 @@ namespace ACS_Yoda_Tweaks
 
 					if (last != _enabled)
 					{
-						string state = value ? "enabled" : "disabled";
-						KLog.Dbg($"YodaDoge Tweak {Name} changed to {state}");
+						if (LogStateChange)
+						{
+							string state = value ? "enabled" : "disabled";
+							KLog.Dbg($"YodaDoge Tweak {Name} changed to {state}");
+						}
 						OnEnableChanged?.Invoke(this);
 					}
 				}

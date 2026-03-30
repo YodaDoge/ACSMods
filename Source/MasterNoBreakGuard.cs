@@ -19,8 +19,6 @@ public class MasterNoBreakGuard : Mod
 	[HarmonyPatch]
 	public static class Patch
 	{
-		private static bool first = true;
-
 		[HarmonyPrefix]
 		[HarmonyPatch(typeof(BehaviourMasterHelp), nameof(BehaviourMasterHelp.Check))]
 		static bool Prefix(BehaviourMasterHelp __instance, Npc npc, int seachr, bool tryfind, ref JobBase __result)
@@ -28,11 +26,6 @@ public class MasterNoBreakGuard : Mod
 			if (!_info.Enabled) return true;
 			__result = null;
 
-			if (first)
-			{
-				first = false;
-				KLog.Dbg("YodaDoge Tweaks disabled Mentor Guard");
-			}
 
 			// Skip
 			return false;

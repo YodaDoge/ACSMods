@@ -15,7 +15,7 @@ public class LookForDummy : Mod
 	public LookForDummy(bool defaultEnabled) : base(defaultEnabled)
 	{
 	}
-
+	//TODO: replace Findbuilding instead
 	[HarmonyPatch]
 	public static class Patch
 	{

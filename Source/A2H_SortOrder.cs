@@ -35,7 +35,6 @@ public class A2H_SortOrder : Mod
 			{
 				if (npc.A2H.thinkFrags != null)
 				{
-					KLog.Dbg("A2H Applying sortorder");
 					var fragger = IManagerModule_LoopInterval<HumanoidEvolutionMgr>.Instance.Fragments;
 					var defLookup = new HashSet<string>(npc.A2H.thinkFrags.Select(x => x.frags[0])).ToDictionary(key => key, val => fragger.GetDef(val));
 					npc.A2H.thinkFrags = npc.A2H.thinkFrags.OrderBy(x => defLookup[x.frags[0]].Type)
