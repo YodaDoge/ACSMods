@@ -65,6 +65,9 @@ namespace ACS_Yoda_Tweaks
 
 			var modId = Path.GetDirectoryName(location).Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries).Last();
 			var workShopURL = RootWorkshopUrl + modId;
+			if (!int.TryParse(modId, out int result))
+				workShopURL = location;
+
 			var msg = Wnd_Message.Show("Prompt", title: ModName, txt: txtWarn, bnt: 2, mode: 0, act: x =>
 			{
 				if (x == "1")
