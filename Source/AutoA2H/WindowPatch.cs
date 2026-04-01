@@ -42,6 +42,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 				__instance.AddChild(_configArea);
 				_configArea.SetPosition(_configArea.position.x - (_configArea.size.x + 2), _configArea.y + 30, _configArea.z);
+				_configArea.AddCopyPasteButtons(__instance);
 			}
 
 

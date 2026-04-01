@@ -28,6 +28,7 @@ namespace ACS_Yoda_Tweaks
 			//new SpiritAnimalPlayFix().Info,
 			//new ShowArtifactCraftingResult().Info, 
 			//new LookForDummy().Info,
+			//new CopyBuildThing().Info,
 			
 			//QoL
 			//new A2H_SortOrder().Info, 
@@ -39,8 +40,10 @@ namespace ACS_Yoda_Tweaks
 			new AutoPause(false).Info,
 			new OneClickInterrogate(false).Info,
 			new AmbientLightMod(false).Info,
+			new FogRemover(false).Info,
 		};
 
+		// XiaWorld.UILogicMode_Build
 		private const string ConfigName = "ACS_Yoda_Tweaks";
 		private const string ModName = "Yoda's Tweaks and Fixes";
 
@@ -137,7 +140,6 @@ namespace ACS_Yoda_Tweaks
 
 				//add does nothing if checkbox already exists
 				Configuration.AddCheckBox(ConfigName, mod.Name, mod.Description, mod.Enabled);
-
 				Configuration.SetCheckBox(ConfigName, mod.Name, mod.Enabled);
 			}
 			var a2h = MLLMain.GetSaveOrDefault<Dictionary<int, List<string>>>(AutoA2H.A2H.Name);

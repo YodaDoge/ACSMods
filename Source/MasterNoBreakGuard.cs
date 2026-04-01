@@ -10,7 +10,7 @@ using XiaWorld;
 public class MasterNoBreakGuard : Mod
 {
 	public override Meta Info => _info;
-	private static Meta _info = new Meta("MasterNoBreakGuard", "Mentor Guard Disabled", false);
+	private static Meta _info = new Meta("MasterNoBreakGuard", "Disable Mentor Guard", false);
 
 	public MasterNoBreakGuard(bool defaultEnabled) : base(defaultEnabled)
 	{

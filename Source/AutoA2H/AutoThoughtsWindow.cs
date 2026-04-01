@@ -35,10 +35,45 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 			//frame.margin = contentMargin;
 			//frame.width = 200;
-			frame.width =  ConfigList.width = width  = 250;
+			frame.width = ConfigList.width = width = 250;
 			ConfigList.margin = contentMargin;
-			 
+
 		}
+
+		public void AddCopyPasteButtons(Wnd_A2HCreateAgg parent)
+		{
+			try
+			{
+				var btnSave = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
+				btnSave.name = "btnCopy";
+				btnSave.title = btnSave.text = "Copy";
+				btnSave.onClick.Add(e => { _copy = GetCheckedThoughts(_npc); });
+
+				var btnPaste = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
+				btnPaste.name = "btnPaste";
+				btnPaste.title = btnPaste.text = "Paste";
+				btnPaste.onClick.Add(e =>
+				{
+					if (_npc != null && _copy.Any())
+						Update(_npc, _copy);
+				});
+				parent.AddChild(btnSave);
+				parent.AddChild(btnPaste);
+
+				btnSave.SetPosition(position.x, position.y + 2, position.z - 1);
+
+				btnPaste.SetPosition(position.x, position.y + 30, position.z - 1);
+			}
+			catch (Exception ex)
+			{
+				Mod.ShowMessage(ex.ToString());
+			}
+
+
+		}
+
+		private static List<string> _copy = new List<string>();
+
 		static Margin ourMargin = new Margin() { left = 2, bottom = 2, top = 2, right = 2 };
 		static Margin contentMargin = new Margin() { left = 5, bottom = 2, top = 2, right = 4 };
 
@@ -85,11 +120,11 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 					listEntry.margin = ourMargin;
 
 
-					listEntry.title = shardType.DisplayName + "  (Lv "+shardType.Level + ")";
+					listEntry.title = shardType.DisplayName + "  (Lv " + shardType.Level + ")";
 					//gButton2.titleColor = shardType.GetLevelColor();
 					listEntry.SetTooltip(GetThinkToolTip, shardType.Name);
 
-					listEntry.GetChild("id").text = shardType.Name; 
+					listEntry.GetChild("id").text = shardType.Name;
 
 					var chkBox = listEntry.GetChild("cb").asButton;
 					bool selected = autoThoughts.Contains(shardType.Name);

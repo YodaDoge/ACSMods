@@ -20,7 +20,7 @@
     <OutputPath>..\..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\AmazingCultivationSimulator\Mods\ACS_Yoda_Tweaks\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>5</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -83,6 +83,8 @@
     <Compile Include="AutoA2H\AutoA2H.cs" />
     <Compile Include="AutoA2H\AutoThoughtsWindow.cs" />
     <Compile Include="AutoA2H\WindowPatch.cs" />
+    <Compile Include="CopyBuildThing.cs" />
+    <Compile Include="FogRemover.cs" />
     <Compile Include="MLLConfigurator.cs" />
     <Compile Include="WorkerAutoEquip.cs" />
     <Compile Include="AutoPause.cs" />

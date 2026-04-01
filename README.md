@@ -21,14 +21,11 @@ As well as useful Talismans such as SpiritTravel, Cleansing, Agility..
 
 ### OptIn: Auto Pause on Load
 
-### OptIn: Mentor Guard Disabled
-Mentor won't perform the guard action on his disciples when they do a breakthrough.
+### OptIn: Guard Disable Mentor
 
 ### OptIn: One Click Interrogate Extended
 Almost the same feature as the [original](https://steamcommunity.com/sharedfiles/filedetails/?id=2856326732&searchtext=Interrogate) Mod. <br/>
 But interrogation now includes all NPCs known to the player. <br/>
-This is useful to find out the favorites of Sect Masters with fewer dialogues. <br/>
-If you use this mod, you should disable the standalone mod <br/>
 
 ### OptIn: Brighter Daylight
 Days will be brighter, creating a stronger contrast between day and night. 
