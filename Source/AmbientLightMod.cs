@@ -55,8 +55,8 @@ namespace ACS_Yoda_Tweaks
 			};
 
 			private static float secsPerHour = 600f / 24f;
-			private static float dawnStart = 5.7f * secsPerHour;
-			private static float dawnEnd = 9.0f * secsPerHour;
+			private static float dawnStart = 5.6f * secsPerHour;
+			private static float dawnEnd = 8.10f * secsPerHour;
 
 			private static float duskStart = 17.8f * secsPerHour;
 			private static float duskEnd = 21.0f * secsPerHour;

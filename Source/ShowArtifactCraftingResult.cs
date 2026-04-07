@@ -83,11 +83,17 @@ public class ShowArtifactCraftingResult : Mod
 				if (thing2.InWhoseHand > 0)
 					locationID = thing2.InWhoseHand;
 
-				if (UILogicMgr.Instance.GetCurMode().Mode != g_emUILogicMode.IndividualCommand)
+				Thing thing3 = ThingMgr.Instance.FindThingByID(locationID);
+				if (thing2 != null)
 				{
-					UILogicMgr.Instance.BasicMode.SelectThing(thing2);
+					if (UILogicMgr.Instance.GetCurMode().Mode != g_emUILogicMode.IndividualCommand)
+					{
+						UILogicMgr.Instance.BasicMode.SelectThing(thing3);
+					}
+					MapCamera.Instance.LookKey(thing3.Key);
 				}
-				MapCamera.Instance.LookKey(thing2.Key);
+
+				MapCamera.Instance.LookKey(thing3.Key);
 				return false;
 			}
 			return true;

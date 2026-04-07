@@ -59,6 +59,9 @@ namespace ACS_Yoda_Tweaks
 			Configuration.Subscribe(OnSave);
 
 			mods = GetDefaults();
+			if(IsYodaMachine)
+				mods.ForEach(x => x.Enabled = true);
+
 			LoadSavedConfig();
 		}
 

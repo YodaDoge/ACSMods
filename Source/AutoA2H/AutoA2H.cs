@@ -11,6 +11,7 @@ using System.Linq;
 using UnityEngine;
 using XiaWorld;
 using XiaWorld.UI.InGame;
+using XLua.TemplateEngine;
 using static XiaWorld.HumanoidEvolutionMgr;
 
 namespace ACS_Yoda_Tweaks.AutoA2H
@@ -73,126 +74,89 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 		private struct ThinkFragScoring
 		{
-			string Name;
-			string AggType;
-			int existingCount;
-			int existingAggTypeCount;
-			object Reference;
+			public int CalcScore()
+			{
+				int existScore = ExistsAsAgg ? -100 : 0;
+				bool isEmotion = AggType == EmotionType;
+				return existScore
+				+ Math.Min(3, existingTotalCount) * 12
+				+ existingAggTypeCount * -20
+				+ level * 11
+				+ (isEmotion ? level * 5 : 0)
+				+ ExistingMemories * 5; //existing as mem => lowest score to => refresh
+			}
+			public List<ThinkFrag> frags;
+			public string Name;
+			public string AggType;
+			public int existingTotalCount;
+			public int existingAggTypeCount;
+			public int level;
+			public bool ExistsAsAgg;
+			public int ExistingMemories;
+			public int Score;
 
 		}
-
+		private static string EmotionType = "AEmotion";
 		public static void ThinkIfYouCan(Npc npc)
 		{
-			if (!AutoNPC.ContainsKey(npc.ID))
+			if (!AutoNPC.ContainsKey(npc.ID) || npc.JobEngine.CurJob?.jobdef.Name == "JobYsThink")
 			{
 				return;
 			}
 
+			if (npc.A2H.thinkFrags == null)
+				npc.A2H.thinkFrags = new List<ThinkFrag>();
+			if (npc.A2H.thinkFragCaches == null)
+				npc.A2H.thinkFragCaches = new List<ThinkFrag>();
+			if (npc.A2H.thinkAggregates == null)
+				npc.A2H.thinkAggregates = new List<ThinkAggregate>();
+
 			try
 			{
-				if (TryFormFinalFrag(npc))
-					return;
-
 				var raceDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
+				List<ThinkFragScoring> scorings = CreateThinkFragScoring(npc);
+				
+				ThinkFragScoring newThinkableThoughtType = scorings.FirstOrDefault(x => (x.existingAggTypeCount == 0 || npc.A2H.CanThinkCount == 0) && x.existingTotalCount == 3);
 
-				var wantedThoughs = npc.A2H.thinkFrags.Concat(npc.A2H.thinkFragCaches)
-										.Where(x => IsWantedFrag(npc, x.frags[0])).GroupBy(x => x.frags[0]);
-
-
-
-				var existingAggs = npc.A2H.thinkAggregates ?? new List<ThinkAggregate>();
-				existingAggs = existingAggs.Where(x => AutoNPC[npc.ID].Contains(x.frag)).ToList();
-
-				var potentialAggs = wantedThoughs.Where(x => x.Count() >= 2)
-						.OrderBy(c => existingAggs.Count(existingAgg => existingAgg.Combine == GetFragDef(c).Type)) //amount of aggs we have asc
-						.ThenByDescending(x => GetFragDef(x).Level).ToList(); //then level desc
-
-				var readyAggs = potentialAggs.Where(x => x.Count() >= 3).ToList();
-				bool isExistingAggType = readyAggs.Any() && existingAggs.Any(x => GetFragDef(readyAggs.FirstOrDefault()).Type != x.Combine);
-
-				if (isExistingAggType && npc.A2H.thinkFrags.Count < Math.Min(readyAggs.Count * 10, 32)) //get more frags for diversity
+				bool collectMoreFrags = npc.A2H.thinkAggregates.Count * 20 < npc.A2H.thinkFrags.Count;
+				bool canMakeNewThink = newThinkableThoughtType.existingTotalCount > 0;
+				if ( (!canMakeNewThink && collectMoreFrags) || TryFormFinalFrag(npc))
 					return;
 
+				RefreshMemory(scorings, npc, raceDef, newThinkableThoughtType.Name);
 
-				var aggAboutToExpire = existingAggs.FirstOrDefault(x => x.RemoveCountDown <= 2);
-				if (aggAboutToExpire != null)
+				if (canMakeNewThink) 
 				{
-					//Ignore all types which we already have
-					var existingTypes = existingAggs.Select(x => x.Combine).Distinct().ToList();
-					potentialAggs.RemoveAll(toRemove => existingTypes.Contains(GetFragDef(toRemove).Type));
+					ShowMessage($"{npc.Name} adds {newThinkableThoughtType.AggType}/{newThinkableThoughtType.Name} to types {string.Join(", ", npc.A2H.thinkAggregates.Select(x => x.Combine).ToArray())}");
 
-					//forget all for which we have type and expires soon
-					npc.A2H.thinkFragCaches.RemoveAll(x => x.RemoveCountDown <= 3 && GetFragDef(x).Type == aggAboutToExpire.Combine);
-
-					if (npc.A2H.thinkFragCaches.Count >= raceDef.MaxThinkCache)
-					{
-						//remove  low lvl memories von denen wir schon ein agg typ haben
-					}
-				}
-
-				if (readyAggs.Any())
-				{
-					var target = readyAggs.First();
-
-					int freeMemorySlots = raceDef.MaxThinkCache - npc.A2H.thinkFragCaches.Count;
-					if (freeMemorySlots > 0)
-					{
-						var toMemorize = npc.A2H.thinkFrags.Where(x => x.frags[0] != target.Key && IsWantedFrag(npc, x.frags[0]))
-							.Skip(1).Take(freeMemorySlots).ToList();
-
-						foreach (var f in toMemorize)
-						{
-							npc.A2H.MoveThink_Think2Cache(f);
-							f.RemoveCountDown = raceDef.ThinkLast;
-
-						}
-					}
-
+					//CreateAgg
 					npc.A2H.RemoveAllTState();
+					newThinkableThoughtType.frags.ForEach(x => x.TState = 1);
 
-					foreach (var f in target)
+					var finalThought = newThinkableThoughtType.Name;
+					string msg = "existing Aggs: " + string.Join(";", npc.A2H.thinkAggregates.Select(x => x.Combine).ToArray()) + "\n";
+					foreach (var item in scorings.Take(5))
 					{
-						f.TState = 1;
+						msg += $"{item.AggType} {item.Name} {item.Score}" + "\n";
 					}
-
-					var finalThought = readyAggs.First().Key;
-
+					ShowMessage(msg);
 					StartAggrThink(npc, finalThought);
 					return;
 				}
 
 				//Look for meditation targets
-				if (potentialAggs.Any() && npc.A2H.thinkFrags.Count < raceDef.MaxThink)
+				var canStudyToCompletion = scorings.Where(x => x.existingTotalCount == 2 && !x.frags.Any(a => a.Conflict > 0)).ToList(); //conflict == has learned through study
+				if (canStudyToCompletion.Any())
 				{
-					var wantedComboByPrio = potentialAggs.FirstOrDefault();
-					var fragsToStudy = new List<string>(potentialAggs.Select(x => x.Key));
-					List<Thing> potentialStudyTargets = new List<Thing>();
+					if (npc.A2H.thinkFrags.Count >= raceDef.MaxThink)
+						return;
 
-					foreach (var thingType in studyItemTypes)
+					var thinkTarget = FindStudyTarget(canStudyToCompletion);
+
+					var existingCmd = npc.CheckCommand("StudyThing", checkcount: true)?.FirstOrDefault(x => x != null);
+
+					if (thinkTarget != null && existingCmd == null)
 					{
-						var found = ThingMgr.Instance.GetThingList(thingType)?
-												.Where(x =>
-												{
-													if (x?.def?.Frags?.Any(f => fragsToStudy.Contains(f.Frag)) == true)
-													{
-														var itm = x as ItemThing;
-														if (itm == null)
-															return true;
-														if (itm.EquipByWho + itm.InWhoseBag + itm.InWhoseHand <= 0 && itm.FreeCount > 0 && itm.InDark == false)
-															return true;
-													}
-													return false;
-
-												});
-						if (found != null)
-							potentialStudyTargets.AddRange(found);
-					}
-
-					var thinkTarget = potentialStudyTargets.OrderBy(x => fragsToStudy.IndexOf(x.def.Frags[0].Frag)).FirstOrDefault();
-					if (thinkTarget != null && npc.CheckCommand("StudyThing") == null)
-					{
-
-						ShowMessage($"{npc.GetName()} Study  " + thinkTarget.GetName() + " for " + thinkTarget.def.Frags[0].Frag);
 						npc.AddCommand("StudyThing", thinkTarget);
 						return;
 					}
@@ -201,12 +165,128 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			}
 			catch (Exception ex)
 			{
-				ShowMessage(ex.ToString());
+				ShowMessage(npc?.GetName() + " " + ex.ToString());
 				KLog.Dbg(ex.ToString());
 			}
 		}
 
+		private static bool first = true;
 
+		private static List<ThinkFragScoring> CreateThinkFragScoring(Npc npc)
+		{
+			var wantedThoughs = npc.A2H.thinkFrags.Concat(npc.A2H.thinkFragCaches)
+													.Where(x => IsWantedFrag(npc, x.frags[0]))
+													.GroupBy(x => x.frags[0]);
+
+			var existingAggs = npc.A2H.thinkAggregates.Where(x => AutoNPC[npc.ID].Contains(x.frag)).ToList();
+
+
+			List<ThinkFragScoring> scorings = new List<ThinkFragScoring>();
+
+			foreach (var frag in wantedThoughs)
+			{
+				var def = GetFragDef(frag.First());
+				var items = frag.ToList();
+				var scoring = new ThinkFragScoring()
+				{
+					AggType = "A" + def.Type,
+					existingAggTypeCount = existingAggs.Count(a => a.Combine == "A" + def.Type),
+					existingTotalCount = items.Count(),
+					level = def.Level,
+					ExistsAsAgg = existingAggs.Any(x => x.frags.First() == frag.Key),
+					Name = frag.Key,
+					ExistingMemories = npc.A2H.thinkFragCaches.Count(x => x.frags[0] == frag.Key),
+					frags = items
+				};
+				scoring.Score = scoring.CalcScore();
+				scorings.Add(scoring);
+			}
+			scorings = scorings.OrderByDescending(x => x.Score).ToList();
+			return scorings;
+		}
+
+		private static Thing FindStudyTarget(List<ThinkFragScoring> canStudyToCompletion)
+		{
+			List<Thing> potentialStudyTargets = new List<Thing>();
+			foreach (var thingType in studyItemTypes)
+			{
+				var found = ThingMgr.Instance.GetThingList(thingType)?
+										.Where(thing =>
+										{
+											if (thing?.def?.Frags?.Any(f => canStudyToCompletion.Any(a => a.Name == f.Frag)) == true)
+											{
+												var item = thing as ItemThing;
+												if (item == null)
+													return true;
+												else
+												{
+													if (item.EquipByWho + item.InWhoseBag + item.InWhoseHand <= 0 && item.FreeCount > 0 && item.InDark == false)
+														return true;
+												}
+											}
+											return false;
+
+										});
+				if (found != null && found.Any())
+					potentialStudyTargets.AddRange(found);
+			}
+			Thing thinkTarget = null;
+			string fragWeWillComplete = null;
+
+			foreach (var think in canStudyToCompletion)
+			{
+				if (thinkTarget != null)
+					break;
+				thinkTarget = potentialStudyTargets.FirstOrDefault(thing => thing.def.Frags.Any(f => think.Name == f.Frag));
+				fragWeWillComplete = think.Name;
+			}
+
+
+			return thinkTarget;
+		}
+
+		private static void RefreshMemory(List<ThinkFragScoring> scorings, Npc npc, HERaceInfoDef raceDef, string nameToIgnore = null)
+		{
+			//TODO: remove irrelevant
+			int memorized = 0;
+			HashSet<string> memorizedTypes = new HashSet<string>();
+			foreach (var scoredFrag in scorings)
+			{
+				bool shouldIgnore = scoredFrag.Name == nameToIgnore;
+				bool allAreMemorized = Math.Min(scoredFrag.existingTotalCount,3) == scoredFrag.ExistingMemories;
+
+				if (shouldIgnore || allAreMemorized )
+				{
+					memorized += scoredFrag.ExistingMemories;
+					memorizedTypes.Add(scoredFrag.Name);
+					continue;
+				}
+
+				if (memorized >= raceDef.MaxThink)
+					break;
+
+				foreach (var toMemorize in npc.A2H.thinkFrags.Where(x => x.frags[0] == scoredFrag.Name).ToList())
+				{
+					if (npc.A2H.thinkFragCaches.Count >= raceDef.MaxThinkCache)
+					{
+						//Prune one
+						var canRemove = npc.A2H.thinkFragCaches.FirstOrDefault(x => !memorizedTypes.Contains(x.frags[0]) && x.frags[0] != toMemorize.frags[0]);
+
+						//we are full, nothing can be removed
+						if (canRemove == null)
+							break;
+
+						npc.A2H.thinkFragCaches.Remove(canRemove); ;
+					}
+
+					toMemorize.RemoveCountDown = raceDef.ThinkLast;
+					npc.A2H.MoveThink_Think2Cache(toMemorize);
+					memorizedTypes.Add(scoredFrag.Name);
+					memorized++;
+				}
+
+			}
+		}
 
 		private static g_emThingType[] studyItemTypes = new g_emThingType[] { g_emThingType.Building, g_emThingType.Item, g_emThingType.Plant, g_emThingType.None, };
 
@@ -224,7 +304,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				List<ThinkAggregate> targetList = new List<ThinkAggregate>();
 				foreach (var ag in wantedAggsByType.OrderBy(x => SortedAggTypes.IndexOf(x.Key)))
 				{
-					var frst = ag.FirstOrDefault();
 					targetList.Add(ag.FirstOrDefault());
 				}
 				CombineAggs(targetList, npc);
@@ -239,7 +318,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 		private static void CombineAggs(List<ThinkAggregate> list, Npc npc)
 		{
 			var raceDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
-
 			ThinkFinal thinkFinal = HMgr.GetThinkFinal(list, raceDef);
 			if (thinkFinal != null)
 			{
@@ -248,7 +326,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				{
 					npc.A2H.RemoveThinkAgg(item);
 				}
-				ShowMessage($"{npc.Name} combined a thought");
 			}
 			else
 			{

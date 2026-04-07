@@ -63,12 +63,45 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				btnSave.SetPosition(position.x, position.y + 2, position.z - 1);
 
 				btnPaste.SetPosition(position.x, position.y + 30, position.z - 1);
+
+
+				var txtSearch = (UI_InputTextField)UIPackage.CreateObject("InGame", "InputTextField");
+				txtSearch.m_title.onChanged.Add(TextChange);
+				txtSearch.SetPosition(position.x + 10, position.y + height - 50, position.z - 1);
+				txtSearch.m_title.promptText = "Search";
+				parent.AddChild(txtSearch);
 			}
 			catch (Exception ex)
 			{
 				Mod.ShowMessage(ex.ToString());
 			}
 
+
+		}
+		private static float defaultHeight;
+		private void TextChange(EventContext context)
+		{
+			try
+			{
+				var sender = context.sender as GTextInput;
+
+				var txt = sender.text.ToUpper();
+				bool isEmpty = string.IsNullOrEmpty(txt);
+				defaultHeight = buttons.First().height;
+				foreach (var btn in buttons)
+				{
+					var shardName = btn.GetChild("id").text;
+					btn.visible = isEmpty || GetThinkToolTip(null, shardName).ToUpper().Contains(txt);
+
+					btn.height = btn.viewHeight = btn.visible ? defaultHeight : btn.height;
+					
+				}
+				ConfigList.container.EnsureSizeCorrect();
+			}
+			catch (Exception ex)
+			{
+				Mod.ShowMessage(ex.ToString());
+			}
 
 		}
 
@@ -82,10 +115,12 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 		private static HumanoidEvolutionMgr HMgr => HumanoidEvolutionMgr.Instance;
 		private static Npc _npc;
 
+		List<GButton> buttons = new List<GButton>();
+
 		public void Update(Npc npc, IEnumerable<string> autoThoughts)
 		{
 			_npc = npc;
-
+			buttons.Clear();
 			fragments = HMgr.Fragments.ForEachKey.Select(x => HMgr.Fragments.GetDef(x.Key))
 				.Where(x => x != null)
 				.GroupBy(x => x?.Type);
@@ -135,6 +170,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 					listEntry.onClick.Add(ButtonClicked);
 					listEntry.color = typeColor;
+					buttons.Add(listEntry);
 				}
 				//gButton.title += $" ({active}) ";
 			}
@@ -151,6 +187,11 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 		private string GetThinkToolTip(GObject obj, object frag)
 		{
+			return GetThinkToolTip(obj, frag?.ToString());
+		}
+
+		private string GetThinkToolTip(GObject obj, string frag)
+		{
 			if (frag is string)
 				return IManagerModule_LoopInterval<HumanoidEvolutionMgr>.Instance.GetFragDesc(_npc, frag?.ToString(), true);
 			return "No Tooltip";
@@ -159,9 +200,9 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 		public List<string> GetCheckedThoughts(Npc npc)
 		{
 			List<string> autoThoughts = new List<string>();
-			for (int i = 0; i < ConfigList.numItems; i++)
+			for (int i = 0; i < buttons.Count; i++)
 			{
-				var gButton = ConfigList.GetChildAt(i).asButton;
+				var gButton = buttons[i];
 				if (gButton.GetController("type").selectedIndex != 1)
 					continue;
 
