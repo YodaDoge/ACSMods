@@ -36,16 +36,21 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			[HarmonyPatch(typeof(Wnd_A2HCreateAgg), "OnInit")]
 			public static void OnInit(Wnd_A2HCreateAgg __instance)
 			{
+				try
+				{
+					var x = IManagerModule_LoopInterval<HumanoidEvolutionMgr>.Instance.Fragments;
+					_configArea = new AutoThoughtsWindow();
 
-				var x = IManagerModule_LoopInterval<HumanoidEvolutionMgr>.Instance.Fragments;
-				_configArea = new AutoThoughtsWindow();
+					__instance.AddChild(_configArea);
+					_configArea.SetPosition(_configArea.position.x - (_configArea.size.x + 2), _configArea.y + 30, _configArea.z);
+					_configArea.AddCopyPasteButtons(__instance);
+				}
+				catch (Exception ex)
+				{
+					ShowMessage(ex.ToString());
+				}
 
-				__instance.AddChild(_configArea);
-				_configArea.SetPosition(_configArea.position.x - (_configArea.size.x + 2), _configArea.y + 30, _configArea.z);
-				_configArea.AddCopyPasteButtons(__instance);
 			}
-
-
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_A2HCreateAgg), "ShowNpc")]
@@ -59,6 +64,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				}
 				catch (Exception ex)
 				{
+					ShowMessage(ex.Message);
 					KLog.Dbg(ex.ToString());
 				}
 			}

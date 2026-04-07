@@ -32,7 +32,7 @@ namespace ACS_Yoda_Tweaks
 			{
 				if (!_info.Enabled || rank != g_emNpcRank.Worker) 
 					return;
-				ShowMessage(__instance.Name + " disabled all jobs");
+					
 				for (g_emBehaviourWorkKind g_emBehaviourWorkKind2 = g_emBehaviourWorkKind.OutFire; g_emBehaviourWorkKind2 < g_emBehaviourWorkKind.Count; g_emBehaviourWorkKind2++)
 				{
 					if (g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Xiulian || g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Rest || g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Care || g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Clean)

@@ -84,7 +84,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			try
 			{
 				var sender = context.sender as GTextInput;
-
+				//TODO: remove/add buttons due to search
 				var txt = sender.text.ToUpper();
 				bool isEmpty = string.IsNullOrEmpty(txt);
 				defaultHeight = buttons.First().height;
@@ -119,61 +119,69 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 		public void Update(Npc npc, IEnumerable<string> autoThoughts)
 		{
-			_npc = npc;
-			buttons.Clear();
-			fragments = HMgr.Fragments.ForEachKey.Select(x => HMgr.Fragments.GetDef(x.Key))
-				.Where(x => x != null)
-				.GroupBy(x => x?.Type);
-
-			var rDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
-			var heRule = HMgr.Rules.GetDef(rDef.RaceRule);
-
-			ConfigList.RemoveChildrenToPool();
-			bool first = true;
-			foreach (var thoughtTypes in fragments)
+			try
 			{
-				GButton titleEntry = ConfigList.AddItemFromPool().asButton;
-				titleEntry.title = string.Empty;// thoughtTypes.Key;
-				if (first)
+				_npc = npc;
+				buttons.Clear();
+				fragments = HMgr.Fragments.ForEachKey.Select(x => HMgr.Fragments.GetDef(x.Key))
+					.Where(x => x != null)
+					.GroupBy(x => x?.Type);
+
+				var rDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
+				var heRule = HMgr.Rules.GetDef(rDef.RaceRule);
+
+				ConfigList.RemoveChildrenToPool();
+				bool first = true;
+				foreach (var thoughtTypes in fragments)
 				{
-					first = false;
-					titleEntry.text = "Auto Think \n";
+					GButton titleEntry = ConfigList.AddItemFromPool().asButton;
+					titleEntry.title = string.Empty;// thoughtTypes.Key;
+					if (first)
+					{
+						first = false;
+						titleEntry.text = "Auto Think \n";
+					}
+
+					titleEntry.GetController("type").selectedIndex = 0;
+
+					var rgbVal = "#" + HMgr.GetColor(heRule, thoughtTypes.FirstOrDefault().Name);
+					bool hasColor = ColorUtility.TryParseHtmlString(rgbVal, out Color typeColor);
+					//if (hasColor)
+					//	titleEntry.titleColor = typeColor;
+
+					int active = 0;
+					foreach (var shardType in thoughtTypes.Where(x => !dummyFragNames.Contains(x.DisplayName)).OrderBy(x => x.DisplayName))
+					{
+						GButton listEntry = ConfigList.AddItemFromPool().asButton;
+						listEntry.GetController("type").selectedIndex = 1; //Checkbox
+						listEntry.margin = ourMargin;
+
+
+						listEntry.title = shardType.DisplayName + "  (Lv " + shardType.Level + ")";
+						//gButton2.titleColor = shardType.GetLevelColor();
+						listEntry.SetTooltip(GetThinkToolTip, shardType.Name);
+
+						listEntry.GetChild("id").text = shardType.Name;
+
+						var chkBox = listEntry.GetChild("cb").asButton;
+						bool selected = autoThoughts.Contains(shardType.Name);
+						chkBox.selected = selected;
+						chkBox.enabled = false; //used by daddy
+						if (selected)
+							active++;
+
+						listEntry.onClick.Add(ButtonClicked);
+						listEntry.color = typeColor;
+						buttons.Add(listEntry);
+					}
+					//gButton.title += $" ({active}) ";
 				}
-
-				titleEntry.GetController("type").selectedIndex = 0;
-
-				var rgbVal = "#" + HMgr.GetColor(heRule, thoughtTypes.FirstOrDefault().Name);
-				bool hasColor = ColorUtility.TryParseHtmlString(rgbVal, out Color typeColor);
-				//if (hasColor)
-				//	titleEntry.titleColor = typeColor;
-
-				int active = 0;
-				foreach (var shardType in thoughtTypes.Where(x => !dummyFragNames.Contains(x.DisplayName)).OrderBy(x => x.DisplayName))
-				{
-					GButton listEntry = ConfigList.AddItemFromPool().asButton;
-					listEntry.GetController("type").selectedIndex = 1; //Checkbox
-					listEntry.margin = ourMargin;
-
-
-					listEntry.title = shardType.DisplayName + "  (Lv " + shardType.Level + ")";
-					//gButton2.titleColor = shardType.GetLevelColor();
-					listEntry.SetTooltip(GetThinkToolTip, shardType.Name);
-
-					listEntry.GetChild("id").text = shardType.Name;
-
-					var chkBox = listEntry.GetChild("cb").asButton;
-					bool selected = autoThoughts.Contains(shardType.Name);
-					chkBox.selected = selected;
-					chkBox.enabled = false; //used by daddy
-					if (selected)
-						active++;
-
-					listEntry.onClick.Add(ButtonClicked);
-					listEntry.color = typeColor;
-					buttons.Add(listEntry);
-				}
-				//gButton.title += $" ({active}) ";
 			}
+			catch (Exception ex)
+			{
+				Mod.ShowMessage(ex.ToString());
+			}
+			
 		}
 
 		private void ButtonClicked(EventContext context)

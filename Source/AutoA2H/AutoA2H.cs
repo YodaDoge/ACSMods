@@ -123,23 +123,17 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				if ( (!canMakeNewThink && collectMoreFrags) || TryFormFinalFrag(npc))
 					return;
 
-				RefreshMemory(scorings, npc, raceDef, newThinkableThoughtType.Name);
+				if(npc.A2H.thinkFrags.Count > 3 || newThinkableThoughtType.existingTotalCount > 0)
+					RefreshMemory(scorings, npc, raceDef, newThinkableThoughtType.Name);
 
 				if (canMakeNewThink) 
 				{
-					ShowMessage($"{npc.Name} adds {newThinkableThoughtType.AggType}/{newThinkableThoughtType.Name} to types {string.Join(", ", npc.A2H.thinkAggregates.Select(x => x.Combine).ToArray())}");
-
 					//CreateAgg
 					npc.A2H.RemoveAllTState();
 					newThinkableThoughtType.frags.ForEach(x => x.TState = 1);
 
 					var finalThought = newThinkableThoughtType.Name;
-					string msg = "existing Aggs: " + string.Join(";", npc.A2H.thinkAggregates.Select(x => x.Combine).ToArray()) + "\n";
-					foreach (var item in scorings.Take(5))
-					{
-						msg += $"{item.AggType} {item.Name} {item.Score}" + "\n";
-					}
-					ShowMessage(msg);
+
 					StartAggrThink(npc, finalThought);
 					return;
 				}
