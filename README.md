@@ -5,48 +5,53 @@ Save to add/remove from a save at any time.
 
 ## Fixes
 * Spirit Animal now generates Leisure when performing any Playing actions or interactions with Disciples.
-* Artifact Crafting message will stay, even if the Artifact is hauled
+* Artifact Crafting message will not be removed if the Artifact is hauled
 * Outers will now search for a training Training Dummies more diligently. 
-* Outers will ignore Tier 9+ clothing for mindful dresser.
-* Ingame Copy function (see Hotkeys) will now place the selected building and material in your hand. (default: Last built building)
+* Outers will ignore Tier 9+ clothing when mindful dessing is active.
+* Ingame Copy function (see Hotkeys) will now place the selected building and material in your hand. 
 
 ## Default Features
-* Animal Thoughts are now sorted by Type → Level → Name. <br/> Memorized shards use a bold font
-* Handworking will now be performed at the same priority as Stonecutting. <br/> Respect the priority setting on the workbench. 
-* All Outers with Mindful Dresser active (the toggle in equipment) now also automatically equip Handkerchiefs and Bells. <br/>
-As well as useful Talismans such as SpiritTravel, Cleansing, Agility.. (Can be disabled in settings)
-* Inners on a balanced cultivation plan, will do Fun activities to keep Mental state above 50. <br/>They cultivate until they reach a bottleneck and then practicing instead. <br/> Elysium Compatible: This mods logic will be overriden by elysium
-* Meditation now counts for Spirit Root Sympathy. Meditation is automatically cancelled once 50 Mental State is reached
-* When on an adventure map with a single Disciple, interactions wont prompt for disciple selection anymore.
+* **Animal Thoughts Formatting** <br/>Thoughts are now sorted by Type → Level → Name. <br/> Memorized shards use a bold font
+* **Handworking Station Priority** <br/> Handworking will now be performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
+* **Workers Auto Equip Trinkets** <br/> All Outers with Mindful Dresser active (the toggle in equipment) now automatically equip Handkerchiefs and Bells. 
+<br/> This also includes useful Talismans such as SpiritTravel, Cleansing, and Agility (can be disabled in settings).
+* **Adventure Interaction Prompt Skip** <br/> When on an adventure map with a single Disciple, interactions will skip the character selection.
+* **Meditation and Cultivation Tweaks** <br/>
+Meditation now counts for Spirit Root Sympathy. <br/>
+Meditation is automatically cancelled upon dropping to 50 Mental State or less <br/>
+Inners on a balanced cultivation plan, maintain at least 50 mental state with fun activities.<br/>
+They cultivate until they reach a bottleneck; afterwards, they switch to practicing for XP. <br/> 
+**Elysium Compatible**: This logic is naturally bypassed if the Disciple is managed by Elysium
+
 
 ## Optional Features
 Following Features must be enabled in the MLL menu (Esc => MLL)
 
-### Auto Pause on Load
+* **Auto Pause on Load**
+* **Guard Disabled for Mentors** 
 
-### Guard Disabled for Mentors
+* **One Click Interrogate Extended** <br/>
+  Almost the same feature as the [original](https://steamcommunity.com/sharedfiles/filedetails/?id=2856326732&searchtext=Interrogate) Mod.
+  Interrogation includes all NPCs known to the player.
 
-### One Click Interrogate Extended
-Almost the same feature as the [original](https://steamcommunity.com/sharedfiles/filedetails/?id=2856326732&searchtext=Interrogate) Mod. <br/>
-Interrogation includes all NPCs known to the player. <br/>
+* **Brighter Daylight** <br/>
+  Days will be brighter, creating a stronger contrast between day and night.
 
-### Brighter Daylight
-Days will be brighter, creating a stronger contrast between day and night. 
+* **Animal Autothink** <br/>
+  You can define which thought shards an animal should use.
+  It will automatically handle thinking, memorizing, studying and forming thoughts.
 
-### Animal Autothink
-You can define which thought shards an animal should use. <br/>It will automatically handle thinking, memorizing, studying and forming thoughts 
+* **Smelt after Transcribe** <br/>
+  Manuals will be consumed on sucessful transcription.
 
-### Smelt After Transcribe 
-Manuals will be consumed on sucessful transcription
+* **Remove Map Fog** <br/>
+  Disables Map fog on home and adventure Maps.
 
-### Remove Map Fog
-Disables Map fog on home and adventure Maps
+* **Map Wide Branch Area** <br/>
+  Branch area bonus will be applied to their respective disciples at all time. One such area per branch must exist on the map for this to work.
 
-### Map wide branch area
-Branch area bonus will be applied to their respective disciples at all time. One such area per branch must exist on the map for this to work.
-
-### Recruit without Priorities
-Freshly accepted Disciples will have no work priorities and have hard working enabled.
+* **Recruit without Priorities** <br/>
+  Freshly accepted Disciples will have no work priorities and have hard working enabled.
 
 ## Harmony warning 
 If an outdated Harmony has been loaded you will see a warning dialog. <br/>

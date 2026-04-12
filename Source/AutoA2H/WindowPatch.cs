@@ -36,6 +36,9 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			[HarmonyPatch(typeof(Wnd_A2HCreateAgg), "OnInit")]
 			public static void OnInit(Wnd_A2HCreateAgg __instance)
 			{
+				if (!_info.Enabled)
+					return;
+
 				try
 				{
 					var x = IManagerModule_LoopInterval<HumanoidEvolutionMgr>.Instance.Fragments;
@@ -56,6 +59,9 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			[HarmonyPatch(typeof(Wnd_A2HCreateAgg), "ShowNpc")]
 			public static void OpenWindow(Wnd_A2HCreateAgg __instance, Npc npc)
 			{
+				if (!_info.Enabled)
+					return;
+
 				try
 				{
 					var saved = MLLMain.GetSaveOrDefault<Dictionary<int, List<string>>>(_info.Name);
@@ -74,6 +80,9 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			[HarmonyPatch(typeof(Wnd_A2HCreateAgg), "OnHide")]
 			public static void OnHide(Wnd_A2HCreateAgg __instance, Npc ___npc)
 			{
+				if (!_info.Enabled)
+					return;
+
 				AutoNPC[___npc.ID] = _configArea.GetCheckedThoughts(___npc);
 				try
 				{

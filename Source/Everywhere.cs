@@ -30,11 +30,9 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(AreaTang), "Step")]
 			public static void Step(AreaTang __instance, ref List<int> ___Npcs, float dt)
 			{
+				if (!_info.Enabled) return;
 				try
 				{
-					if (!_info.Enabled) return;
-
-
 					if (__instance.T >= 5f - 0.01f)
 					{
 						foreach (var item in ThingMgr.Instance.NpcList.Where(x => x.TangJoined == __instance.BindTang).Select(x => x.ID))
@@ -55,6 +53,7 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(AreaTang), "OnNpcLeaveArea")]
 			public static bool OnNpcLeaveArea(Npc npc, int key)
 			{
+				if (!_info.Enabled) return true;
 				return false;
 			}
 		}

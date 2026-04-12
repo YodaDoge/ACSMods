@@ -31,9 +31,10 @@ namespace ACS_Yoda_Tweaks
 			//QoL
 			//new A2H_SortOrder().Info, 
 			//new HandworkPriority().Info,
-			new WorkerAutoEquip(true).Info,
-			//NEW QOL
 			//new CopyBuildThing(true).Info,
+
+			new WorkerAutoEquip(true).Info,
+			new CultivationTweaks(true).Info,
 
 
 			//default off
@@ -41,8 +42,7 @@ namespace ACS_Yoda_Tweaks
 			new AutoPause(false).Info,
 			new OneClickInterrogate(false).Info,
 			new AmbientLightMod(false).Info,
-			//NEW
-			new AutoA2H.A2H(false).Info,
+			new A2H(false).Info,
 			new SmeltManual(false).Info,
 			new FogRemover(false).Info, 
 			new Everywhere(false).Info, 

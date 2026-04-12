@@ -13,7 +13,7 @@ namespace ACS_Yoda_Tweaks
 	public class CultivationTweaks : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("AutoPause", "Auto Pause on Load", false);
+		private static Meta _info = new Meta("CultivationTweaks", "Meditation and Cultivation Tweaks", true);
 
 		private const float MinStable = 50.3f;
 		private const float MaxStable = 70f;
@@ -33,10 +33,7 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(BehaviourBasePractice), "Check")]
 			public static bool GetBalancedCultivationActivity(ref JobBase __result, BehaviourBasePractice __instance, Npc npc, int seachr = 10000, bool tryfind = false)
 			{
-				//if (npc.Name == "Artisan Qi")
-				//{
-				//	ShowMessage($"QI {npc.JobEngine == null } prop {npc.PropertyMgr.Practice == null}  ");
-				//}
+				if (!_info.Enabled) return true;
 
 				if (npc.JobEngine.NeedWait()
 				|| (npc.IsRent && !npc.HasSpecialFlag(g_emNpcSpecailFlag.NoLeaveMap))
@@ -66,7 +63,6 @@ namespace ACS_Yoda_Tweaks
 					}
 					else
 					{
-						ShowMessage(npc.Name + " should do practice");
 						__result = JobMgr.Instance.CreateJob("JobPractice", null);
 					}
 					return false;
@@ -101,6 +97,8 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(ToilAbsorbLing), "OnEnterToil")]
 			public static void OnEnterToil(ToilAbsorbLing __instance, KStateQUnit unit)
 			{
+				if (!_info.Enabled) return;
+
 				if (__instance.Job.CMD.def.Param == 6)
 				{
 					__instance.npc.SetSpecialFlag(g_emNpcSpecailFlag.FLAG_PRACTIVING);
@@ -111,6 +109,8 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(ToilAbsorbLing), "OnLeaveToil")]
 			public static void OnLeaveToil(ToilAbsorbLing __instance, KStateQUnit unit)
 			{
+				if (!_info.Enabled) return;
+
 				if (__instance.Job.CMD.def.Param == 6 && __instance.npc.HasSpecialFlag(g_emNpcSpecailFlag.FLAG_PRACTIVING))
 				{
 					//does nothing if flag doesnt exist, but we might be able to make it negative - hence the check
@@ -122,6 +122,8 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(ToilAbsorbLing), "OnStepToil")]
 			public static void OnStepToil(ToilAbsorbLing __instance, float dt, KStateQUnit unit)
 			{
+				if (!_info.Enabled) return;
+
 				var npc = __instance.npc;
 				if (!npc.IsPlayerThing || npc.GongKind == g_emGongKind.God || npc.GongKind == g_emGongKind.Body)
 					return;
@@ -136,6 +138,8 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(ToilPractice), "OnStepToil")]
 			public static void PracticeCultivationToil(ToilPractice __instance, ref bool ___m_bDid, float dt, KStateQUnit unit)
 			{
+				if (!_info.Enabled) return;
+
 				if (__instance.npc.PropertyMgr.Practice.PracticeMode != g_emPracticeBehaviourKind.None)
 					return;
 
@@ -150,6 +154,8 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(ToilPracticeSkill), "OnStepToil")]
 			public static void PracticeSkillToil(ToilPracticeSkill __instance, ref bool ___m_bDid, float dt, KStateQUnit unit)
 			{
+				if (!_info.Enabled) return;
+
 				if (__instance.npc.PropertyMgr.Practice.PracticeMode != g_emPracticeBehaviourKind.None)
 					return;
 
@@ -164,6 +170,8 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(JobPracticeSkill), "GetToilList")]
 			public static void PractiseAtCultivationSpot(JobPracticeSkill __instance, ref List<ToilBase> __result)
 			{
+				if (!_info.Enabled) return;
+
 				if (__instance.Worker.MyPractice != null && __instance.Worker.MyPractice.CheckWorkSpace(check: true) > 0
 					&& __instance.Worker.MyPractice.GetWalkAbleTouchGrid(__instance.Worker.Key, nobase: false, onlycheck: true) > 0)
 				{

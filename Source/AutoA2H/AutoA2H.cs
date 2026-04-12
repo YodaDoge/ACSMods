@@ -392,6 +392,9 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			[HarmonyPatch(typeof(HumanoidEvolutionMgr), "_NpcAddThink", new Type[] { typeof(Npc) })]
 			public static void ThinkAdded(Npc npc)
 			{
+				if (!_info.Enabled)
+					return;
+
 				ThinkIfYouCan(npc);
 			}
 
@@ -400,15 +403,11 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			[HarmonyPatch(typeof(HumanoidEvolutionMgr), "_NpcAddThink", new Type[] { typeof(Npc), typeof(ThinkFrag) })]
 			public static void ThinkAdded(Npc npc, ThinkFrag newThink)
 			{
+				if (!_info.Enabled)
+					return;
+
 				ThinkIfYouCan(npc);
 			}
-
-			//[HarmonyPostfix]
-			//[HarmonyPatch(typeof(JobStudyThing), "OnToilFinish")]
-			//public static void ThinkAdded(ToilBase toil, g_emJobToilState state)
-			//{
-			//	ThinkIfYouCan(toil.npc);
-			//}
 		}
 
 	}

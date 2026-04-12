@@ -39,16 +39,5 @@ namespace ACS_Yoda_Tweaks
 				MapRender.Instance.Fog.clearFog = true;
 			}
 		}
-		//[HarmonyPatch(typeof(GameMain), "GameStart")]
-		//public static class MainManager_Run_Patch
-		//{
-		//	[HarmonyPostfix]
-		//	public static void Postfix(GameMain __instance, bool test = false)
-		//	{
-		//		KLog.Dbg("Pause after game load");
-		//		if(MainManager.Instance != null)
-		//			MainManager.Instance.Pause();
-		//	}
-		//}
 	}
 }

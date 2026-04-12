@@ -10,7 +10,7 @@ using XiaWorld;
 public class SmeltManual : Mod
 {
 	public override Meta Info => _info;
-	private static Meta _info = new Meta("SmeltManual", "Smelt After Transcribe ", false);
+	private static Meta _info = new Meta("SmeltManual", "Smelt After Transcribe", false);
 
 	public SmeltManual(bool defaultEnabled) : base(defaultEnabled)
 	{
@@ -23,6 +23,8 @@ public class SmeltManual : Mod
 		[HarmonyPatch(typeof(JobCangJingGe), "OnLeaveJob")]
 		public static void Prefix(JobCangJingGe __instance, KStateQUnit unit)
 		{
+			if (!_info.Enabled) return;
+
 			if (!unit.IsFinished)
 				return;
 			var itm = __instance.Worker.PutDownItem();
