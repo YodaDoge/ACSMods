@@ -19,7 +19,7 @@ Save to add/remove from a save at any time.
 * **Meditation and Cultivation Tweaks** <br/>
 Meditation now counts for Spirit Root Sympathy. <br/>
 Meditation is automatically cancelled upon dropping to 50 Mental State or less <br/>
-Inners on a balanced cultivation plan, maintain at least 50 mental state with fun activities.<br/>
+Inners on a balanced cultivation plan maintain at least 50 mental state with fun activities.<br/>
 They cultivate until they reach a bottleneck; afterwards, they switch to practicing for XP. <br/> 
 **Elysium Compatible**: This logic is naturally bypassed if the Disciple is managed by Elysium
 
@@ -29,27 +29,20 @@ Following Features must be enabled in the MLL menu (Esc => MLL)
 
 * **Auto Pause on Load**
 * **Guard Disabled for Mentors** 
-
 * **One Click Interrogate Extended** <br/>
   Almost the same feature as the [original](https://steamcommunity.com/sharedfiles/filedetails/?id=2856326732&searchtext=Interrogate) Mod.
   Interrogation includes all NPCs known to the player.
-
 * **Brighter Daylight** <br/>
   Days will be brighter, creating a stronger contrast between day and night.
-
 * **Animal Autothink** <br/>
   You can define which thought shards an animal should use.
   It will automatically handle thinking, memorizing, studying and forming thoughts.
-
 * **Smelt after Transcribe** <br/>
   Manuals will be consumed on sucessful transcription.
-
 * **Remove Map Fog** <br/>
   Disables Map fog on home and adventure Maps.
-
 * **Map Wide Branch Area** <br/>
-  Branch area bonus will be applied to their respective disciples at all time. One such area per branch must exist on the map for this to work.
-
+  Branch area bonus will be applied to their respective disciples at all time.<br/> One such area per branch must exist on the map for this to work.
 * **Recruit without Priorities** <br/>
   Freshly accepted Disciples will have no work priorities and have hard working enabled.
 
