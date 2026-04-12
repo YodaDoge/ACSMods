@@ -10,7 +10,7 @@ using XiaWorld;
 public class SmeltManual : Mod
 {
 	public override Meta Info => _info;
-	private static Meta _info = new Meta("SmeltManual", "Disable Mentor Guard", false);
+	private static Meta _info = new Meta("SmeltManual", "Smelt After Transcribe ", false);
 
 	public SmeltManual(bool defaultEnabled) : base(defaultEnabled)
 	{

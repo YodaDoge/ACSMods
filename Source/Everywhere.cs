@@ -13,7 +13,7 @@ namespace ACS_Yoda_Tweaks
 	public class Everywhere : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("Everywhere", "Everywhere", true);
+		private static Meta _info = new Meta("Everywhere", "Map wide branch area", false);
 
 		private static bool _pauseAfterLoad = false;
 

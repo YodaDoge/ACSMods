@@ -89,8 +89,9 @@
     <Compile Include="BetterCharSelect.cs" />
     <Compile Include="CopyBuildThing.cs" />
     <Compile Include="FogRemover.cs" />
+    <Compile Include="Mod.cs" />
     <Compile Include="SmeltManual.cs" />
-    <Compile Include="MLLConfigurator.cs" />
+    <Compile Include="ACS_Yoda_Tweaks.cs" />
     <Compile Include="WorkerAutoEquip.cs" />
     <Compile Include="AutoPause.cs" />
     <Compile Include="AmbientLightMod.cs" />

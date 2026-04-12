@@ -15,7 +15,7 @@ namespace ACS_Yoda_Tweaks
 	public class EmptyPrio : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("EmptyPrio", "Auto Pause on Load", true);
+		private static Meta _info = new Meta("EmptyPrio", "Recruit without Priorities", false);
 
 		private static bool _pauseAfterLoad = false;
 

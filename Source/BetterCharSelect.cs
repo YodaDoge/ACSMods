@@ -16,7 +16,7 @@ namespace ACS_Yoda_Tweaks
 	public class BetterCharSelect : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("BetterCharSelect", "Auto Pause on Load", false);
+		private static Meta _info = new Meta("BetterCharSelect", "Always use solo disciple", true);
 
 		private static bool _pauseAfterLoad = false;
 
