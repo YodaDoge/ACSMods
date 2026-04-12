@@ -15,7 +15,7 @@ public class LookForDummy : Mod
 	public LookForDummy(bool defaultEnabled) : base(defaultEnabled)
 	{
 	}
-	//TODO: replace Findbuilding instead
+
 	[HarmonyPatch]
 	public static class Patch
 	{
@@ -50,7 +50,7 @@ public class LookForDummy : Mod
 				int num2 = 0;
 				List<int> activityScope = __instance.Worker.map.GetActivityScope();
 				num2 = activityScope[World.RandomRange(0, activityScope.Count)];
-				if (__instance.Worker.CheckKeyStayOK(num2) && GridMgr.Inst.sqrDistance(num2, __instance.Worker.Key) <= 200 && __instance.Worker.map.CheckPath(__instance.Worker, num2) != 0)
+				if (__instance.Worker.CheckKeyStayOK(num2) && GridMgr.Inst.Distance(num2, __instance.Worker.Key) <= 100 && __instance.Worker.map.CheckPath(__instance.Worker, num2) != 0)
 				{
 					list.Add(ToilGoto.GotoGrid(num2, g_emPathEndMode.OnPos));
 				}

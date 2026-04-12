@@ -72,7 +72,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 		private static HEFragmentDef GetFragDef(IGrouping<string, ThinkFrag> frags) => GetFragDef(frags.First());
 
-		private struct ThinkFragScoring
+		public struct ThinkFragScoring
 		{
 			public int CalcScore()
 			{
@@ -80,9 +80,9 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				bool isEmotion = AggType == EmotionType;
 				return existScore
 				+ Math.Min(3, existingTotalCount) * 12
-				+ existingAggTypeCount * -20
+				+ existingAggTypeCount * -50
 				+ level * 11
-				+ (isEmotion ? level * 5 : 0)
+				+ (isEmotion ? level * 8 : 0)
 				+ ExistingMemories * 5; //existing as mem => lowest score to => refresh
 			}
 			public List<ThinkFrag> frags;
@@ -95,7 +95,14 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			public int ExistingMemories;
 			public int Score;
 
+			public static implicit operator bool(ThinkFragScoring score)
+			{
+				return score.existingTotalCount > 0;
+			}
 		}
+
+
+
 		private static string EmotionType = "AEmotion";
 		public static void ThinkIfYouCan(Npc npc)
 		{
@@ -113,47 +120,46 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 			try
 			{
+				if (TryFormFinalFrag(npc))
+					return;
+
 				var raceDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
 				List<ThinkFragScoring> scorings = CreateThinkFragScoring(npc);
-				
-				ThinkFragScoring newThinkableThoughtType = scorings.FirstOrDefault(x => (x.existingAggTypeCount == 0 || npc.A2H.CanThinkCount == 0) && x.existingTotalCount == 3);
 
-				bool collectMoreFrags = npc.A2H.thinkAggregates.Count * 20 < npc.A2H.thinkFrags.Count;
-				bool canMakeNewThink = newThinkableThoughtType.existingTotalCount > 0;
-				if ( (!canMakeNewThink && collectMoreFrags) || TryFormFinalFrag(npc))
-					return;
 
-				if(npc.A2H.thinkFrags.Count > 3 || newThinkableThoughtType.existingTotalCount > 0)
-					RefreshMemory(scorings, npc, raceDef, newThinkableThoughtType.Name);
+				ThinkFragScoring newAggType = scorings.FirstOrDefault(x => x.existingAggTypeCount == 0 && x.existingTotalCount == 3);
 
-				if (canMakeNewThink) 
+				//study for new agg type
+				if (!newAggType && npc.A2H.CanThinkCount <= 10)
 				{
-					//CreateAgg
-					npc.A2H.RemoveAllTState();
-					newThinkableThoughtType.frags.ForEach(x => x.TState = 1);
-
-					var finalThought = newThinkableThoughtType.Name;
-
-					StartAggrThink(npc, finalThought);
-					return;
+					var studyForNewAggType = scorings.Where(x => x.existingAggTypeCount == 0 && x.existingTotalCount == 2).ToList();
+					if (TryStudy(npc, studyForNewAggType))
+						return;
 				}
 
-				//Look for meditation targets
-				var canStudyToCompletion = scorings.Where(x => x.existingTotalCount == 2 && !x.frags.Any(a => a.Conflict > 0)).ToList(); //conflict == has learned through study
-				if (canStudyToCompletion.Any())
+				//max reached => think anything useful
+				if (!newAggType && npc.A2H.CanThinkCount <= 1)
 				{
-					if (npc.A2H.thinkFrags.Count >= raceDef.MaxThink)
-						return;
+					newAggType = scorings.FirstOrDefault(x => x.existingAggTypeCount <= 1 && x.existingTotalCount == 3 && !x.ExistsAsAgg);
 
-					var thinkTarget = FindStudyTarget(canStudyToCompletion);
-
-					var existingCmd = npc.CheckCommand("StudyThing", checkcount: true)?.FirstOrDefault(x => x != null);
-
-					if (thinkTarget != null && existingCmd == null)
+					//study anything..
+					if (!newAggType && npc.A2H.thinkFrags.Count < raceDef.MaxThink)
 					{
-						npc.AddCommand("StudyThing", thinkTarget);
+						TryStudy(npc, scorings);
 						return;
 					}
+				}
+
+				if (newAggType)
+				{
+					RefreshMemory(scorings, npc, raceDef, newAggType.Name);
+
+					npc.A2H.RemoveAllTState();
+					newAggType.frags.ForEach(x => x.TState = 1);
+
+					var finalThought = newAggType.Name;
+
+					StartAggrThink(npc, finalThought);
 				}
 
 			}
@@ -162,6 +168,38 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				ShowMessage(npc?.GetName() + " " + ex.ToString());
 				KLog.Dbg(ex.ToString());
 			}
+		}
+
+		private static bool HasAgg(Npc npc, string name)
+		{
+			throw new NotImplementedException();
+		}
+
+		private static bool TryStudy(Npc npc, List<ThinkFragScoring> scorings)
+		{
+			if (!scorings.Any())
+				return false;
+
+			var raceDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
+
+			var canStudyToCompletion = scorings.Where(x => x.existingTotalCount == 2 && !x.frags.Any(a => a.Conflict > 0)).ToList(); //conflict == has learned through study
+			if (canStudyToCompletion.Any())
+			{
+				if (npc.A2H.thinkFrags.Count >= raceDef.MaxThink)  //user has to make space manually TODO: automatically remove least useful memorized thought and dismiss current think to make space
+					return false;
+
+				var thinkTarget = FindStudyTarget(canStudyToCompletion);
+
+				var existingCmd = npc.CheckCommand("StudyThing", checkcount: true)?.FirstOrDefault(x => x != null);
+
+				if (thinkTarget != null && existingCmd == null)
+				{
+					npc.AddCommand("StudyThing", thinkTarget);
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		private static bool first = true;
@@ -242,23 +280,22 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 		private static void RefreshMemory(List<ThinkFragScoring> scorings, Npc npc, HERaceInfoDef raceDef, string nameToIgnore = null)
 		{
 			//TODO: remove irrelevant
-			int memorized = 0;
+			int relevantMemories = 0;
 			HashSet<string> memorizedTypes = new HashSet<string>();
 			foreach (var scoredFrag in scorings)
 			{
 				bool shouldIgnore = scoredFrag.Name == nameToIgnore;
-				bool allAreMemorized = Math.Min(scoredFrag.existingTotalCount,3) == scoredFrag.ExistingMemories;
+				bool allAreMemorized = Math.Min(scoredFrag.existingTotalCount, 3) == scoredFrag.ExistingMemories;
 
-				if (shouldIgnore || allAreMemorized )
+				if (shouldIgnore || allAreMemorized)
 				{
-					memorized += scoredFrag.ExistingMemories;
+					relevantMemories += scoredFrag.ExistingMemories;
 					memorizedTypes.Add(scoredFrag.Name);
 					continue;
 				}
-
-				if (memorized >= raceDef.MaxThink)
+				if (relevantMemories >= raceDef.MaxThinkCache)
 					break;
-
+					
 				foreach (var toMemorize in npc.A2H.thinkFrags.Where(x => x.frags[0] == scoredFrag.Name).ToList())
 				{
 					if (npc.A2H.thinkFragCaches.Count >= raceDef.MaxThinkCache)
@@ -276,7 +313,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 					toMemorize.RemoveCountDown = raceDef.ThinkLast;
 					npc.A2H.MoveThink_Think2Cache(toMemorize);
 					memorizedTypes.Add(scoredFrag.Name);
-					memorized++;
+					relevantMemories++;
 				}
 
 			}

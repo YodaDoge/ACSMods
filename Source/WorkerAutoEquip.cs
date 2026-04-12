@@ -90,6 +90,22 @@ public class WorkerAutoEquip : Mod
 			lastCheckDict[me] = World.Instance.TolSecond;
 		}
 
+
+		[HarmonyPrefix]
+		[HarmonyPatch(typeof(ThingsData), "FindItem")]
+		public static void FindItem(Npc npc, int r, string name, int okey = 0, bool issort = false, string tag = null, int tagmin = 0, int tagmax = 9999, Func<ItemThing, bool> con = null, bool StrictSort = false)
+		{
+			if (tag == "_WearAble" && npc.IsPlayerThing && con != null)
+			{
+				Func<ItemThing, bool> chain = itm =>
+				{
+					if (itm.Rate >= 9)
+						return false;
+					return con(itm);
+				};
+			}
+		}
+
 		private static bool LookForTalisman(Npc me, string spell)
 		{
 
