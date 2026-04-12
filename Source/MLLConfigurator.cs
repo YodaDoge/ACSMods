@@ -13,8 +13,6 @@ using XiaWorld;
 using static ACS_Yoda_Tweaks.Mod;
 using static CSCallLua;
 using static System.Net.WebRequestMethods;
-using ACS_Yoda_Tweaks.AutoA2H;
-using rail;
 
 namespace ACS_Yoda_Tweaks
 {
@@ -28,7 +26,6 @@ namespace ACS_Yoda_Tweaks
 			//new SpiritAnimalPlayFix().Info,
 			//new ShowArtifactCraftingResult().Info, 
 			//new LookForDummy().Info,
-			//new CopyBuildThing().Info,
 			
 			//QoL
 			//new A2H_SortOrder().Info, 
@@ -40,12 +37,9 @@ namespace ACS_Yoda_Tweaks
 			new AutoPause(false).Info,
 			new OneClickInterrogate(false).Info,
 			new AmbientLightMod(false).Info,
-			new FogRemover(false).Info,
 		};
 
-		// XiaWorld.UILogicMode_Build
 		private const string ConfigName = "ACS_Yoda_Tweaks";
-		private const string ModName = "Yoda's Tweaks and Fixes";
 
 		public static void OnInit()
 		{
@@ -59,20 +53,21 @@ namespace ACS_Yoda_Tweaks
 			Configuration.Subscribe(OnSave);
 
 			mods = GetDefaults();
-			if(IsYodaMachine)
-				mods.ForEach(x => x.Enabled = true);
-
 			LoadSavedConfig();
 		}
 
-		private static void ShowConflictMessage()
+		private static void ShowConflictMessage(string location)
 		{
-			var location = typeof(Harmony).Assembly.Location;
+			if (location == null)
+				location = typeof(Harmony).Assembly.Location;
 
 			var txtWarn = $"Outdated Harmony version\nOpen Readme?";
 
 			var modId = Path.GetDirectoryName(location).Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries).Last();
 			var workShopURL = RootWorkshopUrl + modId;
+			if (!int.TryParse(modId, out int result))
+				workShopURL = location;
+
 			var msg = Wnd_Message.Show("Prompt", title: ModName, txt: txtWarn, bnt: 2, mode: 0, act: x =>
 			{
 				if (x == "1")
@@ -84,6 +79,7 @@ namespace ACS_Yoda_Tweaks
 			});
 		}
 
+		public static string ModName = "Yoda's Tweaks and Fixes";
 		public static string RootWorkshopUrl = @"https://steamcommunity.com/sharedfiles/filedetails/?id=";
 		public static string HarmonyConflictReadme = @"https://github.com/YodaDoge/ACSMods?tab=readme-ov-file#harmony-warning";
 
@@ -95,7 +91,7 @@ namespace ACS_Yoda_Tweaks
 				if (usedHarmonyAssembly.Version < new Version(2, 2, 1, 0))
 				{
 					var location = typeof(Harmony).Assembly.Location;
-					ShowConflictMessage();
+					ShowConflictMessage(location);
 					KLog.Dbg("Outdated Harmony at " + location);
 				}
 			}
@@ -103,11 +99,6 @@ namespace ACS_Yoda_Tweaks
 			{
 				KLog.Dbg(ex.ToString());
 			}
-		}
-
-		public static void ShowMessage(string text)
-		{
-			var msg = Wnd_Message.Show(text, title: "Harmony Conflict", txt: text, bnt: 1, mode: 0);
 		}
 
 		public static void OnSave()
@@ -119,15 +110,7 @@ namespace ACS_Yoda_Tweaks
 				KLog.Dbg($"Saved {item.Name} enabled {checkState}");
 				item.Enabled = checkState;
 			}
-
 			MLLMain.AddOrOverWriteSave(ConfigName, mods.ToDictionary(key => key.Name, va => va.Enabled));
-
-			bool v = MLLMain.AddOrOverWriteSave(A2H.Name, A2H.AutoNPC);
-			foreach (var item in A2H.AutoNPC)
-			{
-				KLog.Dbg("saved a2h " + item.Key + " vals: " + string.Join(",", item.Value.ToArray()));
-			}
-
 		}
 
 		private static void LoadSavedConfig()
@@ -143,19 +126,10 @@ namespace ACS_Yoda_Tweaks
 
 				//add does nothing if checkbox already exists
 				Configuration.AddCheckBox(ConfigName, mod.Name, mod.Description, mod.Enabled);
+
 				Configuration.SetCheckBox(ConfigName, mod.Name, mod.Enabled);
 			}
-			var a2h = MLLMain.GetSaveOrDefault<Dictionary<int, List<string>>>(AutoA2H.A2H.Name);
-			if (a2h != null)
-			{
-				foreach (var item in a2h)
-				{
-					KLog.Dbg("loaded a2h " + item.Key + " vals: " + string.Join(",", item.Value.ToArray()));
-				}
-			}
-			A2H.InitNpcCache(a2h);
 		}
-		protected static bool IsYodaMachine => Environment.MachineName == "YODADOGE";
 	}
 
 	public abstract class Mod
@@ -165,17 +139,11 @@ namespace ACS_Yoda_Tweaks
 			Info.Enabled = defaultEnabled;
 		}
 
-		protected static bool IsYodaMachine => A2H.IsYodaMachine;
-
-		public static void ShowMessage(string message) => ACS_Yoda_Tweaks.ShowMessage(message);
-
 		public abstract Meta Info { get; }
 		public class Meta
 		{
 			public string Name { get; set; }
 			public string Description { get; set; }
-
-			public static bool LogStateChange = false;
 
 			protected bool _enabled;
 			public bool Enabled
@@ -188,11 +156,8 @@ namespace ACS_Yoda_Tweaks
 
 					if (last != _enabled)
 					{
-						if (LogStateChange)
-						{
-							string state = value ? "enabled" : "disabled";
-							KLog.Dbg($"YodaDoge Tweak {Name} changed to {state}");
-						}
+						string state = value ? "enabled" : "disabled";
+						KLog.Dbg($"YodaDoge Tweak {Name} changed to {state}");
 						OnEnableChanged?.Invoke(this);
 					}
 				}
