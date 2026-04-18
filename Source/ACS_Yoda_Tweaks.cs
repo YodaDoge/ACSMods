@@ -44,9 +44,10 @@ namespace ACS_Yoda_Tweaks
 			new AmbientLightMod(false).Info,
 			new A2H(false).Info,
 			new SmeltManual(false).Info,
-			new FogRemover(false).Info, 
-			new Everywhere(false).Info, 
-			new EmptyPrio(false).Info
+			new FogRemover(false).Info,
+			new Everywhere(false).Info,
+			new EmptyPrio(false).Info,
+			new ShowManual(false).Info,
 		};
 
 		private const string ConfigName = "ACS_Yoda_Tweaks";
@@ -70,9 +71,9 @@ namespace ACS_Yoda_Tweaks
 			LoadSavedConfig();
 		}
 
-		public static void ShowMessage(string text)
+		public static void ShowMessage(string text, string title = null)
 		{
-			var msg = Wnd_Message.Show(text, title: ModName, txt: text, bnt: 1, mode: 0);
+			var msg = Wnd_Message.Show(text, title: title ?? ModName, txt: text, bnt: 1, mode: 0);
 		}
 
 		private static void ShowConflictMessage(string location)
@@ -97,7 +98,7 @@ namespace ACS_Yoda_Tweaks
 				}
 			});
 		}
-		
+
 		private static void WarnIfHarmonyConflict()
 		{
 			try
@@ -141,6 +142,8 @@ namespace ACS_Yoda_Tweaks
 				{
 					mod.Enabled = enabled;
 				}
+				else if(IsYodaMachine)
+					mod.Enabled = true;
 
 				//add does nothing if checkbox already exists
 				Configuration.AddCheckBox(ConfigName, mod.Name, mod.Description, mod.Enabled);

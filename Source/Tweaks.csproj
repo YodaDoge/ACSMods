@@ -83,7 +83,12 @@
     <Compile Include="AutoA2H\AutoA2H.cs" />
     <Compile Include="AutoA2H\AutoThoughtsWindow.cs" />
     <Compile Include="AutoA2H\WindowPatch.cs" />
-    <Compile Include="CultivationTweaks.cs" />
+    <Compile Include="CultivationTweaks\LimitWarnings.cs" />
+    <Compile Include="CultivationTweaks\BalancedAlgo.cs" />
+    <Compile Include="CultivationTweaks\PracticePatches.cs" />
+    <Compile Include="DiscipleWhip.cs" />
+    <Compile Include="ShowManual.cs" />
+    <Compile Include="CultivationTweaks\CultivationTweaks.cs" />
     <Compile Include="EmptyPrio.cs" />
     <Compile Include="Everywhere.cs" />
     <Compile Include="BetterCharSelect.cs" />

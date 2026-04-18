@@ -37,7 +37,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			//frame.width = 200;
 			frame.width = ConfigList.width = width = 250;
 			ConfigList.margin = contentMargin;
-
 		}
 
 		public void AddCopyPasteButtons(Wnd_A2HCreateAgg parent)
@@ -54,7 +53,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				btnPaste.title = btnPaste.text = "Paste";
 				btnPaste.onClick.Add(e =>
 				{
-					if (_npc != null && _copy.Any())
+					if (_npc != null && _copy != null)
 						Update(_npc, _copy);
 				});
 				parent.AddChild(btnSave);
@@ -65,20 +64,45 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				btnPaste.SetPosition(position.x, position.y + 30, position.z - 1);
 
 
-				var txtSearch = (UI_InputTextField)UIPackage.CreateObject("InGame", "InputTextField");
+				txtSearch = (UI_InputTextField)UIPackage.CreateObject("InGame", "InputTextField");
 				txtSearch.m_title.onChanged.Add(TextChange);
 				txtSearch.SetPosition(position.x + 10, position.y + height - 50, position.z - 1);
 				txtSearch.m_title.promptText = "Search";
 				parent.AddChild(txtSearch);
+
+
+				GButton gButton = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
+				gButton.name = "Toggle";
+				gButton.title = "Toggle";
+				gButton.text = "Toggle";
+				gButton.onClick.Add(ToggleAll);
+				gButton.SetPosition(txtSearch.position.x + txtSearch.width + 5, position.y + height - 50, position.z - 1);
+				parent.AddChildAt(gButton, parent.GetChildIndex(txtSearch) + 1);
 			}
 			catch (Exception ex)
 			{
 				Mod.ShowMessage(ex.ToString());
 			}
-
-
 		}
-		private static float defaultHeight;
+
+		private void ToggleAll(EventContext context)
+		{
+			var firstBtn = buttons.FirstOrDefault(x => x.visible);
+			if (firstBtn == null) return;
+
+			var checkState = firstBtn.GetChild("cb").asButton.selected;
+
+			buttons.ForEach(btn =>
+			{
+				if (btn.visible)
+				{
+					btn.GetChild("cb").asButton.selected = !checkState;
+				}
+			});
+		}
+
+		private static UI_InputTextField txtSearch;
+
 		private void TextChange(EventContext context)
 		{
 			try
@@ -86,15 +110,15 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				var sender = context.sender as GTextInput;
 				//TODO: remove/add buttons due to search
 				var txt = sender.text.ToUpper();
+				ConfigList.RemoveChildren();
+
 				bool isEmpty = string.IsNullOrEmpty(txt);
-				defaultHeight = buttons.First().height;
 				foreach (var btn in buttons)
 				{
 					var shardName = btn.GetChild("id").text;
 					btn.visible = isEmpty || GetThinkToolTip(null, shardName).ToUpper().Contains(txt);
-
-					btn.height = btn.viewHeight = btn.visible ? defaultHeight : btn.height;
-					
+					if (btn.visible)
+						ConfigList.AddChild(btn);
 				}
 				ConfigList.container.EnsureSizeCorrect();
 			}
@@ -123,14 +147,15 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			{
 				_npc = npc;
 				buttons.Clear();
+				txtSearch.text = string.Empty;
 				fragments = HMgr.Fragments.ForEachKey.Select(x => HMgr.Fragments.GetDef(x.Key))
 					.Where(x => x != null)
 					.GroupBy(x => x?.Type);
 
 				var rDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
 				var heRule = HMgr.Rules.GetDef(rDef.RaceRule);
+				ConfigList.RemoveChildren();
 
-				ConfigList.RemoveChildrenToPool();
 				bool first = true;
 				foreach (var thoughtTypes in fragments)
 				{
@@ -156,7 +181,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 						listEntry.GetController("type").selectedIndex = 1; //Checkbox
 						listEntry.margin = ourMargin;
 
-
 						listEntry.title = shardType.DisplayName + "  (Lv " + shardType.Level + ")";
 						//gButton2.titleColor = shardType.GetLevelColor();
 						listEntry.SetTooltip(GetThinkToolTip, shardType.Name);
@@ -181,7 +205,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			{
 				Mod.ShowMessage(ex.ToString());
 			}
-			
+
 		}
 
 		private void ButtonClicked(EventContext context)

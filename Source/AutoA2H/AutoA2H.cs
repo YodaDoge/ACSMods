@@ -80,10 +80,10 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				bool isEmotion = AggType == EmotionType;
 				return existScore
 				+ Math.Min(3, existingTotalCount) * 12
-				+ existingAggTypeCount * -50
+				+ existingAggTypeCount * -20
 				+ level * 11
-				+ (isEmotion ? level * 8 : 0)
-				+ ExistingMemories * 5; //existing as mem => lowest score to => refresh
+				+ (isEmotion ? level * 5 : 0)
+				+ ExistingMemories * 4; 
 			}
 			public List<ThinkFrag> frags;
 			public string Name;

@@ -15,12 +15,16 @@ Save to add/remove from a save at any time.
 * **Handworking Station Priority** <br/> Handworking will now be performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
 * **Workers Auto Equip Trinkets** <br/> All Outers with Mindful Dresser active (the toggle in equipment) now automatically equip Handkerchiefs and Bells. 
 <br/> This also includes useful Talismans such as SpiritTravel, Cleansing, and Agility (can be disabled in settings).
+* **Reactive Disciples** <br/> Leisure Activities will always immediately abort when receiving an order. <br/>
+Any current Task will be interrupted when being ordered to perform a miracle or talk to an npc.
 * **Adventure Interaction Prompt Skip** <br/> When on an adventure map with a single Disciple, interactions will skip the character selection.
+* **Flag NPC with Manual** <br/> In the Target UI - the search UI bottom left - NPC's which still have their Friendship manual have (秘籍) added to their name
 * **Meditation and Cultivation Tweaks** <br/>
 Meditation now counts for Spirit Root Sympathy. <br/>
 Meditation is automatically cancelled upon dropping to 50 Mental State or less <br/>
 Inners on a balanced cultivation plan maintain at least 50 mental state with fun activities.<br/>
 They cultivate until they reach a bottleneck; afterwards, they switch to practicing for XP. <br/> 
+Meditation will automatically be used when available. <br/>
 **Elysium Compatible**: This logic is naturally bypassed if the Disciple is managed by Elysium
 
 

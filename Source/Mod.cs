@@ -10,7 +10,7 @@ namespace ACS_Yoda_Tweaks
 		}
 		protected static bool IsYodaMachine => ACS_Yoda_Tweaks.IsYodaMachine;
 
-		public static void ShowMessage(string message) => ACS_Yoda_Tweaks.ShowMessage(message);
+		public static void ShowMessage(string message, string title = null) => ACS_Yoda_Tweaks.ShowMessage(message);
 
 		public abstract Meta Info { get; }
 		public class Meta
