@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 using XiaWorld;
 
 namespace ACS_Yoda_Tweaks
@@ -14,7 +15,7 @@ namespace ACS_Yoda_Tweaks
 		{
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(ToilPracticeSkill), "OnStepToil")]
-			public static void PracticeSkillToil(ToilPracticeSkill __instance, ref bool ___m_bDid, float dt, KStateQUnit unit)
+			public static void PracticeSkillToil(ToilPracticeSkill __instance, float dt, KStateQUnit unit)
 			{
 				if (!_info.Enabled) return;
 
@@ -23,8 +24,7 @@ namespace ACS_Yoda_Tweaks
 
 				if (__instance.npc.Needs.GetNeedValue(g_emNeedType.MindState) < GetMinMindState(__instance.npc))
 				{
-					___m_bDid = true;
-					unit.IsFinished = true;
+					__instance.npc.JobEngine.InterruptJob();
 				}
 			}
 

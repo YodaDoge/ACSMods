@@ -17,7 +17,7 @@ namespace ACS_Yoda_Tweaks
 	public class DiscipleWhip : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("DiscipleWhip", "Disciple reactivity", true);
+		private static Meta _info = new Meta("DiscipleWhip", "Reactive Disciples", true);
 
 		private static bool _pauseAfterLoad = false;
 
@@ -28,7 +28,8 @@ namespace ACS_Yoda_Tweaks
 		[HarmonyPatch]
 		public static class Patch
 		{
-			private static Type[] _alwaysSkipJobs = new Type[] { typeof(JobPlayWithBuilding), typeof(JobPlayWithSelf), typeof(JobPlayWithSth), typeof(JobIdle), typeof(JobPractice), typeof(JobPracticeSkill) };
+			private static Type[] _alwaysSkipJobs = new Type[] { typeof(JobPlayWithBuilding), typeof(JobPlayWithSelf),
+			typeof(JobPlayWithSth), typeof(JobIdle), typeof(JobPractice), typeof(JobPracticeSkill), typeof(JobLookAtSky), typeof(JobBasePractice) };
 			public static void TryCancelJob(Npc npc)
 			{
 				if (npc.JobEngine.CurJob == null)
@@ -43,9 +44,11 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(UILogicMode_IndividualCommand), "OnApplyFinish")]
 			public static void OnApplyFinish(UILogicMode_IndividualCommand __instance, Thing ___BindThing, ref bool did)
 			{
+				if (!_info.Enabled) return;
+
 				if (!did)
 					return;
-				if (__instance.Type == g_emIndividualCommandType.NpcWithSelf)
+				if (__instance.Type >= g_emIndividualCommandType._MAGICBEGIN && __instance.Type <= g_emIndividualCommandType._MAGIC_END)
 				{
 					if (___BindThing is Npc npc && npc.IsPlayerThing)
 					{
@@ -58,15 +61,16 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(Thing), "AddCommand")]
 			public static void AddCommand(Thing __instance, string type, params object[] param)
 			{
-				if (!(__instance is Npc npc))
+				if (!_info.Enabled) return;
+
+				if (!(__instance is Npc npc) || !npc.IsPlayerThing || !npc.IsSmartRace)
 					return;
 
-				if (npc.JobEngine.CurJob != null && _alwaysSkipJobs.Contains(npc.JobEngine.CurJob.GetType()))
-					TryCancelJob(npc);
-
-				if (type != "TryTalk" && GameWatch.Instance.Mode != g_emGameMode.RPG)
+				if (npc.JobEngine.CurJob != null)
 				{
-					TryCancelJob(npc);
+					bool isTrash = _alwaysSkipJobs.Contains(npc.JobEngine.CurJob.GetType());
+					if (isTrash || (npc.JobEngine.CurJob is JobAbsorbLing ling && ling.CMD.def.Param == 6)) //meditation
+						TryCancelJob(npc);
 				}
 			}
 

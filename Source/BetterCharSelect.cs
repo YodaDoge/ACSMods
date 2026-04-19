@@ -29,8 +29,10 @@ namespace ACS_Yoda_Tweaks
 		{
 			static bool frst = false;
 			static bool sc = false;
+
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_SelectNpc), "OnShowUpdate")]
+			[HarmonyPriority(1000)]
 			public static void OnShowUpdate(Wnd_SelectNpc __instance, List<Npc> ___npcs, params object[] objs)
 			{
 				if (___npcs.Count == 1)

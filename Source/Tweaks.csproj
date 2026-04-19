@@ -82,10 +82,15 @@
   <ItemGroup>
     <Compile Include="AutoA2H\AutoA2H.cs" />
     <Compile Include="AutoA2H\AutoThoughtsWindow.cs" />
+    <Compile Include="AutoA2H\Aggregation.cs" />
+    <Compile Include="AutoA2H\Memory.cs" />
+    <Compile Include="AutoA2H\Study.cs" />
+    <Compile Include="AutoA2H\Scoring.cs" />
     <Compile Include="AutoA2H\WindowPatch.cs" />
     <Compile Include="CultivationTweaks\LimitWarnings.cs" />
     <Compile Include="CultivationTweaks\BalancedAlgo.cs" />
     <Compile Include="CultivationTweaks\PracticePatches.cs" />
+    <Compile Include="BedPriority.cs" />
     <Compile Include="DiscipleWhip.cs" />
     <Compile Include="ShowManual.cs" />
     <Compile Include="CultivationTweaks\CultivationTweaks.cs" />
