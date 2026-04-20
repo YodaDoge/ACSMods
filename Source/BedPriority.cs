@@ -32,7 +32,7 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(JobTakeRest), "GetToilList")]
 			public static void SmarterBedFind(JobTakeRest __instance)
 			{
-				if (!__instance.Worker.IsSmartRace) 
+				if (!__instance.Worker.IsSmartRace)
 					return;
 
 				if (__instance.Worker.MyBed == null)
@@ -52,7 +52,11 @@ namespace ACS_Yoda_Tweaks
 					}, null, checkowner: false);
 
 					if (bed != null)
+					{
 						__instance.Worker.SetBed(bed);
+					}
+					else
+						ShowMessage($"{__instance.Worker.Rank} {__instance.Worker.GetName()} couldnt find a bed");
 				}
 			}
 

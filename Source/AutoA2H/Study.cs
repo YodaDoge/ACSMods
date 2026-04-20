@@ -18,9 +18,12 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			var canStudyToCompletion = scorings.Where(x => x.existingTotalCount == 2 && !x.frags.Any(a => a.Conflict > 0)).ToList(); //conflict == has learned through study
 			if (canStudyToCompletion.Any())
 			{
-				if (npc.A2H.thinkFrags.Count >= raceDef.MaxThink)  //user has to make space manually TODO: automatically remove least useful memorized thought and dismiss current think to make space
-					return false;
-
+				if (npc.A2H.thinkFrags.Count >= raceDef.MaxThink)
+				{
+					RefreshMemory(scorings, npc, raceDef);
+					if (npc.A2H.thinkFrags.Count >= raceDef.MaxThink)
+						return false;
+				}
 				var thinkTarget = FindStudyTarget(canStudyToCompletion);
 
 				var existingCmd = npc.CheckCommand("StudyThing", checkcount: true)?.FirstOrDefault(x => x != null);

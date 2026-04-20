@@ -11,7 +11,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 		private static void RefreshMemory(List<ThinkFragScoring> scorings, Npc npc, HERaceInfoDef raceDef, string nameToIgnore = null)
 		{
-			//TODO: remove irrelevant
 			int relevantMemories = 0;
 			HashSet<string> memorizedTypes = new HashSet<string>();
 			foreach (var scoredFrag in scorings)
@@ -23,22 +22,22 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				{
 					relevantMemories += scoredFrag.ExistingMemories;
 					memorizedTypes.Add(scoredFrag.Name);
-					continue;
+					if (relevantMemories >= raceDef.MaxThinkCache)
+						break;
+					else
+						continue;
 				}
-				if (relevantMemories >= raceDef.MaxThinkCache)
-					break;
 
 				foreach (var toMemorize in npc.A2H.thinkFrags.Where(x => x.frags[0] == scoredFrag.Name).ToList())
 				{
 					if (npc.A2H.thinkFragCaches.Count >= raceDef.MaxThinkCache)
 					{
-						//Prune one
+						//Prune one which is either not wanted or lesser in scoring
 						var canRemove = npc.A2H.thinkFragCaches.FirstOrDefault(x => !memorizedTypes.Contains(x.frags[0]) && x.frags[0] != toMemorize.frags[0]);
 
 						//we are full, nothing can be removed
 						if (canRemove == null)
 							break;
-
 						npc.A2H.thinkFragCaches.Remove(canRemove); ;
 					}
 
@@ -47,6 +46,8 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 					memorizedTypes.Add(scoredFrag.Name);
 					relevantMemories++;
 				}
+				if (relevantMemories >= raceDef.MaxThinkCache)
+					break;
 
 			}
 		}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -28,51 +29,34 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				if (TryFormFinalFrag(npc))
 					return;
 
-				var raceDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
 				List<ThinkFragScoring> scorings = CreateThinkFragScoring(npc);
 
-
-				ThinkFragScoring newAggType = scorings.FirstOrDefault(x => x.existingAggTypeCount == 0 && x.existingTotalCount == 3);
-				if (newAggType)
+				ThinkFragScoring newAgg = scorings.FirstOrDefault(x => x.existingTotalCount >= 3 && (x.existingAggTypeCount == 0  || npc.A2H.CanThinkCount == 0 )); 
+				if (newAgg)
 				{
-					RefreshMemory(scorings, npc, raceDef, newAggType.Name);
+					var raceDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
+					RefreshMemory(scorings, npc, raceDef, newAgg.Name);
 
 					npc.A2H.RemoveAllTState();
-					newAggType.frags.ForEach(x => x.TState = 1);
+					newAgg.frags.ForEach(x => x.TState = 1);
 
-					var finalThought = newAggType.Name;
+					var finalThought = newAgg.Name;
 
 					StartAggrThink(npc, finalThought);
 					return;
 				}
 
-
-				if (npc.A2H.thinkFragCaches.Count < 5 && npc.A2H.CanThinkCount <= 0)
-					RefreshMemory(scorings, npc, raceDef);
-
-				//study for new agg type
-				if (!newAggType && npc.A2H.CanThinkCount <= 10)
+				if (npc.A2H.CanThinkCount <= 10)
 				{
 					var studyForNewAggType = scorings.Where(x => x.existingAggTypeCount == 0 && x.existingTotalCount == 2).ToList();
 					if (TryStudy(npc, studyForNewAggType))
 						return;
 				}
 
-				//max reached => think anything useful
-				if (!newAggType && npc.A2H.CanThinkCount <= 1)
+				if (npc.A2H.CanThinkCount <= 1)
 				{
-					newAggType = scorings.FirstOrDefault(x => x.existingAggTypeCount <= 1 && x.existingTotalCount == 3 && !x.ExistsAsAgg);
-
-					//study anything..
-					if (!newAggType && npc.A2H.thinkFrags.Count < raceDef.MaxThink)
-					{
-						TryStudy(npc, scorings);
-						return;
-					}
+					TryStudy(npc, scorings); //study anything we keep score of
 				}
-
-
-
 			}
 			catch (Exception ex)
 			{
@@ -139,14 +123,32 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				num -= (float)(50 * npc.A2H.thinkFinals.Count);
 			}
 			num = Mathf.Max(10f, num);
-			if (!npc.CheckKeyStayOK(npc.Key))
-			{
-				var walksafe = JobMgr.Instance.CreateJob("JobGoToWalkable", null, null);
-				npc.JobEngine.BeginJob(walksafe);
-			}
-			npc.JobEngine.SetNextJob("JobYsThink", null, num);
+			
+			var thinkJob = JobMgr.Instance.CreateJob("JobYsThink", null, num);
+			npc.JobEngine.BeginJob(thinkJob);
 			npc.A2H.SetConsiderS(2, npc);
 			MessageMgr.Instance.RemoveMessage(34001, new List<Thing> { npc });
+		}
+
+		[HarmonyPatch]
+		public static class ThinkPatch
+		{
+			//called by study behaviour
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(JobYsThink), "GetToilList")]
+			public static void GetToilList(JobYsThink __instance, ref List<ToilBase> __result)
+			{
+				if (!_info.Enabled)
+					return;
+				var npc = __instance.Worker;
+				//using JobGoToWalkable code here
+				if (!npc.CheckKeyStayOK(npc.Key))
+				{
+					var safeKey = WorldMgr.Instance.curWorld.map.GetWalkableAround(npc.Key, 50, noself: true, 0, (int key) => npc.CheckKeyStayOK(key));
+					var toilGo = ToilGoto.GotoGrid(safeKey, (npc.map.CheckPath(npc.Key, safeKey, g_emPathEndMode.OnPos, nearest: false, fogpath: false) > 0) ? g_emPathEndMode.OnPos : g_emPathEndMode.Immediately);
+					__result.Insert(0, toilGo);
+				}
+			}
 		}
 	}
 }
