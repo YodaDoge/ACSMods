@@ -48,6 +48,10 @@
       <HintPath>..\ModLoaderLite.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\AmazingCultivationSimulator\Amazing Cultivation Simulator_Data\Managed\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
@@ -92,6 +96,7 @@
     <Compile Include="CultivationTweaks\PracticePatches.cs" />
     <Compile Include="BedPriority.cs" />
     <Compile Include="DiscipleWhip.cs" />
+    <Compile Include="MapSeedFix.cs" />
     <Compile Include="ShowManual.cs" />
     <Compile Include="CultivationTweaks\CultivationTweaks.cs" />
     <Compile Include="EmptyPrio.cs" />

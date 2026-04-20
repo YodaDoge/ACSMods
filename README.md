@@ -7,14 +7,16 @@ Save to add/remove from a save at any time.
 * Spirit Animal now generates Leisure when performing any Playing actions or interactions with Disciples.
 * Artifact Crafting message will not be removed if the Artifact is hauled
 * Outers will now search for a training Training Dummies more diligently. 
-* Outers will ignore Tier 9+ clothing when mindful dessing is active.
+* Tier 9+ clothing will be ignored when mindful dessing is active.
 * Ingame Copy function (see Hotkeys) will now place the selected building and material in your hand. 
+* ESC -> Difficulty -> Environment; now shows the correct map seed
 
 ## Default Features
 * **Animal Thoughts Formatting** <br/>Thoughts are now sorted by Type → Level → Name. <br/> Memorized shards use a bold font
 * **Handworking Station Priority** <br/> Handworking will now be performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
-* **Workers Auto Equip Trinkets*** <br/> All Outers with Mindful Dresser active (the toggle in equipment) now automatically equip Handkerchiefs and Bells. 
-<br/> This also includes useful Talismans such as SpiritTravel, Cleansing, and Agility.
+* **Smarter Dressers*** <br/> Mindful Dressers will seek out trinkets. 
+<br/> Outers equip Handkerchiefs, Bells and Talismans such as SpiritTravel, Cleansing, Agility...
+<br/> Xiandao will equip Scented Sachets and Dice
 * **Adventure Interaction Prompt Skip** <br/> When on an adventure map with a single Disciple, interactions will skip the character selection.
 * **Flag NPC with Manual** <br/> In the Target UI - the search UI bottom left - NPC's which still have their Friendship manual have (秘籍) added to their name
 * **Smarter Bedroom Selection** <br/> Workers will prefer beds in rooms with multiple beds and vice versa.

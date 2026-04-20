@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -35,7 +34,8 @@ namespace ACS_Yoda_Tweaks
 
 				for (g_emBehaviourWorkKind g_emBehaviourWorkKind2 = g_emBehaviourWorkKind.Treat; g_emBehaviourWorkKind2 < g_emBehaviourWorkKind.Count; g_emBehaviourWorkKind2++)
 				{
-					if (g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Xiulian || g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Rest || g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Care || g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Clean)
+					if (g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Xiulian || g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Rest
+					|| g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Care || g_emBehaviourWorkKind2 == g_emBehaviourWorkKind.Clean)
 					{
 						continue;
 					}
@@ -49,13 +49,7 @@ namespace ACS_Yoda_Tweaks
 				__instance.HardZJ = true; //WORK HARD
 			}
 
-			[HarmonyPostfix]
-			[HarmonyPatch(typeof(Wnd_GameDIY), "CopyEditSeed")]
-			public static void CopyEditSeed(ref string __result)
-			{
-				__result = World.Instance.map.Seed;
-			}
-
+			
 		}
 	}
 }

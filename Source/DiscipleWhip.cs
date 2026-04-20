@@ -35,7 +35,7 @@ namespace ACS_Yoda_Tweaks
 				if (npc.JobEngine.CurJob == null)
 					return;
 
-				var toil = npc.JobEngine.CurJob.GetCurToil();
+				//var toil = npc.JobEngine.CurJob.GetCurToil();
 				if (npc.JobEngine.CurJob.CanInterruptJob())
 					npc.JobEngine.CurJob.InterruptJob();
 			}

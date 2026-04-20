@@ -13,7 +13,7 @@ namespace ACS_Yoda_Tweaks
 	public class CopyBuildThing : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("FogRemover", "Remove Map Fog", true);
+		private static Meta _info = new Meta("BuildingCopy", "BuildingCopy", true);
 
 		private static bool _doPause = false;
 
