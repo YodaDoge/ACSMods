@@ -30,20 +30,28 @@ namespace ACS_Yoda_Tweaks
 		{
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(NpcPractice), "Up2Disciple")]
-			public static void Up2Disciple(JobTakeRest __instance)
+			public static void Up2Disciple(Npc ___me)
 			{
-				var npc = __instance.Worker;
-				if (!npc.IsSmartRace)
-					return;
-				if (npc.MyBed != null)
+				try
 				{
-					var beds = CountBedsInRoom(npc.MyBed);
-					if (beds == 1)
+					var npc = ___me;
+					if (!npc.IsSmartRace || !npc.IsRealPlayerThing)
 						return;
-					else
-						npc.SetBed(null);
+
+					if (npc.MyBed != null)
+					{
+						var beds = CountBedsInRoom(npc.MyBed);
+						if (beds == 1)
+							return;
+						else
+							npc.SetBed(null);
+					}
+					FindFittingBed(npc);
 				}
-				FindFittingBed(npc);
+				catch (Exception ex)
+				{
+					ShowMessage(ex.ToString());
+				}
 			}
 
 			[HarmonyPrefix]
@@ -51,7 +59,7 @@ namespace ACS_Yoda_Tweaks
 			public static void SmarterBedFind(JobTakeRest __instance)
 			{
 				var npc = __instance.Worker;
-				if (!npc.IsSmartRace)
+				if (!npc.IsSmartRace || !npc.IsPlayerThing)
 					return;
 				if (npc.MyBed == null)
 				{
