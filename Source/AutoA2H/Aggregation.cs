@@ -16,14 +16,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			{
 				return;
 			}
-
-			if (npc.A2H.thinkFrags == null)
-				npc.A2H.thinkFrags = new List<ThinkFrag>();
-			if (npc.A2H.thinkFragCaches == null)
-				npc.A2H.thinkFragCaches = new List<ThinkFrag>();
-			if (npc.A2H.thinkAggregates == null)
-				npc.A2H.thinkAggregates = new List<ThinkAggregate>();
-
+			InitNullLists(npc);
 			try
 			{
 				if (TryFormFinalFrag(npc))
@@ -60,7 +53,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			}
 			catch (Exception ex)
 			{
-				ShowMessage(npc?.GetName() + " " + ex.ToString());
+				ShowMessage(npc?.GetName() + " " + ex);
 				KLog.Dbg(ex.ToString());
 			}
 		}
@@ -115,7 +108,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			var think2Consider = npc.A2H.thinkFrags.Where(x => x.frags[0] == fragName).ToList();
 
 			HEFragmentDef def = IManagerModule_LoopInterval<HumanoidEvolutionMgr>.Instance.Fragments.GetDef(fragName);
-			ThinkAggregate aggregate = HMgr.GetAggregate(think2Consider, F2A.SafeGet(def.Type));
+			ThinkAggregate aggregate = HMgr.GetAggregate(think2Consider, FragAggName2AggDefName.SafeGet(def.Type));
 
 			float num = 600f;
 			if (npc.A2H.thinkFinals != null)

@@ -49,7 +49,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			}
 			catch (Exception ex)
 			{
-				ShowMessage(ex.ToString());
+				ShowMessage(ex);
 				KLog.Dbg(ex.ToString());
 			}
 		}

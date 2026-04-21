@@ -1,5 +1,6 @@
 ﻿using FairyGUI;
 using HarmonyLib;
+using rail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +63,7 @@ namespace ACS_Yoda_Tweaks
 			private static float duskEnd = 21.0f * secsPerHour;
 
 			private static int lastSec;
-			public static Color defaultLight = new Color(0.35f, 0.35f, 0.35f);
+			public static readonly Color defaultLight = new Color(0.35f, 0.35f, 0.35f);
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(World), "Step")]

@@ -15,140 +15,137 @@ using static XiaWorld.AuctionData;
 
 namespace ACS_Yoda_Tweaks.AutoA2H
 {
-	internal class AutoThoughtsWindow : Window
+	public partial class A2H : Mod
 	{
-		public GComponent Frame;
-
-		public GList ConfigList;
-
-		public event EventCallback0 ConfigUpdated;
-
-		public AutoThoughtsWindow()
+		internal class AutoThoughtsWindow : Window
 		{
-			base.contentPane = UIPackage.CreateObject("ModLoaderLite", "ConfigWindow").asCom;
-			Frame = base.contentPane.GetChild("frame").asCom;
-			Frame.text = "Auto Think";
-			base.closeButton = Frame.GetChild("n5");
-			closeButton.visible = false;
-			ConfigList = base.contentPane.GetChild("n1").asList;
-			base.contentPane.GetChild("enter").asButton.visible = false;
+			public GComponent Frame;
 
-			//frame.margin = contentMargin;
-			//frame.width = 200;
-			frame.width = ConfigList.width = width = 250;
-			ConfigList.margin = contentMargin;
-		}
+			public GList ConfigList;
 
-		public void AddCopyPasteButtons(Wnd_A2HCreateAgg parent)
-		{
-			try
+			public event EventCallback0 ConfigUpdated;
+
+			public AutoThoughtsWindow()
 			{
-				var btnSave = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
-				btnSave.name = "btnCopy";
-				btnSave.title = btnSave.text = "Copy";
-				btnSave.onClick.Add(e => { _copy = GetCheckedThoughts(_npc); });
+				base.contentPane = UIPackage.CreateObject("ModLoaderLite", "ConfigWindow").asCom;
+				Frame = base.contentPane.GetChild("frame").asCom;
+				var title = Frame.GetChild("title").asTextField;
+				title.text = "Auto Think";
+				Frame.GetChild("n6").width = title.width = 205; //title background
+				base.closeButton = Frame.GetChild("n5");
+				closeButton.visible = false;
+				ConfigList = base.contentPane.GetChild("n1").asList;
+				base.contentPane.GetChild("enter").asButton.visible = false;
 
-				var btnPaste = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
-				btnPaste.name = "btnPaste";
-				btnPaste.title = btnPaste.text = "Paste";
-				btnPaste.onClick.Add(e =>
-				{
-					if (_npc != null && _copy != null)
-						Update(_npc, _copy);
-				});
-				parent.AddChild(btnSave);
-				parent.AddChild(btnPaste);
-
-				btnSave.SetPosition(position.x, position.y + 2, position.z - 1);
-
-				btnPaste.SetPosition(position.x, position.y + 30, position.z - 1);
-
-
-				txtSearch = (UI_InputTextField)UIPackage.CreateObject("InGame", "InputTextField");
-				txtSearch.m_title.onChanged.Add(TextChange);
-				txtSearch.SetPosition(position.x + 10, position.y + height - 50, position.z - 1);
-				txtSearch.m_title.promptText = "Search";
-				parent.AddChild(txtSearch);
-
-
-				GButton gButton = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
-				gButton.name = "Toggle";
-				gButton.title = "Toggle";
-				gButton.text = "Toggle";
-				gButton.onClick.Add(ToggleAll);
-				gButton.SetPosition(txtSearch.position.x + txtSearch.width + 5, position.y + height - 50, position.z - 1);
-				parent.AddChildAt(gButton, parent.GetChildIndex(txtSearch) + 1);
+				frame.width = ConfigList.width = width = 250;
+				ConfigList.margin = listMargin;
 			}
-			catch (Exception ex)
+
+			public void AddCopyPasteButtons(Wnd_A2HCreateAgg parent)
 			{
-				Mod.ShowMessage(ex.ToString());
-			}
-		}
-
-		private void ToggleAll(EventContext context)
-		{
-			var firstBtn = buttons.FirstOrDefault(x => x.visible);
-			if (firstBtn == null) return;
-
-			var checkState = firstBtn.GetChild("cb").asButton.selected;
-
-			buttons.ForEach(btn =>
-			{
-				if (btn.visible)
+				try
 				{
-					btn.GetChild("cb").asButton.selected = !checkState;
+					var btnSave = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
+					btnSave.name = "btnCopy";
+					btnSave.title = btnSave.text = "Copy";
+					btnSave.onClick.Add(e => { _copy = GetCheckedThoughts(_npc); });
+
+					var btnPaste = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
+					btnPaste.name = "btnPaste";
+					btnPaste.title = btnPaste.text = "Paste";
+					btnPaste.onClick.Add(e =>
+					{
+						if (_npc != null && _copy != null)
+							Update(_npc, _copy);
+					});
+					parent.AddChild(btnSave);
+					parent.AddChild(btnPaste);
+
+					btnSave.SetPosition(position.x, position.y + 5, position.z - 1);
+					btnPaste.SetPosition(position.x, position.y + 32, position.z - 1);
+
+					txtSearch = (UI_InputTextField)UIPackage.CreateObject("InGame", "InputTextField");
+					txtSearch.m_title.onChanged.Add(TextChange);
+					txtSearch.SetPosition(position.x + 10, position.y + height - 50, position.z - 1);
+					txtSearch.m_title.promptText = "Search";
+					parent.AddChild(txtSearch);
+
+					GButton gButton = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
+					gButton.name = "Toggle";
+					gButton.title = "Toggle";
+					gButton.text = "Toggle";
+					gButton.onClick.Add(ToggleAll);
+					gButton.SetPosition(txtSearch.position.x + txtSearch.width + 5, position.y + height - 50, position.z - 1);
+					parent.AddChildAt(gButton, parent.GetChildIndex(txtSearch) + 1);
 				}
-			});
-		}
-
-		private static UI_InputTextField txtSearch;
-
-		private void TextChange(EventContext context)
-		{
-			try
-			{
-				var sender = context.sender as GTextInput;
-				//TODO: remove/add buttons due to search
-				var txt = sender.text.ToUpper();
-				ConfigList.RemoveChildren();
-
-				bool isEmpty = string.IsNullOrEmpty(txt);
-				foreach (var btn in buttons)
+				catch (Exception ex)
 				{
-					var shardName = btn.GetChild("id").text;
-					btn.visible = isEmpty || GetThinkToolTip(null, shardName).ToUpper().Contains(txt);
+					Mod.ShowMessage(ex);
+				}
+			}
+
+			private void ToggleAll(EventContext context)
+			{
+				var firstBtn = buttons.FirstOrDefault(x => x.visible);
+				if (firstBtn == null)
+					return;
+
+				var checkState = firstBtn.GetChild("cb").asButton.selected;
+
+				buttons.ForEach(btn =>
+				{
 					if (btn.visible)
-						ConfigList.AddChild(btn);
-				}
-				ConfigList.container.EnsureSizeCorrect();
+					{
+						btn.GetChild("cb").asButton.selected = !checkState;
+					}
+				});
 			}
-			catch (Exception ex)
+
+			private static UI_InputTextField txtSearch;
+
+			private void TextChange(EventContext context)
 			{
-				Mod.ShowMessage(ex.ToString());
+				try
+				{
+					var sender = context.sender as GTextInput;
+					//TODO: remove/add buttons due to search
+					var txt = sender.text.ToUpper();
+					ConfigList.RemoveChildren();
+
+					bool isEmpty = string.IsNullOrEmpty(txt);
+					foreach (var btn in buttons)
+					{
+						var shardName = btn.GetChild("id").text;
+						btn.visible = isEmpty || GetThinkToolTip(null, shardName).ToUpper().Contains(txt);
+						if (btn.visible)
+							ConfigList.AddChild(btn);
+					}
+					ConfigList.container.EnsureSizeCorrect();
+				}
+				catch (Exception ex)
+				{
+					Mod.ShowMessage(ex);
+				}
+
 			}
 
-		}
+			private static List<string> _copy = new List<string>();
 
-		private static List<string> _copy = new List<string>();
+			static Margin entryMargin = new Margin() { left = 2, bottom = 2, top = 2, right = 2 };
+			static Margin listMargin = new Margin() { left = 5, bottom = 2, top = 2, right = 4 };
 
-		static Margin ourMargin = new Margin() { left = 2, bottom = 2, top = 2, right = 2 };
-		static Margin contentMargin = new Margin() { left = 5, bottom = 2, top = 2, right = 4 };
+			private static HashSet<string> dummyFragNames = new HashSet<string>() { "Empty", "Template" };
+			private static HumanoidEvolutionMgr HMgr => HumanoidEvolutionMgr.Instance;
+			private static Npc _npc;
 
-		IEnumerable<IGrouping<string, HEFragmentDef>> fragments;
-		private static HashSet<string> dummyFragNames = new HashSet<string>() { "Empty", "Template" };
-		private static HumanoidEvolutionMgr HMgr => HumanoidEvolutionMgr.Instance;
-		private static Npc _npc;
+			List<GButton> buttons = new List<GButton>();
 
-		List<GButton> buttons = new List<GButton>();
-
-		public void Update(Npc npc, IEnumerable<string> autoThoughts)
-		{
-			try
+			public void Update(Npc npc, IEnumerable<string> autoThoughts)
 			{
 				_npc = npc;
 				buttons.Clear();
 				txtSearch.text = string.Empty;
-				fragments = HMgr.Fragments.ForEachKey.Select(x => HMgr.Fragments.GetDef(x.Key))
+				var fragments = HMgr.Fragments.ForEachKey.Select(x => HMgr.Fragments.GetDef(x.Key))
 					.Where(x => x != null)
 					.GroupBy(x => x?.Type);
 
@@ -156,93 +153,76 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				var heRule = HMgr.Rules.GetDef(rDef.RaceRule);
 				ConfigList.RemoveChildren();
 
-				bool first = true;
+				var scores = IsYodaMachine && AutoNPC.ContainsKey(npc.ID) ? CreateThinkFragScoring(npc) : null;
+
 				foreach (var thoughtTypes in fragments)
 				{
-					GButton titleEntry = ConfigList.AddItemFromPool().asButton;
-					titleEntry.title = string.Empty;// thoughtTypes.Key;
-					if (first)
-					{
-						first = false;
-						titleEntry.text = "Auto Think \n";
-					}
-
-					titleEntry.GetController("type").selectedIndex = 0;
-
 					var rgbVal = "#" + HMgr.GetColor(heRule, thoughtTypes.FirstOrDefault().Name);
-					bool hasColor = ColorUtility.TryParseHtmlString(rgbVal, out Color typeColor);
-					//if (hasColor)
-					//	titleEntry.titleColor = typeColor;
+					ColorUtility.TryParseHtmlString(rgbVal, out Color typeColor);
 
-					int active = 0;
 					foreach (var shardType in thoughtTypes.Where(x => !dummyFragNames.Contains(x.DisplayName)).OrderBy(x => x.DisplayName))
 					{
 						GButton listEntry = ConfigList.AddItemFromPool().asButton;
 						listEntry.GetController("type").selectedIndex = 1; //Checkbox
-						listEntry.margin = ourMargin;
+						listEntry.margin = entryMargin;
 
 						listEntry.title = shardType.DisplayName + "  (Lv " + shardType.Level + ")";
-						//gButton2.titleColor = shardType.GetLevelColor();
-						listEntry.SetTooltip(GetThinkToolTip, shardType.Name);
+						if (scores != null)
+						{
+							var score = scores.FirstOrDefault(x => x.Name == shardType.Name);
+							if (score)
+								listEntry.title += " S:" + score.Score;
+						}
 
+						listEntry.SetTooltip(GetThinkToolTip, shardType.Name);
 						listEntry.GetChild("id").text = shardType.Name;
 
 						var chkBox = listEntry.GetChild("cb").asButton;
-						bool selected = autoThoughts.Contains(shardType.Name);
-						chkBox.selected = selected;
+						chkBox.selected = autoThoughts.Contains(shardType.Name);
 						chkBox.enabled = false; //used by daddy
-						if (selected)
-							active++;
 
 						listEntry.onClick.Add(ButtonClicked);
 						listEntry.color = typeColor;
 						buttons.Add(listEntry);
 					}
-					//gButton.title += $" ({active}) ";
 				}
 			}
-			catch (Exception ex)
+
+			private void ButtonClicked(EventContext context)
 			{
-				Mod.ShowMessage(ex.ToString());
+				if (context.sender is GButton btn)
+				{
+					var cb = btn.GetChild("cb").asButton;
+					cb.selected = !cb.selected;
+				}
 			}
 
-		}
-
-		private void ButtonClicked(EventContext context)
-		{
-			if (context.sender is GButton btn)
+			private string GetThinkToolTip(GObject obj, object frag)
 			{
-				var cb = btn.GetChild("cb").asButton;
-				cb.selected = !cb.selected;
+				return GetThinkToolTip(obj, frag?.ToString());
 			}
-		}
 
-		private string GetThinkToolTip(GObject obj, object frag)
-		{
-			return GetThinkToolTip(obj, frag?.ToString());
-		}
-
-		private string GetThinkToolTip(GObject obj, string frag)
-		{
-			if (frag is string)
-				return IManagerModule_LoopInterval<HumanoidEvolutionMgr>.Instance.GetFragDesc(_npc, frag?.ToString(), true);
-			return "No Tooltip";
-		}
-
-		public List<string> GetCheckedThoughts(Npc npc)
-		{
-			List<string> autoThoughts = new List<string>();
-			for (int i = 0; i < buttons.Count; i++)
+			private string GetThinkToolTip(GObject obj, string frag)
 			{
-				var gButton = buttons[i];
-				if (gButton.GetController("type").selectedIndex != 1)
-					continue;
-
-				var checkState = gButton.GetChild("cb").asButton.selected;
-				if (checkState)
-					autoThoughts.Add(gButton.GetChild("id").text);
+				if (frag is string)
+					return IManagerModule_LoopInterval<HumanoidEvolutionMgr>.Instance.GetFragDesc(_npc, frag?.ToString(), true);
+				return "No Tooltip";
 			}
-			return autoThoughts;
+
+			public List<string> GetCheckedThoughts(Npc npc)
+			{
+				List<string> autoThoughts = new List<string>();
+				foreach (var gButton in buttons)
+				{
+					if (gButton.GetController("type").selectedIndex != 1)
+						continue;
+
+					var checkState = gButton.GetChild("cb").asButton.selected;
+					if (checkState)
+						autoThoughts.Add(gButton.GetChild("id").text);
+				}
+				return autoThoughts;
+			}
 		}
 	}
 }

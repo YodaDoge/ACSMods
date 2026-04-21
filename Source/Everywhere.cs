@@ -45,7 +45,7 @@ namespace ACS_Yoda_Tweaks
 				}
 				catch (Exception ex)
 				{
-					ShowMessage(ex.ToString());
+					ShowMessage(ex);
 				}
 			}
 

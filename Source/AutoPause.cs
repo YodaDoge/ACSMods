@@ -28,7 +28,7 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(Wnd_GameMain), "OnInit")]
 			public static void OnInit_Postfix(Wnd_GameMain __instance)
 			{
-				if (!_info.Enabled) return;
+				if (!_info.Enabled || World.Instance.TolSecond <= 3f) return;
 
 				_pauseAfterLoad = true;
 				if (MainManager.Instance != null)

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using XiaWorld;
 using static XiaWorld.HumanoidEvolutionMgr;
 
 namespace ACS_Yoda_Tweaks.AutoA2H
 {
-	public partial class A2H
+	public partial class A2H : Mod
 	{
 		public struct ThinkFragScoring
 		{
@@ -18,7 +19,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				+ level * 11
 				+ (isEmotion ? level * 5 : 0)
 				//+ Math.Min(3, existingTotalCount) * 7
-				+ ExistingMemories * 4; 
+				+ ExistingMemories * 4;
 			}
 
 			public List<ThinkFrag> frags;
@@ -35,18 +36,26 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			{
 				return score.existingTotalCount > 0;
 			}
+
+			public override string ToString()
+			{
+				return $"{HumanoidEvolutionMgr.Instance.Fragments.GetDef(Name).DisplayName}  S: {Score}";
+			}
 		}
 
 		internal static List<ThinkFragScoring> CreateThinkFragScoring(Npc npc)
 		{
+			List<ThinkFragScoring> scorings = new List<ThinkFragScoring>();
+
+			if (!AutoNPC.ContainsKey(npc.ID))
+				return scorings;
+
 			var wantedThoughs = npc.A2H.thinkFrags.Concat(npc.A2H.thinkFragCaches)
 													.Where(x => IsWantedFrag(npc, x.frags[0]))
 													.GroupBy(x => x.frags[0]);
 
 			var existingAggs = npc.A2H.thinkAggregates.Where(x => AutoNPC[npc.ID].Contains(x.frag)).ToList();
 
-
-			List<ThinkFragScoring> scorings = new List<ThinkFragScoring>();
 
 			foreach (var frag in wantedThoughs)
 			{
@@ -67,8 +76,18 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				scorings.Add(scoring);
 			}
 			scorings = scorings.OrderByDescending(x => x.Score).ToList();
+
 			return scorings;
 		}
 
+		private static void InitNullLists(Npc npc)
+		{
+			if (npc.A2H.thinkFrags == null)
+				npc.A2H.thinkFrags = new List<ThinkFrag>(40);
+			if (npc.A2H.thinkFragCaches == null)
+				npc.A2H.thinkFragCaches = new List<ThinkFrag>(10);
+			if (npc.A2H.thinkAggregates == null)
+				npc.A2H.thinkAggregates = new List<ThinkAggregate>(6);
+		}
 	}
 }

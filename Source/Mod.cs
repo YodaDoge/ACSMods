@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using UnityEngine;
 
 namespace ACS_Yoda_Tweaks
 {
@@ -8,16 +10,29 @@ namespace ACS_Yoda_Tweaks
 		{
 			Info.Enabled = defaultEnabled;
 		}
-		protected static bool IsYodaMachine => ACS_Yoda_Tweaks.IsYodaMachine;
+		public static bool IsYodaMachine => ACS_Yoda_Tweaks.IsYodaMachine;
 
 		public static void ShowMessage(string message, string title = null) => ACS_Yoda_Tweaks.ShowMessage(message);
+
+		//private static StringBuilder Log = new StringBuilder();
+		//public static void AddLog(string msg)
+		//{
+		//	if (Log.Length > 100)
+		//		Log.Remove(0, Log.Length - 100);
+		//}
+
+		public static void ShowMessage(Exception ex)
+		{
+			ACS_Yoda_Tweaks.ShowMessage(ex.ToString());
+
+			GUIUtility.systemCopyBuffer = ex.ToString();// Log.ToString();
+		}
 
 		public abstract Meta Info { get; }
 		public class Meta
 		{
 			public string Name { get; set; }
 			public string Description { get; set; }
-			public static bool LogStateChange = false;
 
 			protected bool _enabled;
 			public bool Enabled
@@ -30,12 +45,7 @@ namespace ACS_Yoda_Tweaks
 
 					if (last != _enabled)
 					{
-						if (LogStateChange)
-						{
-							string state = value ? "enabled" : "disabled";
-							KLog.Dbg($"YodaDoge Tweak {Name} changed to {state}");
-							OnEnableChanged?.Invoke(this);
-						}
+						OnEnableChanged?.Invoke(this);
 					}
 				}
 			}
@@ -54,6 +64,7 @@ namespace ACS_Yoda_Tweaks
 				Description = description;
 				Enabled = enabled;
 			}
+
 		}
 	}
 }

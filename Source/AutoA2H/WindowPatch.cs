@@ -13,7 +13,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 {
 	public partial class A2H : Mod
 	{
-			private static Dictionary<string, string> F2A = new Dictionary<string, string>
+			private static Dictionary<string, string> FragAggName2AggDefName = new Dictionary<string, string>
 			{
 				{ "Scene", "AScene" },
 				{ "Target", "ATarget" },
@@ -23,14 +23,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 		[HarmonyPatch]
 		public static class Patch
 		{
-			private static Npc _npc;
-			private static int _lastFrame;
-			private static HashSet<ThinkFrag> _think2Consider = new HashSet<ThinkFrag>();
-			private static AnimalToHuman A2H => _npc.A2H;
-			private static HashSet<string> _ConsiderableFrag = new HashSet<string>();
-			private static string _ConsiderFrag;
-			static AutoThoughtsWindow _configArea;
-			static HumanoidEvolutionMgr HMgr => HumanoidEvolutionMgr.Instance;
+			static AutoThoughtsWindow _panelAutoThink;
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_A2HCreateAgg), "OnInit")]
@@ -38,21 +31,26 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			{
 				if (!_info.Enabled)
 					return;
+				InitPanel(__instance);
 
+			}
+
+			private static void InitPanel(Wnd_A2HCreateAgg __instance)
+			{
+				if (_panelAutoThink != null)
+					return;
 				try
 				{
-					var x = IManagerModule_LoopInterval<HumanoidEvolutionMgr>.Instance.Fragments;
-					_configArea = new AutoThoughtsWindow();
-
-					__instance.AddChild(_configArea);
-					_configArea.SetPosition(_configArea.position.x - (_configArea.size.x + 2), _configArea.y + 30, _configArea.z);
-					_configArea.AddCopyPasteButtons(__instance);
+					_panelAutoThink = new AutoThoughtsWindow();
+					//TODO: move this into constructor
+					__instance.AddChild(_panelAutoThink);
+					_panelAutoThink.SetPosition(_panelAutoThink.position.x - (_panelAutoThink.size.x + 2), _panelAutoThink.y + 10, _panelAutoThink.z - 1);
+					_panelAutoThink.AddCopyPasteButtons(__instance);
 				}
 				catch (Exception ex)
 				{
-					ShowMessage(ex.ToString());
+					ShowMessage(ex);
 				}
-
 			}
 
 			[HarmonyPostfix]
@@ -61,16 +59,18 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			{
 				if (!_info.Enabled)
 					return;
-
+				InitPanel(__instance);
+				InitNullLists(npc);
 				try
 				{
-					var saved = MLLMain.GetSaveOrDefault<Dictionary<int, List<string>>>(_info.Name);
+
+					//var saved = MLLMain.GetSaveOrDefault<Dictionary<int, List<string>>>(_info.Name);
 					var selectedThoughts = AutoNPC.ContainsKey(npc.ID) ? AutoNPC[npc.ID] : new List<string>();
-					_configArea.Update(npc, selectedThoughts);
+					_panelAutoThink.Update(npc, selectedThoughts);
 				}
 				catch (Exception ex)
 				{
-					ShowMessage(ex.Message);
+					ShowMessage(ex);
 					KLog.Dbg(ex.ToString());
 				}
 			}
@@ -83,7 +83,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				if (!_info.Enabled)
 					return;
 
-				AutoNPC[___npc.ID] = _configArea.GetCheckedThoughts(___npc);
+				AutoNPC[___npc.ID] = _panelAutoThink.GetCheckedThoughts(___npc);
 				try
 				{
 					var isNew = !MLLMain.AddOrOverWriteSave(_info.Name, AutoNPC);
@@ -92,7 +92,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				}
 				catch (Exception ex)
 				{
-					ShowMessage(ex.ToString());
+					ShowMessage(ex);
 					KLog.Dbg(ex.ToString());
 				}
 

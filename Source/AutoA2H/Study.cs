@@ -7,34 +7,43 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 {
 	public partial class A2H
 	{
+		private static bool HasStudyCommand(Npc npc) => npc.CheckCommand("StudyThing", checkcount: true)?.Any(x => x != null) == true;
+
 
 		private static bool TryStudy(Npc npc, List<ThinkFragScoring> scorings)
 		{
-			if (!scorings.Any())
-				return false;
-
-			var raceDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
-
-			var canStudyToCompletion = scorings.Where(x => x.existingTotalCount == 2 && !x.frags.Any(a => a.Conflict > 0)).ToList(); //conflict == has learned through study
-			if (canStudyToCompletion.Any())
+			try
 			{
-				if (npc.A2H.thinkFrags.Count >= raceDef.MaxThink)
-				{
-					RefreshMemory(scorings, npc, raceDef);
-					if (npc.A2H.thinkFrags.Count >= raceDef.MaxThink)
-						return false;
-				}
-				var thinkTarget = FindStudyTarget(canStudyToCompletion);
-
-				var existingCmd = npc.CheckCommand("StudyThing", checkcount: true)?.FirstOrDefault(x => x != null);
-
-				if (thinkTarget != null && existingCmd == null)
-				{
-					npc.AddCommand("StudyThing", thinkTarget);
+				if (!scorings.Any())
+					return false;
+				if (HasStudyCommand(npc))
 					return true;
-				}
-			}
 
+				var raceDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
+
+				var canStudyToCompletion = scorings.Where(x => x.existingTotalCount == 2 && !x.frags.Any(a => a.Conflict > 0)).ToList(); //conflict == has learned through study
+				if (canStudyToCompletion.Any())
+				{
+					if (npc.A2H.thinkFrags.Count >= raceDef.MaxThink)
+					{
+						RefreshMemory(scorings, npc, raceDef);
+						if (npc.A2H.thinkFrags.Count >= raceDef.MaxThink)
+							return false;
+					}
+					var thinkTarget = FindStudyTarget(canStudyToCompletion);
+
+					if (thinkTarget != null)
+					{
+						npc.AddCommand("StudyThing", thinkTarget);
+						return true;
+					}
+				}
+
+			}
+			catch (System.Exception ex)
+			{
+				ShowMessage(ex);
+			}
 			return false;
 		}
 

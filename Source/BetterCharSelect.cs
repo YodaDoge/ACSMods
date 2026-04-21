@@ -27,9 +27,6 @@ namespace ACS_Yoda_Tweaks
 		[HarmonyPatch]
 		public static class Patch
 		{
-			static bool frst = false;
-			static bool sc = false;
-
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_SelectNpc), "OnShowUpdate")]
 			[HarmonyPriority(1000)]
@@ -45,19 +42,10 @@ namespace ACS_Yoda_Tweaks
 					}
 					catch (Exception ex)
 					{
-						ShowMessage(ex.ToString());
+						ShowMessage(ex);
 					}
 
 				}
-			}
-
-			[HarmonyPostfix]
-			[HarmonyPatch(typeof(Wnd_RPGSelectNpc), "DoShow")]
-			public static void DoShow(ItemThing thing, int bagidx)
-			{
-				if (!sc)
-					ShowMessage("OnShow");
-				sc = true;
 			}
 		}
 	}

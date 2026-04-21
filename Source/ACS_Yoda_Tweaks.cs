@@ -59,6 +59,7 @@ namespace ACS_Yoda_Tweaks
 		public static void OnInit()
 		{
 			WarnIfHarmonyConflict();
+
 		}
 
 		public static void OnLoad()
@@ -119,7 +120,7 @@ namespace ACS_Yoda_Tweaks
 
 		public static void OnSave()
 		{
-			//this is an in memory save. Actually persistance only if user saves the game.
+			//this is an in memory save. Actually persistence only if user saves the game.
 			foreach (var item in mods)
 			{
 				var checkState = Configuration.GetCheckBox(ConfigName, item.Name);

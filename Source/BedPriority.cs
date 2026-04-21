@@ -9,6 +9,7 @@ using System.Text;
 using System.Xml.Linq;
 using UnityEngine;
 using XiaWorld;
+using XiaWorld.Modifier;
 using XiaWorld.UI.InGame;
 using static XiaWorld.JianghuMgr;
 
@@ -28,6 +29,17 @@ namespace ACS_Yoda_Tweaks
 		[HarmonyPatch]
 		public static class Patch
 		{
+			private static HashSet<Npc> _players = new HashSet<Npc>();
+
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(Modifier_Vistor), "OnEnter")]
+			public static void Vistor(Modifier_Vistor __instance)
+			{
+				var npc = __instance.Mgr.me;
+				ShowMessage($"{npc.GetName()} state {npc.PropertyMgr.Practice.GongStateLevel}");
+				FindFittingBed(npc);
+			}
+
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(NpcPractice), "Up2Disciple")]
 			public static void Up2Disciple(Npc ___me)
@@ -50,7 +62,7 @@ namespace ACS_Yoda_Tweaks
 				}
 				catch (Exception ex)
 				{
-					ShowMessage(ex.ToString());
+					ShowMessage(ex);
 				}
 			}
 
@@ -76,7 +88,7 @@ namespace ACS_Yoda_Tweaks
 					if (normal)
 					{
 						int sleepBuildings = CountBedsInRoom(t);
-						bool needSingleRoom = npc.Rank > g_emNpcRank.Worker;
+						bool needSingleRoom = npc.Rank > g_emNpcRank.Worker && npc.PropertyMgr.Practice.GongStateLevel >= g_emGongStageLevel.None;
 						bool isFit = needSingleRoom ? sleepBuildings == 1 : sleepBuildings > 1;
 						return isFit;
 					}
@@ -87,13 +99,11 @@ namespace ACS_Yoda_Tweaks
 				{
 					npc.SetBed(bed);
 				}
-				else
-					ShowMessage($"{npc.Rank} {npc.GetName()} couldnt find a bed");
 			}
 
 			private static int CountBedsInRoom(BuildingThing t)
 			{
-				return t.AtRoom.m_lisThingsInRoom.Count(x => x.TagData.CheckTag("Sleep") > 0);
+				return t.AtRoom?.m_lisThingsInRoom.Count(x => x.TagData.CheckTag("Sleep") > 0) ?? 50; 
 			}
 		}
 	}
