@@ -23,9 +23,10 @@ Can be added/removed from ongoing saves.
 * **Reactive Disciples*** <br/> Leisure and cultivation activities will immediately abort when receiving an order. <br/>
 Most tasks will be interrupted to perform a miracle or talk to an npc.
 * **UI Tweaks** 
-<br/>- Universe storage and Manual Pavillion have their search input field focused when opening. 
- Both will perform the search while typing 
-<br/> - Universe storage items can be removed via ctrl+click (single) or shift+click (all)
+<br/>- Many Windows have their Input fields automatically focused
+<br/>- Searching is now case-insensitive (Manual pavillion, Universe, Search Panel) 
+<br/>- Manual Pavillion and Mini-Universe will perform the search while typing 
+<br/>- Items in Mini-Universe can be removed via ctrl+click (single), shift+click (all), alt+click (10)
 <br/> - On Adventures with a single Disciple interactions will skip the character selection prompt
 <br/> - Animal thoughts are now sorted by Type → Level → Name. Memorized shards use a bold font
 * **(Beta) Meditation and Cultivation Tweaks** *<br/>

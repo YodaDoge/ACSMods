@@ -14,8 +14,8 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\AmazingCultivationSimulator\Mods\ACS_Yoda_Tweaks\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -98,6 +98,7 @@
     <Compile Include="BedPriority.cs" />
     <Compile Include="DiscipleWhip.cs" />
     <Compile Include="MapSeedFix.cs" />
+    <Compile Include="CaseInsensitivity.cs" />
     <Compile Include="ShowManual.cs" />
     <Compile Include="CultivationTweaks\CultivationTweaks.cs" />
     <Compile Include="EmptyPrio.cs" />

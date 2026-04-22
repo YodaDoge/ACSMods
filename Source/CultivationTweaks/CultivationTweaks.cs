@@ -51,11 +51,10 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(ToilAbsorbLing), "OnLeaveToil")]
 			public static void UseSpiritRootSympathyWhileMeditation_Exit(ToilAbsorbLing __instance, KStateQUnit unit)
 			{
-				if (!_info.Enabled) return;
-
+				//we might have the flag from a previous session with this module active, so we clean it up
 				if (__instance.Job.CMD.def.Param == 6 && __instance.npc.HasSpecialFlag(g_emNpcSpecailFlag.FLAG_PRACTIVING))
 				{
-					//does nothing if flag doesnt exist, but we might be able to make it negative - hence the check
+					//does nothing if flag doesnt exist, 
 					__instance.npc.SubSpecialFlag(g_emNpcSpecailFlag.FLAG_PRACTIVING);
 				}
 			}
@@ -92,8 +91,8 @@ namespace ACS_Yoda_Tweaks
 				var npc = __instance.npc;
 
 				if (__instance.npc.PropertyMgr.Practice.PracticeMode != g_emPracticeBehaviourKind.None
-					|| NeedsRest(__instance.npc)
-					|| npc.PropertyMgr.Practice.GongStateLevel >= g_emGongStageLevel.God2) //cultivation fills sleep need
+					|| NeedsRest(__instance.npc)  //cultivation fills sleep need
+					|| npc.PropertyMgr.Practice.GongStateLevel >= g_emGongStageLevel.God2)
 					return;
 
 				if (__instance.npc.PropertyMgr.Practice.TouchNeck ||

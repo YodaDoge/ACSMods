@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Xml.Linq;
 using UnityEngine;
@@ -28,6 +29,12 @@ namespace ACS_Yoda_Tweaks
 		[HarmonyPatch]
 		public static class Patch
 		{
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(SearchMainPanel), "Show")]
+			public static void FocusSearch(SearchMainPanel __instance, int select = 0, g_emIndividualCommandType commandType = g_emIndividualCommandType.None)
+			{
+				__instance.UIInfo.m_F.m_title.RequestFocus();
+			}
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(SearchMainPanel), "SetBntInfo")]
@@ -47,7 +54,7 @@ namespace ACS_Yoda_Tweaks
 
 
 						var jnpc = JianghuMgr.Instance.GetKnowNpcData(npc.JiangHuSeed);
-						
+
 						if (jnpc == null || jnpc.KnowOther?.Contains(npc.JiangHuSeed + "_15") != true)
 							bnt.m_n172.m_n176.text += " (秘籍)";
 
@@ -57,10 +64,9 @@ namespace ACS_Yoda_Tweaks
 				{
 					ShowMessage(ex);
 				}
-
-
-
 			}
+
+
 		}
 	}
 }

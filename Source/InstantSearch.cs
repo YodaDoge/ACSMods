@@ -56,7 +56,6 @@ namespace ACS_Yoda_Tweaks
 				textField.SetSelection(0, textField.text?.Length ?? 0);
 			}
 
-
 			[HarmonyPrefix]
 			[HarmonyPatch(typeof(Wnd_RemoteStorage), "RefreshData")]
 			public static bool FixNullErrorInGetOrCreate(Wnd_RemoteStorage __instance, ref List<string> ___Items, Dictionary<string, List<string>> ___kvs)
@@ -81,12 +80,11 @@ namespace ACS_Yoda_Tweaks
 				List<string> list = (___ShowingItems = ((t != null) ? ___kvs.SafeGet(t) : ___Items));
 				if (!string.IsNullOrEmpty(___seachkey))
 				{
-					___seachkey = ___seachkey.ToLower();
 					___ShowingItems = new List<string>(list);
 					___ShowingItems.RemoveAll(delegate (string name)
 					{
 						ThingDef def = ThingMgr.Instance.GetDef(g_emThingType.Item, name);
-						return !def.ThingName.ToLower().Contains(___seachkey);
+						return def.ThingName.IndexOf(___seachkey, StringComparison.OrdinalIgnoreCase) < 0;
 					});
 				}
 				if (list != null)
@@ -106,8 +104,9 @@ namespace ACS_Yoda_Tweaks
 			{
 				bool ctrlClick = UnityEngine.Input.GetKey(KeyCode.LeftControl);
 				bool shiftClick = UnityEngine.Input.GetKey(KeyCode.LeftShift);
+				bool altClick = UnityEngine.Input.GetKey(KeyCode.LeftAlt);
 
-				if (!shiftClick && !ctrlClick)
+				if (!shiftClick && !ctrlClick && !altClick)
 					return true;
 
 				UI_Bnt_EquipItem uI_Bnt_EquipItem = context.data as UI_Bnt_EquipItem;
@@ -120,7 +119,7 @@ namespace ACS_Yoda_Tweaks
 				{
 					return true;
 				}
-				int num = shiftClick ? itemCount : 1; //!shiftclick = ctrlClick = 1
+				int num = shiftClick ? itemCount : altClick ? Math.Min(itemCount, 10) : 1; 
 				spaceRing.TakeOut(item, num, (___from != null) ? ___from.Key : 0, ___from.Pos);
 				return false;
 			}
