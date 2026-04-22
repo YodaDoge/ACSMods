@@ -56,7 +56,7 @@ namespace ACS_Yoda_Tweaks
 						}
 						else
 						{
-							if (npc.MyPractice != null && npc.PropertyMgr.Practice.CheckMagic("ClosedDoor"))
+							if (npc.MyPractice != null && npc.PropertyMgr.Practice.CheckMagic("ClosedDoor") && !NeedsRest(npc))
 							{
 								//see: UILogicMode_IndividualCommand
 								var cmd = npc.AddCommand("ClosedDoor", npc.MyPractice.Key, npc.MyPractice, 2); 
