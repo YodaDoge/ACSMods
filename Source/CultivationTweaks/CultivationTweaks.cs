@@ -14,7 +14,7 @@ namespace ACS_Yoda_Tweaks
 	public partial class CultivationTweaks : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("CultivationTweaks", "Meditation and Cultivation Tweaks", true);
+		private static Meta _info = new Meta("CultivationTweaks", "Meditation and Cultivation Tweaks", false);
 
 		private const float MinStable = 50.3f;
 		private const float MaxStable = 70f;
@@ -24,7 +24,7 @@ namespace ACS_Yoda_Tweaks
 
 		private static bool NeedsRest(Npc npc)
 		{
-			return npc.Needs.GetNeedValue(g_emNeedType.Rest) < 35;
+			return npc.Needs.GetNeedValue(g_emNeedType.Rest) < 50;
 		}
 
 		public CultivationTweaks(bool defaultEnabled) : base(defaultEnabled)
@@ -89,9 +89,11 @@ namespace ACS_Yoda_Tweaks
 			public static void AutoCancelCultivation(ToilPractice __instance, float dt, KStateQUnit unit)
 			{
 				if (!_info.Enabled) return;
+				var npc = __instance.npc;
 
 				if (__instance.npc.PropertyMgr.Practice.PracticeMode != g_emPracticeBehaviourKind.None
-					|| NeedsRest(__instance.npc)) //cultivation fills sleep need
+					|| NeedsRest(__instance.npc)
+					|| npc.PropertyMgr.Practice.GongStateLevel >= g_emGongStageLevel.God2) //cultivation fills sleep need
 					return;
 
 				if (__instance.npc.PropertyMgr.Practice.TouchNeck ||

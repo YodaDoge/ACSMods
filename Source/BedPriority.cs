@@ -36,7 +36,6 @@ namespace ACS_Yoda_Tweaks
 			public static void Vistor(Modifier_Vistor __instance)
 			{
 				var npc = __instance.Mgr.me;
-				ShowMessage($"{npc.GetName()} state {npc.PropertyMgr.Practice.GongStateLevel}");
 				FindFittingBed(npc);
 			}
 
@@ -67,6 +66,24 @@ namespace ACS_Yoda_Tweaks
 			}
 
 			[HarmonyPrefix]
+			[HarmonyPatch(typeof(Npc), "SetBed")]
+			public static void NameRoom(Npc __instance, BuildingThing bed)
+			{
+				var npc = __instance;
+				if (bed != null && bed.AtRoom?.Name == "Room")
+				{
+					var beds = CountBedsInRoom(bed);
+					if (beds == 1)
+						bed.AtRoom.ChangeName(npc.GetName() + "");
+				}
+				if (bed != npc.MyBed && npc.MyBed != null && npc.MyBed.AtRoom?.Name?.StartsWith(npc.GetName()) == true)
+				{
+					if (CountBedsInRoom(npc.MyBed) == 1)
+						npc.MyBed.AtRoom.ChangeName("Room");
+				}
+			}
+
+			[HarmonyPrefix]
 			[HarmonyPatch(typeof(JobTakeRest), "GetToilList")]
 			public static void SmarterBedFind(JobTakeRest __instance)
 			{
@@ -84,15 +101,14 @@ namespace ACS_Yoda_Tweaks
 				//npc.map.Things.FindBuildingForTag
 				var bed = npc.map.Things.FindBuilding(npc, 1000, "Sleep", 0, needworkspace: true, false, 0, 9999, (BuildingThing t) =>
 				{
-					bool normal = t.HaveFreeOwner() && GameDefine.CanShareThisBed(t, npc) > 0;
-					if (normal)
+					bool defaultBedCheck = t.HaveFreeOwner() && GameDefine.CanShareThisBed(t, npc) > 0;
+					if (defaultBedCheck)
 					{
 						int sleepBuildings = CountBedsInRoom(t);
-						bool needSingleRoom = npc.Rank > g_emNpcRank.Worker && npc.PropertyMgr.Practice.GongStateLevel >= g_emGongStageLevel.None;
-						bool isFit = needSingleRoom ? sleepBuildings == 1 : sleepBuildings > 1;
+						bool isFit = WantsSingleRoom(npc) ? sleepBuildings == 1 : sleepBuildings > 1;
 						return isFit;
 					}
-					return normal;
+					return defaultBedCheck;
 				}, null, checkowner: false);
 
 				if (bed != null)
@@ -101,9 +117,12 @@ namespace ACS_Yoda_Tweaks
 				}
 			}
 
+			private static bool WantsSingleRoom(Npc npc) => npc.Rank > g_emNpcRank.Worker && npc.PropertyMgr.Practice.GongStateLevel > g_emGongStageLevel.None;
+
+
 			private static int CountBedsInRoom(BuildingThing t)
 			{
-				return t.AtRoom?.m_lisThingsInRoom.Count(x => x.TagData.CheckTag("Sleep") > 0) ?? 50; 
+				return t.AtRoom?.m_lisThingsInRoom.Count(x => x.TagData.CheckTag("Sleep") > 0) ?? 50;
 			}
 		}
 	}

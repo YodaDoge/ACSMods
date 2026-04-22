@@ -23,7 +23,7 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(BehaviourBasePractice), "Check")]
 			public static bool GetBalancedCultivationActivity(ref JobBase __result, BehaviourBasePractice __instance, ref Npc npc, int seachr = 10000, bool tryfind = false)
 			{
-				if (!_info.Enabled || (npc.Rank != g_emNpcRank.Disciple))
+				if (!_info.Enabled || (npc.Rank != g_emNpcRank.Disciple) || npc.PropertyMgr.Practice.GongStateLevel >= g_emGongStageLevel.God2 )
 					return true;
 
 				try
@@ -49,7 +49,7 @@ namespace ACS_Yoda_Tweaks
 								jobPlayWithBuilding.FunID = fun.ID;
 							}
 						}
-						else if (npc.PropertyMgr.Practice.TouchNeck)
+						else if (npc.PropertyMgr.Practice.TouchNeck && !NeedsRest(npc))
 						{
 							__result = JobMgr.Instance.CreateJob("JobPracticeSkill", null);
 

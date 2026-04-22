@@ -61,6 +61,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 					return;
 				InitPanel(__instance);
 				InitNullLists(npc);
+				_hadError = false;
 				try
 				{
 
@@ -72,18 +73,21 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				{
 					ShowMessage(ex);
 					KLog.Dbg(ex.ToString());
+					_hadError = true;
 				}
 			}
+			private static bool _hadError = false;
 
 
 			[HarmonyPrefix]
 			[HarmonyPatch(typeof(Wnd_A2HCreateAgg), "OnHide")]
 			public static void OnHide(Wnd_A2HCreateAgg __instance, Npc ___npc)
 			{
-				if (!_info.Enabled)
+				if (!_info.Enabled || _hadError)
 					return;
 
 				AutoNPC[___npc.ID] = _panelAutoThink.GetCheckedThoughts(___npc);
+				_panelAutoThink.ClearButtons();
 				try
 				{
 					var isNew = !MLLMain.AddOrOverWriteSave(_info.Name, AutoNPC);

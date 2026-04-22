@@ -91,6 +91,7 @@
     <Compile Include="AutoA2H\Study.cs" />
     <Compile Include="AutoA2H\Scoring.cs" />
     <Compile Include="AutoA2H\WindowPatch.cs" />
+    <Compile Include="InstantSearch.cs" />
     <Compile Include="CultivationTweaks\LimitWarnings.cs" />
     <Compile Include="CultivationTweaks\BalancedAlgo.cs" />
     <Compile Include="CultivationTweaks\PracticePatches.cs" />
@@ -110,7 +111,7 @@
     <Compile Include="WorkerAutoEquip.cs" />
     <Compile Include="AutoPause.cs" />
     <Compile Include="AmbientLightMod.cs" />
-    <Compile Include="LookForDummy.cs" />
+    <Compile Include="DummyDetector.cs" />
     <Compile Include="MasterNoBreakGuard.cs" />
     <Compile Include="OneClickInterrogatePatch.cs" />
     <Compile Include="HandworkPriority.cs" />

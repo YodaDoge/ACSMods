@@ -16,6 +16,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			{
 				return;
 			}
+
 			InitNullLists(npc);
 			try
 			{
@@ -43,12 +44,21 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				{
 					var studyForNewAggType = scorings.Where(x => x.existingAggTypeCount == 0 && x.existingTotalCount == 2).ToList();
 					if (TryStudy(npc, studyForNewAggType))
+					{
+						MessageMgr.Instance.RemoveMessage(34001, new List<Thing> { npc });
 						return;
+					}
 				}
 
-				if (npc.A2H.CanThinkCount <= 1)
+				//study anything we keep score of
+				if (npc.A2H.CanThinkCount <= 1) 
 				{
-					TryStudy(npc, scorings); //study anything we keep score of
+					RefreshMemory(scorings, npc);
+					if (TryStudy(npc, scorings))
+					{
+						MessageMgr.Instance.RemoveMessage(34001, new List<Thing> { npc });
+					}
+					; 
 				}
 			}
 			catch (Exception ex)

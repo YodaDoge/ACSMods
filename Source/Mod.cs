@@ -1,4 +1,7 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -14,12 +17,27 @@ namespace ACS_Yoda_Tweaks
 
 		public static void ShowMessage(string message, string title = null) => ACS_Yoda_Tweaks.ShowMessage(message);
 
-		//private static StringBuilder Log = new StringBuilder();
-		//public static void AddLog(string msg)
-		//{
-		//	if (Log.Length > 100)
-		//		Log.Remove(0, Log.Length - 100);
-		//}
+		private const int LogLength = 5;
+		private static Queue<string> Log = new Queue<string>(LogLength);
+
+		public static void AddLog(string msg, params string[] fmt) => AddLog(string.Format(msg, fmt));
+		public static void AddLog(string msg)
+		{
+			while (Log.Count >= LogLength)
+				Log.Dequeue();
+			Log.Enqueue(msg);
+		}
+
+		public static void ShowLog(string msg)
+		{
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.AppendLine(msg);
+			while (Log.Count > 0)
+			{
+				stringBuilder.Append(Log.Dequeue());
+			}
+			ShowMessage(stringBuilder.ToString());
+		}
 
 		public static void ShowMessage(Exception ex)
 		{

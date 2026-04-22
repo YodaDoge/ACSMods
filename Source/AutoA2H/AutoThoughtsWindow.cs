@@ -154,9 +154,19 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				ConfigList.RemoveChildren();
 
 				var scores = IsYodaMachine && AutoNPC.ContainsKey(npc.ID) ? CreateThinkFragScoring(npc) : null;
-
+				bool first = true;
 				foreach (var thoughtTypes in fragments)
 				{
+					//GButton titleEntry = ConfigList.AddItemFromPool().asButton;
+					//titleEntry.title = string.Empty;// thoughtTypes.Key;
+					//if (first)
+					//{
+					//	first = false;
+					//	titleEntry.text = "Auto Think \n";
+					//}
+
+					//titleEntry.GetController("type").selectedIndex = 0;
+
 					var rgbVal = "#" + HMgr.GetColor(heRule, thoughtTypes.FirstOrDefault().Name);
 					ColorUtility.TryParseHtmlString(rgbVal, out Color typeColor);
 
@@ -222,6 +232,11 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 						autoThoughts.Add(gButton.GetChild("id").text);
 				}
 				return autoThoughts;
+			}
+
+			internal void ClearButtons()
+			{
+				buttons.Clear();
 			}
 		}
 	}

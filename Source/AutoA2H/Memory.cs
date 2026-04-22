@@ -9,8 +9,11 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 	public partial class A2H
 	{
 
-		private static void RefreshMemory(List<ThinkFragScoring> scorings, Npc npc, HERaceInfoDef raceDef, string nameToIgnore = null)
+		private static void RefreshMemory(List<ThinkFragScoring> scorings, Npc npc, HERaceInfoDef raceDef = null, string nameToIgnore = null)
 		{
+			if (raceDef == null)
+				raceDef =  HMgr.RaceInfos.GetDef(npc.RaceDefName);
+
 			int relevantMemories = 0;
 			HashSet<string> memorizedTypes = new HashSet<string>();
 			foreach (var scoredFrag in scorings)

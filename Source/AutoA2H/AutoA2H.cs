@@ -20,7 +20,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 	{
 		public override Meta Info => _info;
 		public const string Name = "AutoA2H";
-		private static Meta _info = new Meta(Name, "Animal Autothink", false);
+		private static Meta _info = new Meta(Name, "(Beta) Animal Autothink", false);
 
 		public A2H() : base(_info.Enabled)
 		{
