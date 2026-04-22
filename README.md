@@ -1,7 +1,7 @@
 ﻿# Yoda's Tweaks and Fixes
 
-Game restart required after enabling this mod!
-Save to add/remove from a save at any time.
+Application restart required after enabling this mod! <br/>
+Can be added/removed from ongoing saves.
 
 ## Fixes
 * Spirit Animal now generates Leisure when performing any Playing actions or interactions with Disciples.
