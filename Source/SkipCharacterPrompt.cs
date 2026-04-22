@@ -13,14 +13,14 @@ using XiaWorld.UI.InGame;
 
 namespace ACS_Yoda_Tweaks
 {
-	public class BetterCharSelect : Mod
+	public class SkipCharacterPrompt : Mod
 	{
 		public override Meta Info => _info;
 		private static Meta _info = new Meta("BetterCharSelect", "Always use solo disciple", true);
 
 		private static bool _pauseAfterLoad = false;
 
-		public BetterCharSelect(bool defaultEnabled) : base(defaultEnabled)
+		public SkipCharacterPrompt(bool defaultEnabled) : base(defaultEnabled)
 		{
 		}
 

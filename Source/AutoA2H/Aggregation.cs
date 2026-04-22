@@ -12,7 +12,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 	{
 		public static void ThinkIfYouCan(Npc npc)
 		{
-			if (!AutoNPC.ContainsKey(npc.ID) || npc.JobEngine.CurJob?.jobdef.Name == "JobYsThink")
+			if (!IsAutoNPC(npc) || npc.JobEngine.CurJob?.jobdef.Name == "JobYsThink")
 			{
 				return;
 			}

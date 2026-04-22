@@ -10,18 +10,18 @@ Can be added/removed from ongoing saves.
 * Tier 9+ clothing will be ignored when mindful dessing is active.
 * Ingame Copy function (see Hotkeys) will now place the selected building and material in your hand. 
 * ESC -> Difficulty -> Environment; now shows the correct map seed
-* Universe Storage will show items after opening
-* Universe Storage will search case insensitive
+* Universe Storage now shows items after opening
+* Universe Storage search is now case-insensitive
 
 ## Default Features
 * **Handworking Station Priority** <br/> Handworking will now be performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
 * **Smarter Dressers*** <br/> Mindful Dressers will seek out trinkets. 
 <br/> Outers equip Handkerchiefs, Bells and Talismans such as SpiritTravel, Cleansing, Agility...
 <br/> Xiandao will equip Scented Sachets and Dice
-* **Flag NPC with Manual** <br/> In the Target UI - the search UI bottom left - NPC's which still have their Friendship manual have (秘籍) added to their name
+* **Flag NPC with Manual** <br/> In the Search Panel, NPC's which still carry a Friendship manual have (秘籍) added to their name
 * **Smarter Bedroom Selection** <br/> Workers will prefer beds in rooms with multiple beds and vice versa. Rooms with a single bed will be named after their residents.
 * **Reactive Disciples*** <br/> Leisure and cultivation activities will immediately abort when receiving an order. <br/>
-Most task will be interrupted to perform a miracle or talk to an npc.
+Most tasks will be interrupted to perform a miracle or talk to an npc.
 * **UI Tweaks** 
 <br/>- Universe storage and Manual Pavillion have their search input field focused when opening. 
  Both will perform the search while typing 
@@ -44,8 +44,8 @@ Following Features must be enabled in the MLL menu (Esc => MLL)
 * **Auto Pause on Load**
 * **Guard Disabled for Mentors** 
 * **One Click Interrogate Extended** <br/>
-  Almost the same feature as the [original](https://steamcommunity.com/sharedfiles/filedetails/?id=2856326732&searchtext=Interrogate) Mod.
-  Interrogation includes all NPCs known to the player.
+  Almost identical to the [original](https://steamcommunity.com/sharedfiles/filedetails/?id=2856326732&searchtext=Interrogate) Mod.
+  <br/>Interrogation includes all NPCs known to the player.
 * **Brighter Daylight** <br/>
   Days will be brighter, creating a stronger contrast between day and night.
 * **Smelt after Transcribe** <br/>
@@ -57,7 +57,7 @@ Following Features must be enabled in the MLL menu (Esc => MLL)
 * **Recruit without Priorities** <br/>
   Freshly accepted Disciples will have no work priorities and have hard working enabled.
 * **(BETA) Animal Autothink** <br/>
-  You can define which thought shards an animal should use.
+  You can define which thought shards an animal should use. <br/>
   It will automatically handle thinking, memorizing, studying and forming thoughts.
 
 ## Harmony warning 

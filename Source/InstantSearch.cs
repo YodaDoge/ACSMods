@@ -48,8 +48,14 @@ namespace ACS_Yoda_Tweaks
 				__instance.UIInfo.m_n8.text = string.Empty;
 				__instance.UIInfo.m_n10.onClick.Call();
 				__instance.UIInfo.m_n8.RequestFocus();
-				__instance.UIInfo.m_n8.SetSelection(0, __instance.UIInfo.m_n8.text?.Length ?? 0);
+				SelectAllText(__instance.UIInfo.m_n8);
 			}
+
+			private static void SelectAllText(GTextInput textField)
+			{
+				textField.SetSelection(0, textField.text?.Length ?? 0);
+			}
+
 
 			[HarmonyPrefix]
 			[HarmonyPatch(typeof(Wnd_RemoteStorage), "RefreshData")]
@@ -98,8 +104,8 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(Wnd_RemoteStorage), "ClickOnItem")]
 			public static bool ClickOnItem(Wnd_RemoteStorage __instance, Thing ___from, EventContext context)
 			{
-				bool shiftClick = UnityEngine.Input.GetKeyDown(KeyCode.LeftControl);
-				bool ctrlClick = UnityEngine.Input.GetKeyDown(KeyCode.LeftShift);
+				bool ctrlClick = UnityEngine.Input.GetKey(KeyCode.LeftControl);
+				bool shiftClick = UnityEngine.Input.GetKey(KeyCode.LeftShift);
 
 				if (!shiftClick && !ctrlClick)
 					return true;
@@ -126,9 +132,9 @@ namespace ACS_Yoda_Tweaks
 			{
 				__result.UIInfo.m_n45.value = 1;
 				__result.UIInfo.m_sliderv.m_title.text = "1";
-				__result.UIInfo.m_sliderv.m_title.RequestFocus();
-				__result.UIInfo.m_sliderv.m_title.SetSelection(0, __result.UIInfo.m_sliderv.text?.Length ?? 0);
 				__result.UIInfo.m_sliderv.m_title.onChanged?.Call();
+				//__result.UIInfo.m_sliderv.m_title.RequestFocus();
+				SelectAllText(__result.UIInfo.m_sliderv.m_title);
 			}
 		}
 	}

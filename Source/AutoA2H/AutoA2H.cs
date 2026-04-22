@@ -73,7 +73,8 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 		private static HEFragmentDef GetFragDef(IGrouping<string, ThinkFrag> frags) => GetFragDef(frags.First());
 
 		private static string EmotionType = "AEmotion";
-		
+
+		public static bool IsAutoNPC(Npc npc) => AutoNPC.ContainsKey(npc.ID) && AutoNPC[npc.ID]?.Any() == true;
 
 		[HarmonyPatch]
 		public static class AnimalPatch
@@ -84,7 +85,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			{
 				if (!_info.Enabled)
 					return;
-
 				ThinkIfYouCan(npc);
 			}
 
@@ -95,7 +95,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			{
 				if (!_info.Enabled)
 					return;
-
 				ThinkIfYouCan(npc);
 			}
 		}

@@ -102,7 +102,7 @@
     <Compile Include="CultivationTweaks\CultivationTweaks.cs" />
     <Compile Include="EmptyPrio.cs" />
     <Compile Include="Everywhere.cs" />
-    <Compile Include="BetterCharSelect.cs" />
+    <Compile Include="SkipCharacterPrompt.cs" />
     <Compile Include="CopyBuildThing.cs" />
     <Compile Include="FogRemover.cs" />
     <Compile Include="Mod.cs" />
