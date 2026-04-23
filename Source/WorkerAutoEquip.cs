@@ -127,7 +127,7 @@ public class MindfulDresser : Mod
 				var original = con;
 				Func<ItemThing, bool> chain = itm =>
 				{
-					if (itm.Rate >= 9 )
+					if (itm.Rate >= 9 || IsFengShuiItem(itm) )
 						return false;
 					return original(itm);
 				};
