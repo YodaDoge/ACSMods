@@ -61,6 +61,8 @@ Following Features must be enabled in the MLL menu (Esc => MLL)
   You can define which thought shards an animal should use. <br/>
   It will automatically handle thinking, memorizing, studying and forming thoughts.
 
+SourceCode and Readme: https://github.com/YodaDoge/ACSMods/
+
 ## Harmony warning 
 If an outdated Harmony has been loaded you will see a warning dialog. <br/>
 Using an outdated Harmony version can lead to loss of progress. <br/>
