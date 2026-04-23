@@ -41,7 +41,7 @@ namespace ACS_Yoda_Tweaks
 
 		public static void ShowMessage(Exception ex)
 		{
-			ACS_Yoda_Tweaks.ShowMessage(ex.ToString());
+			ShowLog(ex.ToString());
 
 			GUIUtility.systemCopyBuffer = ex.ToString();// Log.ToString();
 		}

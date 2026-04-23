@@ -24,7 +24,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			public GList ConfigList;
 
 			public event EventCallback0 ConfigUpdated;
-
+			
 			public AutoThoughtsWindow()
 			{
 				base.contentPane = UIPackage.CreateObject("ModLoaderLite", "ConfigWindow").asCom;
@@ -39,49 +39,39 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 				frame.width = ConfigList.width = width = 250;
 				ConfigList.margin = listMargin;
-			}
 
-			public void AddCopyPasteButtons(Wnd_A2HCreateAgg parent)
-			{
-				try
+				var btnSave = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
+				btnSave.name = "btnCopy";
+				btnSave.title = btnSave.text = "Copy";
+				btnSave.onClick.Add(e => { _copy = GetCheckedThoughts(_npc); });
+
+				var btnPaste = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
+				btnPaste.name = "btnPaste";
+				btnPaste.title = btnPaste.text = "Paste";
+				btnPaste.onClick.Add(e =>
 				{
-					var btnSave = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
-					btnSave.name = "btnCopy";
-					btnSave.title = btnSave.text = "Copy";
-					btnSave.onClick.Add(e => { _copy = GetCheckedThoughts(_npc); });
+					if (_npc != null && _copy != null)
+						Update(_npc, _copy);
+				});
+				AddChild(btnSave);
+				AddChild(btnPaste);
 
-					var btnPaste = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
-					btnPaste.name = "btnPaste";
-					btnPaste.title = btnPaste.text = "Paste";
-					btnPaste.onClick.Add(e =>
-					{
-						if (_npc != null && _copy != null)
-							Update(_npc, _copy);
-					});
-					parent.AddChild(btnSave);
-					parent.AddChild(btnPaste);
+				btnSave.SetPosition(position.x, position.y + 5, position.z - 1);
+				btnPaste.SetPosition(position.x, position.y + 32, position.z - 1);
 
-					btnSave.SetPosition(position.x, position.y + 5, position.z - 1);
-					btnPaste.SetPosition(position.x, position.y + 32, position.z - 1);
+				txtSearch = (UI_InputTextField)UIPackage.CreateObject("InGame", "InputTextField");
+				txtSearch.m_title.onChanged.Add(TextChange);
+				txtSearch.SetPosition(position.x + 10, position.y + height - 50, position.z - 1);
+				txtSearch.m_title.promptText = "Search";
+				AddChild(txtSearch);
 
-					txtSearch = (UI_InputTextField)UIPackage.CreateObject("InGame", "InputTextField");
-					txtSearch.m_title.onChanged.Add(TextChange);
-					txtSearch.SetPosition(position.x + 10, position.y + height - 50, position.z - 1);
-					txtSearch.m_title.promptText = "Search";
-					parent.AddChild(txtSearch);
-
-					GButton gButton = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
-					gButton.name = "Toggle";
-					gButton.title = "Toggle";
-					gButton.text = "Toggle";
-					gButton.onClick.Add(ToggleAll);
-					gButton.SetPosition(txtSearch.position.x + txtSearch.width + 5, position.y + height - 50, position.z - 1);
-					parent.AddChildAt(gButton, parent.GetChildIndex(txtSearch) + 1);
-				}
-				catch (Exception ex)
-				{
-					Mod.ShowMessage(ex);
-				}
+				GButton btnToggle = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
+				btnToggle.name = "Toggle";
+				btnToggle.title = "Toggle";
+				btnToggle.text = "Toggle";
+				btnToggle.onClick.Add(ToggleAll);
+				btnToggle.SetPosition(txtSearch.position.x + txtSearch.width + 5, position.y + height - 50, position.z - 1);
+				AddChildAt(btnToggle, GetChildIndex(txtSearch) + 1);
 			}
 
 			private void ToggleAll(EventContext context)

@@ -38,10 +38,10 @@ namespace ACS_Yoda_Tweaks
 
 
 			public static bool Disabled = false;
-			static float skyLightDay = 0.50f;
+			static float skyLightDay = 0.45f;
 			static float skyLightNight = 0.35f;
 
-			static float seasonTintStrength = 0.02f;
+			static float seasonTintStrength = 0.03f;
 
 			static float seasonTintStrengthNightFactor = 0.2f;
 			static float seasonTintStrengthDayFactor = 0.7f;

@@ -78,13 +78,14 @@ namespace ACS_Yoda_Tweaks
 			{
 				____ShowType = t;
 				List<string> list = (___ShowingItems = ((t != null) ? ___kvs.SafeGet(t) : ___Items));
-				if (!string.IsNullOrEmpty(___seachkey))
+				string searchval = __instance.UIInfo.m_n8.text;
+				if (!string.IsNullOrEmpty(searchval))
 				{
 					___ShowingItems = new List<string>(list);
 					___ShowingItems.RemoveAll(delegate (string name)
 					{
 						ThingDef def = ThingMgr.Instance.GetDef(g_emThingType.Item, name);
-						return def.ThingName.IndexOf(___seachkey, StringComparison.OrdinalIgnoreCase) < 0;
+						return def.ThingName.IndexOf(searchval, StringComparison.OrdinalIgnoreCase) < 0;
 					});
 				}
 				if (list != null)
@@ -119,7 +120,7 @@ namespace ACS_Yoda_Tweaks
 				{
 					return true;
 				}
-				int num = shiftClick ? itemCount : altClick ? Math.Min(itemCount, 10) : 1; 
+				int num = shiftClick ? itemCount : altClick ? Math.Min(itemCount, 10) : 1;
 				spaceRing.TakeOut(item, num, (___from != null) ? ___from.Key : 0, ___from.Pos);
 				return false;
 			}

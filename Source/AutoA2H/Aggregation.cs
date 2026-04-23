@@ -25,7 +25,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 				List<ThinkFragScoring> scorings = CreateThinkFragScoring(npc);
 
-				ThinkFragScoring newAgg = scorings.FirstOrDefault(x => x.existingTotalCount >= 3 && (x.existingAggTypeCount == 0  || npc.A2H.CanThinkCount == 0 )); 
+				ThinkFragScoring newAgg = scorings.FirstOrDefault(x => x.existingTotalCount >= 3 && (x.existingAggTypeCount == 0 || npc.A2H.CanThinkCount == 0));
 				if (newAgg)
 				{
 					var raceDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
@@ -51,14 +51,14 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				}
 
 				//study anything we keep score of
-				if (npc.A2H.CanThinkCount <= 1) 
+				if (npc.A2H.CanThinkCount <= 1)
 				{
 					RefreshMemory(scorings, npc);
 					if (TryStudy(npc, scorings))
 					{
 						MessageMgr.Instance.RemoveMessage(34001, new List<Thing> { npc });
 					}
-					; 
+					;
 				}
 			}
 			catch (Exception ex)
@@ -111,6 +111,12 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			}
 		}
 
+		private static Dictionary<string, string> FragAggName2AggDefName = new Dictionary<string, string>
+			{
+				{ "Scene", "AScene" },
+				{ "Target", "ATarget" },
+				{ "Emotion", "AEmotion" }
+			};
 
 		private static void StartAggrThink(Npc npc, string fragName)
 		{
@@ -126,7 +132,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				num -= (float)(50 * npc.A2H.thinkFinals.Count);
 			}
 			num = Mathf.Max(10f, num);
-			
+
 			var thinkJob = JobMgr.Instance.CreateJob("JobYsThink", null, num);
 			npc.JobEngine.BeginJob(thinkJob);
 			npc.A2H.SetConsiderS(2, npc);

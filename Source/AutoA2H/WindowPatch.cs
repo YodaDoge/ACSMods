@@ -7,67 +7,50 @@ using System.Text;
 using UnityEngine;
 using XiaWorld;
 using XiaWorld.SaveLoad;
-using static XiaWorld.HumanoidEvolutionMgr;
+using XiaWorld.UI.InGame;
 
 namespace ACS_Yoda_Tweaks.AutoA2H
 {
 	public partial class A2H : Mod
 	{
-			private static Dictionary<string, string> FragAggName2AggDefName = new Dictionary<string, string>
-			{
-				{ "Scene", "AScene" },
-				{ "Target", "ATarget" },
-				{ "Emotion", "AEmotion" }
-			};
-
 		[HarmonyPatch]
 		public static class Patch
 		{
 			static AutoThoughtsWindow _panelAutoThink;
+			private static string PanelName;
 
-			[HarmonyPostfix]
-			[HarmonyPatch(typeof(Wnd_A2HCreateAgg), "OnInit")]
-			public static void OnInit(Wnd_A2HCreateAgg __instance)
+			private static void InitPanel(Wnd_A2HCreateAgg __instance, Npc npc, List<string> selectedThoughts)
 			{
-				if (!_info.Enabled)
-					return;
-				InitPanel(__instance);
+				var panelAutoThink = _panelAutoThink; // private variable to make findref stuff easier
+				if (_panelAutoThink == null || string.IsNullOrEmpty(PanelName) || __instance.GetChild(PanelName) == null) // nullcheck in unity is special! hence double check with the string
+				{
+					panelAutoThink = new AutoThoughtsWindow();
+					PanelName = panelAutoThink.name;
+					__instance.AddChild(panelAutoThink);
+					panelAutoThink.SetPosition(panelAutoThink.position.x - (panelAutoThink.size.x + 2), panelAutoThink.y + 10, panelAutoThink.z - 1);
+				}
 
+				panelAutoThink.Update(npc, selectedThoughts);
+				_panelAutoThink = panelAutoThink;
 			}
 
-			private static void InitPanel(Wnd_A2HCreateAgg __instance)
-			{
-				if (_panelAutoThink != null)
-					return;
-				try
-				{
-					_panelAutoThink = new AutoThoughtsWindow();
-					//TODO: move this into constructor
-					__instance.AddChild(_panelAutoThink);
-					_panelAutoThink.SetPosition(_panelAutoThink.position.x - (_panelAutoThink.size.x + 2), _panelAutoThink.y + 10, _panelAutoThink.z - 1);
-					_panelAutoThink.AddCopyPasteButtons(__instance);
-				}
-				catch (Exception ex)
-				{
-					ShowMessage(ex);
-				}
-			}
+			private static bool _hadError = false;
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_A2HCreateAgg), "ShowNpc")]
-			public static void OpenWindow(Wnd_A2HCreateAgg __instance, Npc npc)
+			public static void OpenWindow(Npc npc)
 			{
 				if (!_info.Enabled)
 					return;
-				InitPanel(__instance);
-				InitNullLists(npc);
-				_hadError = false;
+
 				try
 				{
-
+					_hadError = false;
+					InitNullLists(npc);
+					var window = SingletonWindowEx<Wnd_A2HCreateAgg, UI_A2HCreateAgg>.Instance;
 					//var saved = MLLMain.GetSaveOrDefault<Dictionary<int, List<string>>>(_info.Name);
 					var selectedThoughts = AutoNPC.ContainsKey(npc.ID) ? AutoNPC[npc.ID] : new List<string>();
-					_panelAutoThink.Update(npc, selectedThoughts);
+					InitPanel(window, npc, selectedThoughts);
 				}
 				catch (Exception ex)
 				{
@@ -76,8 +59,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 					_hadError = true;
 				}
 			}
-			private static bool _hadError = false;
-
 
 			[HarmonyPrefix]
 			[HarmonyPatch(typeof(Wnd_A2HCreateAgg), "OnHide")]
@@ -86,12 +67,10 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				if (!_info.Enabled || _hadError)
 					return;
 
-				AutoNPC[___npc.ID] = _panelAutoThink.GetCheckedThoughts(___npc);
-				_panelAutoThink.ClearButtons();
 				try
 				{
+					AutoNPC[___npc.ID] = _panelAutoThink.GetCheckedThoughts(___npc);
 					var isNew = !MLLMain.AddOrOverWriteSave(_info.Name, AutoNPC);
-
 					ThinkIfYouCan(___npc);
 				}
 				catch (Exception ex)
