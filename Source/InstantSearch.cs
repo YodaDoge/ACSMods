@@ -103,8 +103,8 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(Wnd_RemoteStorage), "ClickOnItem")]
 			public static bool ClickOnItem(Wnd_RemoteStorage __instance, Thing ___from, EventContext context)
 			{
-				bool ctrlClick = UnityEngine.Input.GetKey(KeyCode.LeftControl);
 				bool shiftClick = UnityEngine.Input.GetKey(KeyCode.LeftShift);
+				bool ctrlClick = UnityEngine.Input.GetKey(KeyCode.LeftControl);
 				bool altClick = UnityEngine.Input.GetKey(KeyCode.LeftAlt);
 
 				if (!shiftClick && !ctrlClick && !altClick)
@@ -120,7 +120,7 @@ namespace ACS_Yoda_Tweaks
 				{
 					return true;
 				}
-				int num = shiftClick ? itemCount : altClick ? Math.Min(itemCount, 10) : 1;
+				int num = shiftClick ? itemCount : ctrlClick ? Math.Min(itemCount, 10) : 1;
 				spaceRing.TakeOut(item, num, (___from != null) ? ___from.Key : 0, ___from.Pos);
 				return false;
 			}

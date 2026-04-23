@@ -22,13 +22,13 @@ Can be added/removed from ongoing saves.
 * **Smarter Bedroom Selection** <br/> Workers will prefer beds in rooms with multiple beds and vice versa. Rooms with a single bed will be named after their residents.
 * **Reactive Disciples*** <br/> Leisure and cultivation activities will immediately abort when receiving an order. <br/>
 Most tasks will be interrupted to perform a miracle or talk to an npc.
-* **UI Tweaks** 
+* **UI Improvements** 
 <br/>- Many Windows have their Input fields automatically focused
 <br/>- Searching is now case-insensitive (Manual pavillion, Universe, Search Panel) 
 <br/>- Manual Pavillion and Mini-Universe will perform the search while typing 
-<br/>- Items in Mini-Universe can be removed via ctrl+click (single), shift+click (all), alt+click (10)
-<br/> - On Adventures with a single Disciple interactions will skip the character selection prompt
-<br/> - Animal thoughts are now sorted by Type → Level → Name. Memorized shards use a bold font
+<br/>- Items in Mini-Universe can be removed via shift+click (all), ctrl+click (10), alt+click (1)
+<br/>- On Adventures with a single Disciple interactions will skip the character selection prompt
+<br/>- Animal thoughts are now sorted by Type → Level → Name. Memorized shards use a bold font
 * **(Beta) Meditation and Cultivation Tweaks** *<br/>
 Meditation now counts for Spirit Root Sympathy. <br/>
 Meditation is automatically cancelled upon dropping to 50 Mental State or less <br/>
@@ -57,7 +57,7 @@ Following Features must be enabled in the MLL menu (Esc => MLL)
   Branch area bonus will be applied to their respective disciples at all time.<br/> One such area per branch must exist on the map for this to work.
 * **Recruit without Priorities** <br/>
   Freshly accepted Disciples will have no work priorities and have hard working enabled.
-* **(BETA) Animal Autothink** <br/>
+* **Animal Autothink** <br/>
   You can define which thought shards an animal should use. <br/>
   It will automatically handle thinking, memorizing, studying and forming thoughts.
 

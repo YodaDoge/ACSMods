@@ -130,10 +130,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Preview.png">
+    <Content Include="..\Images\Preview.png">
       <Link>Preview.png</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
