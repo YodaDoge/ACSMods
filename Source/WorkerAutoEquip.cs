@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using XiaWorld;
 using XiaWorld.Fight;
+using static XiaWorld.AuctionData;
 
-public class WorkerAutoEquip : Mod
+public class MindfulDresser : Mod
 {
 	public override Meta Info => _info;
 	private static Meta _info = new Meta("WorkerAutoEquip", "Smarter Dressers", true);
 
-	public WorkerAutoEquip(bool defaultEnabled) : base(defaultEnabled)
+	public MindfulDresser(bool defaultEnabled) : base(defaultEnabled)
 	{
 	}
 
@@ -55,6 +56,12 @@ public class WorkerAutoEquip : Mod
 			bool hasValidWearCMD = me.WearCMD > 0 && CommandMgr.Instance.FindCommandByID(me.WearCMD) != null;
 			if (hasValidWearCMD)
 				return;
+
+			if (me.PropertyMgr.MoodData.CheckMood("NeedTrousers"))
+				FindClothing(me, "_LableTrousers");
+			if (me.PropertyMgr.MoodData.CheckMood("NeedClothes"))
+				FindClothing(me, "_LableClothes");
+
 			if (me.Rank == g_emNpcRank.Worker)
 			{
 				if (LookForTool(me, "Item_SmallBell"))
@@ -94,6 +101,22 @@ public class WorkerAutoEquip : Mod
 			lastCheckDict[me] = World.Instance.TolSecond;
 		}
 
+		private static void FindClothing(Npc me, string pantsTag)
+		{
+			ItemThing itemThing = me.map.Things.FindItem(me, 25, null, 0, issort: false, "_WearAble", 0, 9999, delegate (ItemThing it)
+			{
+				if (it.def.Item.Equip.NeedSex != g_emNpcSex.None && it.def.Item.Equip.NeedSex != me.Sex)
+				{
+					return false;
+				}
+				return it.TagData.CheckTag(pantsTag) > 0;
+			});
+			if (itemThing != null)
+			{
+				Command command = me.AddCommand("EquipItem", itemThing);
+				me.WearCMD = command.ID;
+			}
+		}
 
 		[HarmonyPrefix]
 		[HarmonyPatch(typeof(ThingsData), "FindItem")]
@@ -104,7 +127,7 @@ public class WorkerAutoEquip : Mod
 				var original = con;
 				Func<ItemThing, bool> chain = itm =>
 				{
-					if (itm.Rate >= 9)
+					if (itm.Rate >= 9 )
 						return false;
 					return original(itm);
 				};
@@ -112,12 +135,13 @@ public class WorkerAutoEquip : Mod
 			}
 		}
 
+		private static bool IsFengShuiItem(ItemThing thing) => thing.FSItemState > 0;
+
 		private static bool LookForTalisman(Npc me, string spell)
 		{
-
-			ItemThing itemThing = me.map.Things.FindItem(me, 9999, "Item_SpellLv3", con: x => x.m_spell == spell);
-			itemThing = itemThing ?? me.map.Things.FindItem(me, 9999, "Item_SpellLv2", con: x => x.m_spell == spell);
-			itemThing = itemThing ?? me.map.Things.FindItem(me, 9999, "Item_Spell", con: x => x.m_spell == spell);
+			ItemThing itemThing = me.map.Things.FindItem(me, 9999, "Item_SpellLv3", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
+			itemThing = itemThing ?? me.map.Things.FindItem(me, 9999, "Item_SpellLv2", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
+			itemThing = itemThing ?? me.map.Things.FindItem(me, 9999, "Item_Spell", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
 			if (itemThing != null)
 			{
 				Command command = me.AddCommand("EquipItem", itemThing);
@@ -131,7 +155,7 @@ public class WorkerAutoEquip : Mod
 		{
 			if (me.Equip.FindTool(tool) == null)
 			{
-				ItemThing itemThing = me.map.Things.FindItem(me, 9999, tool);
+				ItemThing itemThing = me.map.Things.FindItem(me, 9999, tool, con: x => !IsFengShuiItem(x));
 				if (itemThing != null && me.CheckEquipCell(itemThing) != g_emEquipType.None)
 				{
 					Command command = me.AddCommand("EquipItem", itemThing);

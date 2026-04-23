@@ -1,8 +1,7 @@
 [h1]Yoda's Tweaks and Fixes[/h1]
-
 Application restart required after enabling this mod! 
 Can be added/removed from ongoing saves.
-
+SourceCode and Readme: [url]https://github.com/YodaDoge/ACSMods/[/url]
 [h2]Fixes[/h2]
 [list]
 [*]Spirit Animal now generates Leisure when performing any Playing actions or interactions with Disciples.
@@ -45,12 +44,10 @@ They cultivate until they reach a bottleneck; afterwards, they switch to practic
 Meditation will automatically be used when available.
 [b]Elysium Compatible[/b]: This logic is naturally bypassed if the Disciple is managed by Elysium
 [/list]
-
 *= Can be disabled in Mod settings
 
 [h2]Optional Features[/h2]
 Following Features must be enabled in the MLL menu (Esc => MLL)
-
 [list]
 [*][b]Auto Pause on Load[/b]
 [*][b]Guard Disabled for Mentors[/b] 
@@ -73,4 +70,4 @@ You can define which thought shards an animal should use.
 It will automatically handle thinking, memorizing, studying and forming thoughts.
 [/list]
 
-SourceCode and Readme: [url]https://github.com/YodaDoge/ACSMods/[/url]
+

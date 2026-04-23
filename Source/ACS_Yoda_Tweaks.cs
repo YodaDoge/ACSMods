@@ -33,7 +33,7 @@ namespace ACS_Yoda_Tweaks
 			//new HandworkPriority().Info,
 			//new CopyBuildThing(true).Info,
 			new DiscipleWhip(true).Info,
-			new WorkerAutoEquip(true).Info,
+			new MindfulDresser(true).Info,
 			new CultivationTweaks(true).Info,
 
 
