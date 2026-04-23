@@ -1,0 +1,76 @@
+[h1]Yoda's Tweaks and Fixes[/h1]
+
+Application restart required after enabling this mod! 
+Can be added/removed from ongoing saves.
+
+[h2]Fixes[/h2]
+[list]
+[*]Spirit Animal now generates Leisure when performing any Playing actions or interactions with Disciples.
+[*]Artifact Crafting message will not be removed when the Artifact is hauled
+[*]Outers will now search for training Dummies more diligently. 
+[*]Tier 9+ clothing will be ignored when mindful dessing is active.
+[*]Ingame Copy function (see Hotkeys) will now place the selected building and material in your hand. 
+[*]ESC -> Difficulty -> Environment; now shows the correct map seed
+[*]Universe Storage now shows items after opening
+[*]Universe Storage search is now case-insensitive
+[/list]
+
+[h2]Default Features[/h2]
+[list]
+[*][b]Handworking Station Priority[/b]
+Handworking will now be performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
+[*][b]Smarter Dressers[/b][i]*[/i]
+Mindful Dressers will seek out trinkets. 
+Outers equip Handkerchiefs, Bells and Talismans such as SpiritTravel, Cleansing, Agility...
+Xiandao will equip Scented Sachets and Dice
+[*][b]Flag NPC with Manual[/b]
+In the Search Panel, NPC's which still carry a Friendship manual have (秘籍) added to their name
+[*][b]Smarter Bedroom Selection[/b]
+Workers will prefer beds in rooms with multiple beds and vice versa. Rooms with a single bed will be named after their residents.
+[*][b]Reactive Disciples[/b][i]*[/i]
+Leisure and cultivation activities will immediately abort when receiving an order. 
+Most tasks will be interrupted to perform a miracle or talk to an npc.
+[*][b]UI Improvements[/b] 
+- Many Windows have their Input fields automatically focused
+- Searching is now case-insensitive (Manual pavillion, Universe, Search Panel) 
+- Manual Pavillion and Mini-Universe will perform the search while typing 
+- Items in Mini-Universe can be removed via shift+click (all), ctrl+click (10), alt+click (1)
+- On Adventures with a single Disciple interactions will skip the character selection prompt
+- Animal thoughts are now sorted by Type → Level → Name. Memorized shards use a bold font
+[*][b](Beta) Meditation and Cultivation Tweaks[/b] [i]*[/i]
+Meditation now counts for Spirit Root Sympathy. 
+Meditation is automatically cancelled upon dropping to 50 Mental State or less 
+Inners on a balanced cultivation plan maintain at least 50 mental state with fun activities.
+They cultivate until they reach a bottleneck; afterwards, they switch to practicing for XP and Qi-regen. 
+Meditation will automatically be used when available.
+[b]Elysium Compatible[/b]: This logic is naturally bypassed if the Disciple is managed by Elysium
+[/list]
+
+*= Can be disabled in Mod settings
+
+[h2]Optional Features[/h2]
+Following Features must be enabled in the MLL menu (Esc => MLL)
+
+[list]
+[*][b]Auto Pause on Load[/b]
+[*][b]Guard Disabled for Mentors[/b] 
+[*][b]One Click Interrogate Extended[/b]
+Almost identical to the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2856326732&searchtext=Interrogate]original[/url] Mod.
+Interrogation includes all NPCs known to the player.
+[*][b]Brighter Daylight[/b]
+Days will be brighter, creating a stronger contrast between day and night.
+[*][b]Smelt after Transcribe[/b]
+Manuals will be consumed on sucessful transcription.
+[*][b]Remove Map Fog[/b]
+Disables Map fog on home and adventure Maps.
+[*][b]Map Wide Branch Area[/b]
+Branch area bonus will be applied to their respective disciples at all time.
+One such area per branch must exist on the map for this to work.
+[*][b]Recruit without Priorities[/b]
+Freshly accepted Disciples will have no work priorities and have hard working enabled.
+[*][b]Animal Autothink[/b]
+You can define which thought shards an animal should use. 
+It will automatically handle thinking, memorizing, studying and forming thoughts.
+[/list]
+
+SourceCode and Readme: [url]https://github.com/YodaDoge/ACSMods/[/url]
