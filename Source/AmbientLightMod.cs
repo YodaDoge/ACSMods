@@ -1,5 +1,6 @@
 ﻿using FairyGUI;
 using HarmonyLib;
+using rail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,10 +38,10 @@ namespace ACS_Yoda_Tweaks
 
 
 			public static bool Disabled = false;
-			static float skyLightDay = 0.50f;
+			static float skyLightDay = 0.45f;
 			static float skyLightNight = 0.35f;
 
-			static float seasonTintStrength = 0.02f;
+			static float seasonTintStrength = 0.03f;
 
 			static float seasonTintStrengthNightFactor = 0.2f;
 			static float seasonTintStrengthDayFactor = 0.7f;
@@ -55,14 +56,14 @@ namespace ACS_Yoda_Tweaks
 			};
 
 			private static float secsPerHour = 600f / 24f;
-			private static float dawnStart = 5.7f * secsPerHour;
-			private static float dawnEnd = 9.0f * secsPerHour;
+			private static float dawnStart = 5.6f * secsPerHour;
+			private static float dawnEnd = 8.10f * secsPerHour;
 
 			private static float duskStart = 17.8f * secsPerHour;
 			private static float duskEnd = 21.0f * secsPerHour;
 
 			private static int lastSec;
-			public static Color defaultLight = new Color(0.35f, 0.35f, 0.35f);
+			public static readonly Color defaultLight = new Color(0.35f, 0.35f, 0.35f);
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(World), "Step")]
@@ -138,7 +139,6 @@ namespace ACS_Yoda_Tweaks
 				Color currentPeak = SeasonalLightTints[season];
 				Color nextPeak = SeasonalLightTints[(season + 1) % 4];
 
-				// 4. Use Mathf.SmoothStep for each channel
 				return new Color(
 					Mathf.SmoothStep(currentPeak.r, nextPeak.r, t),
 					Mathf.SmoothStep(currentPeak.g, nextPeak.g, t),
@@ -146,11 +146,10 @@ namespace ACS_Yoda_Tweaks
 				);
 			}
 
-
-
 			[HarmonyPatch(typeof(Wnd_GameMain), "__clickFengshui")]
 			public static void Postfix(EventContext context, Wnd_GameMain __instance)
 			{
+				//if kept enbabled feng shui mode is too bright
 				if (__instance.openFengshui && _info.Enabled)
 					Toggle(false);
 			}

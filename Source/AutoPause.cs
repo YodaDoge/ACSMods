@@ -15,7 +15,7 @@ namespace ACS_Yoda_Tweaks
 		public override Meta Info => _info;
 		private static Meta _info = new Meta("AutoPause", "Auto Pause on Load", false);
 
-		private static bool _doPause = false;
+		private static bool _pauseAfterLoad = false;
 
 		public AutoPause(bool defaultEnabled) : base(defaultEnabled)
 		{
@@ -28,9 +28,9 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(Wnd_GameMain), "OnInit")]
 			public static void OnInit_Postfix(Wnd_GameMain __instance)
 			{
-				if (!_info.Enabled) return;
+				if (!_info.Enabled || World.Instance.TolSecond <= 3f) return;
 
-				_doPause = true;
+				_pauseAfterLoad = true;
 				if (MainManager.Instance != null)
 					MainManager.Instance.Pause();
 			}
@@ -41,24 +41,13 @@ namespace ACS_Yoda_Tweaks
 			{
 				if (!_info.Enabled) return;
 
-				if (_doPause && MainManager.Instance != null)
+				if ((_pauseAfterLoad || !Application.isFocused) && MainManager.Instance != null)
 				{
 					MainManager.Instance.Pause();
-					_doPause = false;
+					_pauseAfterLoad = false;
 				}
 
 			}
 		}
-		//[HarmonyPatch(typeof(GameMain), "GameStart")]
-		//public static class MainManager_Run_Patch
-		//{
-		//	[HarmonyPostfix]
-		//	public static void Postfix(GameMain __instance, bool test = false)
-		//	{
-		//		KLog.Dbg("Pause after game load");
-		//		if(MainManager.Instance != null)
-		//			MainManager.Instance.Pause();
-		//	}
-		//}
 	}
 }

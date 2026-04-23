@@ -20,7 +20,7 @@
     <OutputPath>..\..\..\..\..\Program Files %28x86%29\Steam\steamapps\common\AmazingCultivationSimulator\Mods\ACS_Yoda_Tweaks\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>5</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -46,6 +46,10 @@
     </Reference>
     <Reference Include="ModLoaderLite">
       <HintPath>..\ModLoaderLite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\AmazingCultivationSimulator\Amazing Cultivation Simulator_Data\Managed\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">
@@ -80,11 +84,35 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MLLConfigurator.cs" />
+    <Compile Include="AutoA2H\AutoA2H.cs" />
+    <Compile Include="AutoA2H\AutoThoughtsWindow.cs" />
+    <Compile Include="AutoA2H\Aggregation.cs" />
+    <Compile Include="AutoA2H\Memory.cs" />
+    <Compile Include="AutoA2H\Study.cs" />
+    <Compile Include="AutoA2H\Scoring.cs" />
+    <Compile Include="AutoA2H\WindowPatch.cs" />
+    <Compile Include="InstantSearch.cs" />
+    <Compile Include="CultivationTweaks\LimitWarnings.cs" />
+    <Compile Include="CultivationTweaks\BalancedAlgo.cs" />
+    <Compile Include="CultivationTweaks\PracticePatches.cs" />
+    <Compile Include="BedPriority.cs" />
+    <Compile Include="DiscipleWhip.cs" />
+    <Compile Include="MapSeedFix.cs" />
+    <Compile Include="CaseInsensitivity.cs" />
+    <Compile Include="ShowManual.cs" />
+    <Compile Include="CultivationTweaks\CultivationTweaks.cs" />
+    <Compile Include="EmptyPrio.cs" />
+    <Compile Include="Everywhere.cs" />
+    <Compile Include="SkipCharacterPrompt.cs" />
+    <Compile Include="CopyBuildThing.cs" />
+    <Compile Include="FogRemover.cs" />
+    <Compile Include="Mod.cs" />
+    <Compile Include="SmeltManual.cs" />
+    <Compile Include="ACS_Yoda_Tweaks.cs" />
     <Compile Include="WorkerAutoEquip.cs" />
     <Compile Include="AutoPause.cs" />
     <Compile Include="AmbientLightMod.cs" />
-    <Compile Include="LookForDummy.cs" />
+    <Compile Include="DummyDetector.cs" />
     <Compile Include="MasterNoBreakGuard.cs" />
     <Compile Include="OneClickInterrogatePatch.cs" />
     <Compile Include="HandworkPriority.cs" />
@@ -102,10 +130,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Preview.png">
+    <Content Include="..\Images\Preview.png">
       <Link>Preview.png</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

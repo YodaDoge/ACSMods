@@ -1,4 +1,5 @@
-﻿using FairyGUI;
+﻿using ACS_Yoda_Tweaks.AutoA2H;
+using FairyGUI;
 using HarmonyLib;
 using ModLoaderLite;
 using ModLoaderLite.Config;
@@ -30,20 +31,35 @@ namespace ACS_Yoda_Tweaks
 			//QoL
 			//new A2H_SortOrder().Info, 
 			//new HandworkPriority().Info,
+			//new CopyBuildThing(true).Info,
+			new DiscipleWhip(true).Info,
 			new WorkerAutoEquip(true).Info,
+			new CultivationTweaks(true).Info,
+
 
 			//default off
 			new MasterNoBreakGuard(false).Info,
 			new AutoPause(false).Info,
 			new OneClickInterrogate(false).Info,
 			new AmbientLightMod(false).Info,
+			new A2H(false).Info,
+			new SmeltManual(false).Info,
+			new FogRemover(false).Info,
+			new Everywhere(false).Info,
+			new EmptyPrio(false).Info,
+			new ShowManual(false).Info,
 		};
 
 		private const string ConfigName = "ACS_Yoda_Tweaks";
+		public static bool IsYodaMachine => Environment.MachineName == "YODADOGE";
+		public static string ModName = "Yoda's Tweaks and Fixes";
+		public static string RootWorkshopUrl = @"https://steamcommunity.com/sharedfiles/filedetails/?id=";
+		public static string HarmonyConflictReadme = @"https://github.com/YodaDoge/ACSMods?tab=readme-ov-file#harmony-warning";
 
 		public static void OnInit()
 		{
 			WarnIfHarmonyConflict();
+
 		}
 
 		public static void OnLoad()
@@ -54,6 +70,11 @@ namespace ACS_Yoda_Tweaks
 
 			mods = GetDefaults();
 			LoadSavedConfig();
+		}
+
+		public static void ShowMessage(string text, string title = null)
+		{
+			var msg = Wnd_Message.Show(text, title: title ?? ModName, txt: text, bnt: 1, mode: 0);
 		}
 
 		private static void ShowConflictMessage(string location)
@@ -79,10 +100,6 @@ namespace ACS_Yoda_Tweaks
 			});
 		}
 
-		public static string ModName = "Yoda's Tweaks and Fixes";
-		public static string RootWorkshopUrl = @"https://steamcommunity.com/sharedfiles/filedetails/?id=";
-		public static string HarmonyConflictReadme = @"https://github.com/YodaDoge/ACSMods?tab=readme-ov-file#harmony-warning";
-
 		private static void WarnIfHarmonyConflict()
 		{
 			try
@@ -103,7 +120,7 @@ namespace ACS_Yoda_Tweaks
 
 		public static void OnSave()
 		{
-			//this is an in memory save. Actually persistance only if user saves the game.
+			//this is an in memory save. Actually persistence only if user saves the game.
 			foreach (var item in mods)
 			{
 				var checkState = Configuration.GetCheckBox(ConfigName, item.Name);
@@ -111,6 +128,9 @@ namespace ACS_Yoda_Tweaks
 				item.Enabled = checkState;
 			}
 			MLLMain.AddOrOverWriteSave(ConfigName, mods.ToDictionary(key => key.Name, va => va.Enabled));
+
+			bool v = MLLMain.AddOrOverWriteSave(A2H.Name, A2H.AutoNPC);
+
 		}
 
 		private static void LoadSavedConfig()
@@ -123,60 +143,17 @@ namespace ACS_Yoda_Tweaks
 				{
 					mod.Enabled = enabled;
 				}
+				else if(IsYodaMachine)
+					mod.Enabled = true;
 
 				//add does nothing if checkbox already exists
 				Configuration.AddCheckBox(ConfigName, mod.Name, mod.Description, mod.Enabled);
 
 				Configuration.SetCheckBox(ConfigName, mod.Name, mod.Enabled);
 			}
-		}
-	}
 
-	public abstract class Mod
-	{
-		public Mod(bool defaultEnabled)
-		{
-			Info.Enabled = defaultEnabled;
-		}
-
-		public abstract Meta Info { get; }
-		public class Meta
-		{
-			public string Name { get; set; }
-			public string Description { get; set; }
-
-			protected bool _enabled;
-			public bool Enabled
-			{
-				get => _enabled;
-				set
-				{
-					var last = _enabled;
-					_enabled = value;
-
-					if (last != _enabled)
-					{
-						string state = value ? "enabled" : "disabled";
-						KLog.Dbg($"YodaDoge Tweak {Name} changed to {state}");
-						OnEnableChanged?.Invoke(this);
-					}
-				}
-			}
-
-			Action<Meta> OnEnableChanged;
-
-			public Meta(string name, string description, bool enabled, Action<Meta> enableToggled)
-				: this(name, description, enabled)
-			{
-				OnEnableChanged = enableToggled;
-			}
-
-			public Meta(string name, string description, bool enabled)
-			{
-				Name = name;
-				Description = description;
-				Enabled = enabled;
-			}
+			var a2h = MLLMain.GetSaveOrDefault<Dictionary<int, List<string>>>(AutoA2H.A2H.Name);
+			A2H.InitNpcCache(a2h);
 		}
 	}
 }

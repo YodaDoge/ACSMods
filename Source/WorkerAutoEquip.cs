@@ -10,7 +10,7 @@ using XiaWorld.Fight;
 public class WorkerAutoEquip : Mod
 {
 	public override Meta Info => _info;
-	private static Meta _info = new Meta("WorkerAutoEquip", "Outer Disciples Auto Equip Trinkets", true);
+	private static Meta _info = new Meta("WorkerAutoEquip", "Smarter Dressers", true);
 
 	public WorkerAutoEquip(bool defaultEnabled) : base(defaultEnabled)
 	{
@@ -20,7 +20,6 @@ public class WorkerAutoEquip : Mod
 	public static class Patch
 	{
 		static Dictionary<Npc, float> lastCheckDict = new Dictionary<Npc, float>();
-		static HashSet<Npc> activeWorkers = new HashSet<Npc>();
 		const float checkInterval = 60f;
 
 		private static string[] genericTalisman = new string[] {
@@ -44,14 +43,10 @@ public class WorkerAutoEquip : Mod
 			if (!_info.Enabled) return;
 
 			var me = ___me;
-			bool validForAutoEquip = me.AutoWear && !me.IsVistor && me.IsSmartRace && me.EnemyType != g_emEnemyType.PlayerAttacker && me.Rank == g_emNpcRank.Worker;
+			bool validForAutoEquip = me.AutoWear && !me.IsVistor && me.IsSmartRace && me.EnemyType != g_emEnemyType.PlayerAttacker && (me.Rank == g_emNpcRank.Worker || me.GongKind == g_emGongKind.Dao);
 			if (!validForAutoEquip)
 				return;
 
-			if (!activeWorkers.Contains(me))
-			{
-				activeWorkers.Add(me);
-			}
 
 			float lastWearCheck = lastCheckDict.GetOrCreate(me);
 			if (World.Instance.TolSecond - lastWearCheck < checkInterval)
@@ -60,34 +55,61 @@ public class WorkerAutoEquip : Mod
 			bool hasValidWearCMD = me.WearCMD > 0 && CommandMgr.Instance.FindCommandByID(me.WearCMD) != null;
 			if (hasValidWearCMD)
 				return;
-
-			if (LookForTool(me, "Item_SmallBell"))
-				return;
-
-			if (LookForTool(me, "Item_Handkerchief"))
-				return;
-
-			//TODO: Scraper/facemask if appropiate job is assigned
-			//TODO: Feature - FindBetterTool
-
-			//var talismanLabel = g_emItemLable.Spell;
-			var equippedTali = GetTali(me).Select(x => x.Key).ToList();
-
-			if (equippedTali.Count < 3)
+			if (me.Rank == g_emNpcRank.Worker)
 			{
-				//TODO: if crafter => check craftingtable
-				foreach (var usefulTaliName in genericTalisman)
-				{
-					bool hasTali = equippedTali.Any(x => x.m_spell == usefulTaliName);
+				if (LookForTool(me, "Item_SmallBell"))
+					return;
 
-					if (!hasTali && LookForTalisman(me, usefulTaliName))
+				if (LookForTool(me, "Item_Handkerchief"))
+					return;
+
+				//TODO: Scraper/facemask if appropiate job is assigned
+				//TODO: Feature - FindBetterTool
+
+				var equippedTali = GetTali(me).Select(x => x.Key).ToList();
+
+				if (equippedTali.Count < 3)
+				{
+					//TODO: if crafter => check craftingtable
+					foreach (var usefulTaliName in genericTalisman)
 					{
-						return;
+						bool hasTali = equippedTali.Any(x => x.m_spell == usefulTaliName);
+
+						if (!hasTali && LookForTalisman(me, usefulTaliName))
+						{
+							return;
+						}
 					}
 				}
 			}
-
+			else if (me.GongKind == g_emGongKind.Dao)
+			{
+				if (LookForTool(me, "Item_Dice"))
+					return;
+				if (LookForTool(me, "Item_SmallBell"))
+					return;
+				if (LookForTool(me, "Item_PerfumeBag"))
+					return;
+			}
 			lastCheckDict[me] = World.Instance.TolSecond;
+		}
+
+
+		[HarmonyPrefix]
+		[HarmonyPatch(typeof(ThingsData), "FindItem")]
+		public static void FindItem(Npc npc, int r, string name, int okey = 0, bool issort = false, string tag = null, int tagmin = 0, int tagmax = 9999, Func<ItemThing, bool> con = null, bool StrictSort = false)
+		{
+			if (tag == "_WearAble" && npc.IsPlayerThing && con != null)
+			{
+				var original = con;
+				Func<ItemThing, bool> chain = itm =>
+				{
+					if (itm.Rate >= 9)
+						return false;
+					return original(itm);
+				};
+				con = chain;
+			}
 		}
 
 		private static bool LookForTalisman(Npc me, string spell)
@@ -114,8 +136,6 @@ public class WorkerAutoEquip : Mod
 				{
 					Command command = me.AddCommand("EquipItem", itemThing);
 					me.WearCMD = command.ID;
-
-					KLog.Dbg($"{me.Name} is getting himself a {itemThing}");
 
 					return true;
 				}

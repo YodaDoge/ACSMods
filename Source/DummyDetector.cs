@@ -7,12 +7,12 @@ using System.Text;
 using XiaWorld;
 using static ACS_Yoda_Tweaks.Mod;
 
-public class LookForDummy : Mod
+public class DummyDetector : Mod
 {
 	public override Meta Info => _info;
 	private static Meta _info = new Meta("LookForDummy", "Training Dummy searchrange increase", true);
 
-	public LookForDummy(bool defaultEnabled) : base(defaultEnabled)
+	public DummyDetector(bool defaultEnabled) : base(defaultEnabled)
 	{
 	}
 
@@ -24,14 +24,16 @@ public class LookForDummy : Mod
 		public static bool Prefix(ref List<ToilBase> __result, JobBasePractice __instance, ref bool ___freepractice)
 		{
 			if (!_info.Enabled) return true;
-
+			var npc = __instance.Worker;
 			List<ToilBase> list = new List<ToilBase>();
 			__result = list;
 			var freepractice = ___freepractice;
 			bool flag = false;
-			if (__instance.Worker.InBuilding == null || __instance.Worker.InBuilding.TagData.CheckTag("BasePractice") <= 0)
+			
+			if (npc.InBuilding == null || __instance.Worker.InBuilding.TagData.CheckTag("BasePractice") <= 0)
 			{
-				BuildingThing buildingThing = __instance.Worker.map.Things.FindBuilding(__instance.Worker, 150, "BasePractice", 0, needworkspace: true, issort: true);
+				AddLog($"{npc.ToString()} Searching");
+				BuildingThing buildingThing = __instance.Worker.map.Things.FindBuilding(__instance.Worker, 200, "BasePractice", 0, needworkspace: true, issort: true);
 				if (buildingThing != null)
 				{
 					flag = true;
@@ -40,6 +42,7 @@ public class LookForDummy : Mod
 					list.Add(ToilGoto.GotoThing(buildingThing, g_emPathEndMode.Touch, num));
 					list.Add(new ToilJump2Building(buildingThing, num));
 				}
+				AddLog($"{npc.ToString()} found Dummy "+flag);
 			}
 			if (__instance.Worker.InBuilding != null && __instance.Worker.InBuilding.TagData.CheckTag("BasePractice") > 0)
 			{

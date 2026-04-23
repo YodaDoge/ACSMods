@@ -1,37 +1,65 @@
 ﻿# Yoda's Tweaks and Fixes
 
-Game restart required after enabling this mod!
-Save to add/remove from a save at any time.
+Application restart required after enabling this mod! <br/>
+Can be added/removed from ongoing saves.
 
 ## Fixes
 * Spirit Animal now generates Leisure when performing any Playing actions or interactions with Disciples.
-* Artifact Crafting message will stay, even if the Artifact is hauled
-* Outers will now look up to 150 cells far for a Training Dummy (Vanilla: 100 when scheduled, 10 when "Work Hard" training)
+* Artifact Crafting message will not be removed when the Artifact is hauled
+* Outers will now search for training Dummies more diligently. 
+* Tier 9+ clothing will be ignored when mindful dessing is active.
+* Ingame Copy function (see Hotkeys) will now place the selected building and material in your hand. 
+* ESC -> Difficulty -> Environment; now shows the correct map seed
+* Universe Storage now shows items after opening
+* Universe Storage search is now case-insensitive
 
 ## Default Features
-* Animal Thoughts are now sorted by Type → Level → Name. <br/> Memorized shards use a bold font
-* Handworking will now be performed at the same priority as Stonecutting. <br/> Respect the priority setting on the workbench. 
+* **Handworking Station Priority** <br/> Handworking will now be performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
+* **Smarter Dressers*** <br/> Mindful Dressers will seek out trinkets. 
+<br/> Outers equip Handkerchiefs, Bells and Talismans such as SpiritTravel, Cleansing, Agility...
+<br/> Xiandao will equip Scented Sachets and Dice
+* **Flag NPC with Manual** <br/> In the Search Panel, NPC's which still carry a Friendship manual have (秘籍) added to their name
+* **Smarter Bedroom Selection** <br/> Workers will prefer beds in rooms with multiple beds and vice versa. Rooms with a single bed will be named after their residents.
+* **Reactive Disciples*** <br/> Leisure and cultivation activities will immediately abort when receiving an order. <br/>
+Most tasks will be interrupted to perform a miracle or talk to an npc.
+* **UI Improvements** 
+<br/>- Many Windows have their Input fields automatically focused
+<br/>- Searching is now case-insensitive (Manual pavillion, Universe, Search Panel) 
+<br/>- Manual Pavillion and Mini-Universe will perform the search while typing 
+<br/>- Items in Mini-Universe can be removed via shift+click (all), ctrl+click (10), alt+click (1)
+<br/>- On Adventures with a single Disciple interactions will skip the character selection prompt
+<br/>- Animal thoughts are now sorted by Type → Level → Name. Memorized shards use a bold font
+* **(Beta) Meditation and Cultivation Tweaks** *<br/>
+Meditation now counts for Spirit Root Sympathy. <br/>
+Meditation is automatically cancelled upon dropping to 50 Mental State or less <br/>
+Inners on a balanced cultivation plan maintain at least 50 mental state with fun activities.<br/>
+They cultivate until they reach a bottleneck; afterwards, they switch to practicing for XP and Qi-regen. <br/> 
+Meditation will automatically be used when available. <br/>
+**Elysium Compatible**: This logic is naturally bypassed if the Disciple is managed by Elysium
+
+*= Can be disabled in Mod settings
 
 ## Optional Features
-Following Features can be toggled in the MLL menu (Esc => MLL)
+Following Features must be enabled in the MLL menu (Esc => MLL)
 
-### Outer Disciples Auto Equip Trinkets
-All Outers with Mindful Dresser active (the toggle in equipment) now also automatically equip Handkerchiefs and Bells. <br/>
-As well as useful Talismans such as SpiritTravel, Cleansing, Agility..
-
-### OptIn: Auto Pause on Load
-
-### OptIn: Mentor Guard Disabled
-Mentor won't perform the guard action on his disciples when they do a breakthrough.
-
-### OptIn: One Click Interrogate Extended
-Almost the same feature as the [original](https://steamcommunity.com/sharedfiles/filedetails/?id=2856326732&searchtext=Interrogate) Mod. <br/>
-But interrogation now includes all NPCs known to the player. <br/>
-This is useful to find out the favorites of Sect Masters with fewer dialogues. <br/>
-If you use this mod, you should disable the standalone mod <br/>
-
-### OptIn: Brighter Daylight
-Days will be brighter, creating a stronger contrast between day and night. 
+* **Auto Pause on Load**
+* **Guard Disabled for Mentors** 
+* **One Click Interrogate Extended** <br/>
+  Almost identical to the [original](https://steamcommunity.com/sharedfiles/filedetails/?id=2856326732&searchtext=Interrogate) Mod.
+  <br/>Interrogation includes all NPCs known to the player.
+* **Brighter Daylight** <br/>
+  Days will be brighter, creating a stronger contrast between day and night.
+* **Smelt after Transcribe** <br/>
+  Manuals will be consumed on sucessful transcription.
+* **Remove Map Fog** <br/>
+  Disables Map fog on home and adventure Maps.
+* **Map Wide Branch Area** <br/>
+  Branch area bonus will be applied to their respective disciples at all time.<br/> One such area per branch must exist on the map for this to work.
+* **Recruit without Priorities** <br/>
+  Freshly accepted Disciples will have no work priorities and have hard working enabled.
+* **Animal Autothink** <br/>
+  You can define which thought shards an animal should use. <br/>
+  It will automatically handle thinking, memorizing, studying and forming thoughts.
 
 ## Harmony warning 
 If an outdated Harmony has been loaded you will see a warning dialog. <br/>

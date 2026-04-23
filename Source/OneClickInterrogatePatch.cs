@@ -57,7 +57,7 @@ public class OneClickInterrogate : Mod
 								}
 							}
 						}
-						string t = string.Format("{0}{1}{2}{3}{4}{5}", npc.GetName(), " interrogates ", npc2.GetName(), " about all of their fellow sect members and learned ", num2, " things.");
+						string t = string.Format("{0}{1}{2}{3}{4}{5}", npc.GetName(), " interrogates ", npc2.GetName(), " about all sect members and learned ", num2, " things.");
 						talkWindow.SetTxt(t);
 					});
 				}
