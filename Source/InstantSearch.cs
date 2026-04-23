@@ -18,8 +18,6 @@ namespace ACS_Yoda_Tweaks
 		public override Meta Info => _info;
 		private static Meta _info = new Meta("InstantSearch", "", true);
 
-		private static bool _pauseAfterLoad = false;
-
 		public InstantSearch(bool defaultEnabled) : base(defaultEnabled)
 		{
 		}
@@ -33,6 +31,14 @@ namespace ACS_Yoda_Tweaks
 			{
 				___UIInfo.m_F.m_title.onChanged.Add(x => ___UIInfo.m_search.onClick.Call());
 			}
+
+			//[HarmonyPostfix]
+			//[HarmonyPatch(typeof(Wnd_CangJingGeWindow), "Show")]
+			//public static void FilterELements(Wnd_CangJingGeWindow __instance, UI_CangJingGeWindow ___UIInfo, BuildingThing building, int type, Npc npc = null)
+			//{
+			//	___UIInfo.m_F.m_title.onChanged.Add(x => ___UIInfo.m_search.onClick.Call());
+			//}
+
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_RemoteStorage), "OnInit")]
@@ -101,7 +107,7 @@ namespace ACS_Yoda_Tweaks
 
 			[HarmonyPrefix]
 			[HarmonyPatch(typeof(Wnd_RemoteStorage), "ClickOnItem")]
-			public static bool ClickOnItem(Wnd_RemoteStorage __instance, Thing ___from, EventContext context)
+			public static bool QuickRemoveItem(Wnd_RemoteStorage __instance, Thing ___from, EventContext context)
 			{
 				bool shiftClick = UnityEngine.Input.GetKey(KeyCode.LeftShift);
 				bool ctrlClick = UnityEngine.Input.GetKey(KeyCode.LeftControl);

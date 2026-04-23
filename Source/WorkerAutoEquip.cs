@@ -37,6 +37,20 @@ public class MindfulDresser : Mod
 
 		private static string[] crafterTalisman = new string[] { "Spell_MadeQualityAddValue" /*Craftsmanship: Crafting QUality gain*/ };
 
+		[HarmonyPrefix]
+		[HarmonyPatch(typeof(ToilEquipItem), "OnEnterToil")]
+		public static void Step(ToilEquipItem __instance, KStateQUnit unit)
+		{
+			if (!_info.Enabled) return;
+
+			var npc = __instance.npc;
+			var horse = npc.ItemInHand.GetHorseData();
+			if (horse == null)
+				return;
+			npc.NoRideHorse = npc.GetSpeed() >= horse.Speed;
+		}
+
+
 		[HarmonyPostfix]
 		[HarmonyPatch(typeof(NpcFeeling), "Step")]
 		public static void Step(float dt, NpcFeeling __instance, ref Npc ___me)
@@ -127,7 +141,7 @@ public class MindfulDresser : Mod
 				var original = con;
 				Func<ItemThing, bool> chain = itm =>
 				{
-					if (itm.Rate >= 9 || IsFengShuiItem(itm) )
+					if (itm.Rate >= 9 || IsFengShuiItem(itm))
 						return false;
 					return original(itm);
 				};

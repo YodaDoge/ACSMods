@@ -31,11 +31,12 @@ namespace ACS_Yoda_Tweaks
 		public static void ShowLog(string msg)
 		{
 			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.AppendLine(msg);
 			while (Log.Count > 0)
 			{
 				stringBuilder.Append(Log.Dequeue());
 			}
+			stringBuilder.AppendLine("__________");
+			stringBuilder.AppendLine(msg);
 			ShowMessage(stringBuilder.ToString());
 		}
 
