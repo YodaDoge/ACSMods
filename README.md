@@ -12,13 +12,13 @@ Can be added/removed from ongoing saves.
 * ESC -> Difficulty -> Environment; now shows the correct map seed
 * Universe Storage now shows items after opening
 * Universe Storage search is now case-insensitive
-* Mindful dressing will now clothe naked disciples
+* Mindful dressing now clothes naked disciples
 
 ## Default Features
 * **Handworking Station Priority** <br/> 
 Handworking will now be performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
 * **Smarter Dressers*** <br/> 
-Mindful Dressers will automatically seek out additional items:
+Mindful Dressers seek out additional items:
 <br/> Outers equip Handkerchiefs, Bells and Talismans such as SpiritTravel, Cleansing, Agility...
 <br/> Xiandao will equip Scented Sachets and Dice
 * **Flag NPC with Manual** <br/> 

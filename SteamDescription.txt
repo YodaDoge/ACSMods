@@ -5,43 +5,44 @@ SourceCode and Readme: [url]https://github.com/YodaDoge/ACSMods/[/url]
 [h2]Fixes[/h2]
 [list]
 [*]Spirit Animal now generates Leisure when performing any Playing actions or interactions with Disciples.
-[*]Artifact Crafting message will not be removed when the Artifact is hauled
-[*]Outers will now search for training Dummies more diligently. 
-[*]Tier 9+ clothing will be ignored when mindful dressing is active.
-[*]Ingame Copy function (see Hotkeys) will now place the selected building and material in your hand. 
+[*]Artifact Crafting message is not removed when the Artifact is hauled
+[*]Outers search for training Dummies more diligently. 
+[*]Tier 9+ clothing is ignored when mindful dressing is active.
+[*]Ingame Copy function (see Hotkeys) now places the selected building and material in your hand. 
 [*]ESC -> Difficulty -> Environment; now shows the correct map seed
 [*]Universe Storage now shows items after opening
 [*]Many search operations are no longer case-sensitive
-[*]Mindful dressing will now clothe naked disciples, even when the outside temperature is ideal
+[*]Mindful dressing now clothes naked disciples, even when their temperature range is met
 [/list]
 
 [h2]Default Features[/h2]
 [list]
 [*][b]Handworking Station Priority[/b]
-Handworking will now be performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
-[*][b]Smarter Dressers[/b][i]*[/i]
-Mindful Dressers will seek out trinkets. 
+Handworking is performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
+[*][b]Smarter Dressers[/b] *
+Mindful Dressers seek out additional items:
 Outers equip Handkerchiefs, Bells and Talismans such as SpiritTravel, Cleansing, Agility...
-Xiandao will equip Scented Sachets and Dice
+Xiandao equip Scented Sachets and Dice
 [*][b]Flag NPC with Manual[/b]
 In the Search Panel, NPC's which still carry a Friendship manual have (秘籍) added to their name
 [*][b]Smarter Bedroom Selection[/b]
-Workers will prefer beds in rooms with multiple beds and vice versa. Rooms with a single bed will be named after their residents.
-[*][b]Reactive Disciples[/b][i]*[/i]
-Many resumable Actvities (leisure, cultivation, hauling etc.) will immediately abort when receiving orders like equip, eat, talk or miracles
+Workers prefer beds in rooms with multiple beds and vice versa. Rooms with a single bed are named after their residents.
+[*][b]Reactive Disciples[/b] *
+Many resumable Actvities (leisure, cultivation, hauling etc.) are immediately interrupted when receiving new orders e.g. equip, eat, talk or miracles
 [*][b]UI Improvements[/b] 
-- Many Windows have their Input fields automatically focused
+- Many Windows have their Input fields focused initially
 - Searching is now case-insensitive (Manual pavillion, Universe, Search Panel) 
-- Manual Pavillion and Mini-Universe will perform the search while typing 
+- Manual Pavillion and Mini-Universe perform their search while typing 
 - Items in Mini-Universe can be removed via shift+click (all), ctrl+click (10), alt+click (1)
-- On Adventures with a single Disciple interactions will skip the character selection prompt
+- On Adventures with a single Disciple, interactions skip the character selection prompt
 - Animal thoughts are now sorted by Type → Level → Name. Memorized shards use a bold font
+- Spirit Fly toggles when a spirit contract is equipped, based on its speed compared to the disciple
 [*][b](Beta) Meditation and Cultivation Tweaks[/b] [i]*[/i]
-Meditation now counts for Spirit Root Sympathy. 
-Meditation is automatically cancelled upon dropping to 50 Mental State or less 
+Meditation uses Spirit Root Sympathy. 
+Meditation is cancelled upon dropping to 50 Mental State or less 
 Inners on a balanced cultivation plan maintain at least 50 mental state with fun activities.
 They cultivate until they reach a bottleneck; afterwards, they switch to practicing for XP and Qi-regen. 
-Meditation will automatically be used when available.
+Meditation is automatically used when available.
 [b]Elysium Compatible[/b]: This logic is naturally bypassed if the Disciple is managed by Elysium
 [/list]
 *= Can be disabled in Mod settings
@@ -55,19 +56,17 @@ Following Features must be enabled in the MLL menu (Esc => MLL)
 Almost identical to the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2856326732&searchtext=Interrogate]original[/url] Mod.
 Interrogation includes all NPCs known to the player.
 [*][b]Brighter Daylight[/b]
-Days will be brighter, creating a stronger contrast between day and night.
+Days are brighter, creating a stronger contrast between day and night.
 [*][b]Smelt after Transcribe[/b]
-Manuals will be consumed on sucessful transcription.
+Manuals are consumed on sucessful transcription.
 [*][b]Remove Map Fog[/b]
 Disables Map fog on home and adventure Maps.
 [*][b]Map Wide Branch Area[/b]
-Branch area bonus will be applied to their respective disciples at all time.
+Branch area bonus is applied to their respective disciples at all time.
 One such area per branch must exist on the map for this to work.
 [*][b]Recruit without Priorities[/b]
-Freshly accepted Disciples will have no work priorities and have hard working enabled.
+Freshly accepted Disciples start with hard working enabled and no work priorities.
 [*][b]Animal Autothink[/b]
 You can define which thought shards an animal should use. 
 It will automatically handle thinking, memorizing, studying and forming thoughts.
 [/list]
-
-
