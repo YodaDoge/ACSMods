@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 using XiaWorld;
 using XiaWorld.Fight;
-using static XiaWorld.AuctionData;
 
 public class MindfulDresser : Mod
 {
@@ -55,14 +55,7 @@ public class MindfulDresser : Mod
 		[HarmonyPatch(typeof(NpcFeeling), "Step")]
 		public static void Step(float dt, NpcFeeling __instance, ref Npc ___me)
 		{
-			if (!_info.Enabled) return;
-
 			var me = ___me;
-			bool validForAutoEquip = me.AutoWear && !me.IsVistor && me.IsSmartRace && me.EnemyType != g_emEnemyType.PlayerAttacker && (me.Rank == g_emNpcRank.Worker || me.GongKind == g_emGongKind.Dao);
-			if (!validForAutoEquip)
-				return;
-
-
 			float lastWearCheck = lastCheckDict.GetOrCreate(me);
 			if (World.Instance.TolSecond - lastWearCheck < checkInterval)
 				return;
@@ -73,8 +66,16 @@ public class MindfulDresser : Mod
 
 			if (me.PropertyMgr.MoodData.CheckMood("NeedTrousers"))
 				FindClothing(me, "_LableTrousers");
+
 			if (me.PropertyMgr.MoodData.CheckMood("NeedClothes"))
 				FindClothing(me, "_LableClothes");
+
+			if (!_info.Enabled) return;
+
+			bool validForAutoEquip = me.AutoWear && !me.IsVistor && me.IsSmartRace && me.EnemyType != g_emEnemyType.PlayerAttacker && (me.Rank == g_emNpcRank.Worker || me.GongKind == g_emGongKind.Dao);
+			if (!validForAutoEquip)
+				return;
+
 
 			if (me.Rank == g_emNpcRank.Worker)
 			{
@@ -115,15 +116,15 @@ public class MindfulDresser : Mod
 			lastCheckDict[me] = World.Instance.TolSecond;
 		}
 
-		private static void FindClothing(Npc me, string pantsTag)
+		private static void FindClothing(Npc me, string itemTag)
 		{
-			ItemThing itemThing = me.map.Things.FindItem(me, 25, null, 0, issort: false, "_WearAble", 0, 9999, delegate (ItemThing it)
+			ItemThing itemThing = me.map.Things.FindItem(me, 200, null, 0, issort: false, "_WearAble", 0, 9999, delegate (ItemThing it)
 			{
 				if (it.def.Item.Equip.NeedSex != g_emNpcSex.None && it.def.Item.Equip.NeedSex != me.Sex)
 				{
 					return false;
 				}
-				return it.TagData.CheckTag(pantsTag) > 0;
+				return it.TagData.CheckTag(itemTag) > 0;
 			});
 			if (itemThing != null)
 			{

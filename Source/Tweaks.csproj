@@ -109,7 +109,7 @@
     <Compile Include="Mod.cs" />
     <Compile Include="SmeltManual.cs" />
     <Compile Include="ACS_Yoda_Tweaks.cs" />
-    <Compile Include="WorkerAutoEquip.cs" />
+    <Compile Include="MindfulDresser.cs" />
     <Compile Include="AutoPause.cs" />
     <Compile Include="AmbientLightMod.cs" />
     <Compile Include="DummyDetector.cs" />
@@ -134,6 +134,9 @@
       <Link>Preview.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="..\SteamDescription.txt">
+      <Link>SteamDescription.txt</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

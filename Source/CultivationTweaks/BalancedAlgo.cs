@@ -16,6 +16,11 @@ namespace ACS_Yoda_Tweaks
 			return npc.PropertyMgr.Practice.TouchNeck ? MinBC : MinStable;
 		}
 
+		private static bool HasAdventureCommand(Npc npc)
+		{
+			return npc.CheckCommand("GoMapExplore")?.Any(x => x != null) == true;
+		}
+
 		[HarmonyPatch]
 		public static partial class Patch
 		{
@@ -30,7 +35,8 @@ namespace ACS_Yoda_Tweaks
 				{
 					if (npc.JobEngine.NeedWait()
 					|| (npc.IsRent && !npc.HasSpecialFlag(g_emNpcSpecailFlag.NoLeaveMap))
-					|| (npc.HealthState != g_emNpcHealthState.Normal))
+					|| (npc.HealthState != g_emNpcHealthState.Normal)
+					|| HasAdventureCommand(npc))
 						return true;
 
 					if (npc.Rank == g_emNpcRank.Disciple && npc.CanDoDiscipleWork && npc.GongKind == g_emGongKind.Dao && npc.CanDoMagic()
@@ -59,7 +65,7 @@ namespace ACS_Yoda_Tweaks
 							if (npc.MyPractice != null && npc.PropertyMgr.Practice.CheckMagic("ClosedDoor") && !NeedsRest(npc))
 							{
 								//see: UILogicMode_IndividualCommand
-								var cmd = npc.AddCommand("ClosedDoor", npc.MyPractice.Key, npc.MyPractice, 2); 
+								var cmd = npc.AddCommand("ClosedDoor", npc.MyPractice.Key, npc.MyPractice, 2);
 								cmd.WorkParam3 = "ClosedDoor";
 								__result = JobMgr.Instance.CreateJob("JobAbsorbLing", cmd);
 							}

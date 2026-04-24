@@ -7,11 +7,12 @@ SourceCode and Readme: [url]https://github.com/YodaDoge/ACSMods/[/url]
 [*]Spirit Animal now generates Leisure when performing any Playing actions or interactions with Disciples.
 [*]Artifact Crafting message will not be removed when the Artifact is hauled
 [*]Outers will now search for training Dummies more diligently. 
-[*]Tier 9+ clothing will be ignored when mindful dessing is active.
+[*]Tier 9+ clothing will be ignored when mindful dressing is active.
 [*]Ingame Copy function (see Hotkeys) will now place the selected building and material in your hand. 
 [*]ESC -> Difficulty -> Environment; now shows the correct map seed
 [*]Universe Storage now shows items after opening
-[*]Universe Storage search is now case-insensitive
+[*]Many search operations are no longer case-sensitive
+[*]Mindful dressing will now clothe naked disciples, even when the outside temperature is ideal
 [/list]
 
 [h2]Default Features[/h2]
@@ -27,8 +28,7 @@ In the Search Panel, NPC's which still carry a Friendship manual have (秘籍) a
 [*][b]Smarter Bedroom Selection[/b]
 Workers will prefer beds in rooms with multiple beds and vice versa. Rooms with a single bed will be named after their residents.
 [*][b]Reactive Disciples[/b][i]*[/i]
-Leisure and cultivation activities will immediately abort when receiving an order. 
-Most tasks will be interrupted to perform a miracle or talk to an npc.
+Many resumable Actvities (leisure, cultivation, hauling etc.) will immediately abort when receiving orders like equip, eat, talk or miracles
 [*][b]UI Improvements[/b] 
 - Many Windows have their Input fields automatically focused
 - Searching is now case-insensitive (Manual pavillion, Universe, Search Panel) 

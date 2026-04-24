@@ -7,21 +7,26 @@ Can be added/removed from ongoing saves.
 * Spirit Animal now generates Leisure when performing any Playing actions or interactions with Disciples.
 * Artifact Crafting message will not be removed when the Artifact is hauled
 * Outers will now search for training Dummies more diligently. 
-* Tier 9+ clothing will be ignored when mindful dessing is active.
+* Tier 9+ clothing will be ignored when mindful dressing is active.
 * Ingame Copy function (see Hotkeys) will now place the selected building and material in your hand. 
 * ESC -> Difficulty -> Environment; now shows the correct map seed
 * Universe Storage now shows items after opening
 * Universe Storage search is now case-insensitive
+* Mindful dressing will now clothe naked disciples
 
 ## Default Features
-* **Handworking Station Priority** <br/> Handworking will now be performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
-* **Smarter Dressers*** <br/> Mindful Dressers will seek out trinkets. 
+* **Handworking Station Priority** <br/> 
+Handworking will now be performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
+* **Smarter Dressers*** <br/> 
+Mindful Dressers will automatically seek out additional items:
 <br/> Outers equip Handkerchiefs, Bells and Talismans such as SpiritTravel, Cleansing, Agility...
 <br/> Xiandao will equip Scented Sachets and Dice
-* **Flag NPC with Manual** <br/> In the Search Panel, NPC's which still carry a Friendship manual have (秘籍) added to their name
-* **Smarter Bedroom Selection** <br/> Workers will prefer beds in rooms with multiple beds and vice versa. Rooms with a single bed will be named after their residents.
-* **Reactive Disciples*** <br/> Leisure and cultivation activities will immediately abort when receiving an order. <br/>
-Most tasks will be interrupted to perform a miracle or talk to an npc.
+* **Flag NPC with Manual** <br/> 
+In the Search Panel, NPC's which still carry a Friendship manual have (秘籍) added to their name
+* **Smarter Bedroom Selection** <br/> 
+Workers will prefer beds in rooms with multiple beds and vice versa. Rooms with a single bed will be named after their residents.
+* **Reactive Disciples*** <br/> 
+Many resumable Actvities (leisure, cultivation, hauling etc.) will immediately abort when receiving orders like equip, eat, talk or miracles<br/>
 * **UI Improvements** 
 <br/>- Many Windows have their Input fields automatically focused
 <br/>- Searching is now case-insensitive (Manual pavillion, Universe, Search Panel) 

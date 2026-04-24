@@ -14,29 +14,34 @@ using static XiaWorld.JianghuMgr;
 
 namespace ACS_Yoda_Tweaks
 {
-	public class DiscipleWhip : Mod
+	public class ReactiveDisciples : Mod
 	{
 		public override Meta Info => _info;
 		private static Meta _info = new Meta("DiscipleWhip", "Reactive Disciples", true);
 
 		private static bool _pauseAfterLoad = false;
 
-		public DiscipleWhip(bool defaultEnabled) : base(defaultEnabled)
+		public ReactiveDisciples(bool defaultEnabled) : base(defaultEnabled)
 		{
 		}
 
 		[HarmonyPatch]
 		public static class Patch
 		{
-			private static Type[] _alwaysSkipJobs = new Type[] { typeof(JobPlayWithBuilding), typeof(JobPlayWithSelf),
-			typeof(JobPlayWithSth), typeof(JobIdle), typeof(JobPractice), typeof(JobPracticeSkill), typeof(JobLookAtSky), typeof(JobBasePractice) };
+			private static HashSet<Type> _alwaysSkipJobs = new HashSet<Type> { typeof(JobPlayWithBuilding), typeof(JobPlayWithSelf),
+			typeof(JobPlayWithSth), typeof(JobIdle), typeof(JobPractice), typeof(JobPracticeSkill), typeof(JobLookAtSky),
+			typeof(JobBasePractice), typeof(JobMoveThingTo),
+			typeof(JobMoveBuilding) , typeof(JobHarvest), typeof(JobPlant), typeof(JobCleanFloor), typeof(JobCutoff),
+			typeof(JobBuild), typeof(JobCleanFloor), typeof(JobRemoveFloor), typeof(JobFree), typeof(JobAbsorbLing)
+			};
+
 			public static void TryCancelJob(Npc npc)
 			{
 				if (npc.JobEngine.CurJob == null)
 					return;
 
 				//var toil = npc.JobEngine.CurJob.GetCurToil();
-				if (npc.JobEngine.CurJob.CanInterruptJob())
+				if (_alwaysSkipJobs.Contains(npc.JobEngine.CurJob.GetType()) && npc.JobEngine.CurJob.CanInterruptJob())
 					npc.JobEngine.CurJob.InterruptJob();
 			}
 
@@ -66,12 +71,7 @@ namespace ACS_Yoda_Tweaks
 				if (!(__instance is Npc npc) || !npc.IsPlayerThing || !npc.IsSmartRace)
 					return;
 
-				if (npc.JobEngine.CurJob != null)
-				{
-					bool isTrash = _alwaysSkipJobs.Contains(npc.JobEngine.CurJob.GetType());
-					if (isTrash || (npc.JobEngine.CurJob is JobAbsorbLing ling && ling.CMD.def.Param == 6)) //meditation
-						TryCancelJob(npc);
-				}
+				TryCancelJob(npc);
 			}
 
 		}

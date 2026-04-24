@@ -32,7 +32,7 @@ namespace ACS_Yoda_Tweaks
 			//new A2H_SortOrder().Info, 
 			//new HandworkPriority().Info,
 			//new CopyBuildThing(true).Info,
-			new DiscipleWhip(true).Info,
+			new ReactiveDisciples(true).Info,
 			new MindfulDresser(true).Info,
 			new CultivationTweaks(true).Info,
 
