@@ -84,6 +84,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MessageIgnore.cs" />
+    <Compile Include="ImmortalSaveLoad.cs" />
+    <Compile Include="PolicyEventTimer.cs" />
     <Compile Include="AutoA2H\AutoA2H.cs" />
     <Compile Include="AutoA2H\AutoThoughtsWindow.cs" />
     <Compile Include="AutoA2H\Aggregation.cs" />

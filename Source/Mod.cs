@@ -40,6 +40,14 @@ namespace ACS_Yoda_Tweaks
 			ShowMessage(stringBuilder.ToString());
 		}
 
+		public virtual void OnSave()
+		{ 
+		}
+
+		public virtual void OnLoad()
+		{ 
+		}
+
 		public static void ShowMessage(Exception ex)
 		{
 			ShowLog(ex.ToString());

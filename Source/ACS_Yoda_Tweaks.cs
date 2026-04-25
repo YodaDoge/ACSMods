@@ -49,6 +49,7 @@ namespace ACS_Yoda_Tweaks
 			new EmptyPrio(false).Info,
 			new ShowManual(false).Info,
 			new PolicyEventTimer(false).Info,
+			new ImmortalSaveLoad(false).Info
 		};
 
 		private const string ConfigName = "ACS_Yoda_Tweaks";
@@ -60,7 +61,6 @@ namespace ACS_Yoda_Tweaks
 		public static void OnInit()
 		{
 			WarnIfHarmonyConflict();
-
 		}
 
 		public static void OnLoad()
