@@ -76,6 +76,9 @@ namespace ACS_Yoda_Tweaks
 		public static void ShowMessage(string text, string title = null)
 		{
 			var msg = Wnd_Message.Show(text, title: title ?? ModName, txt: text, bnt: 1, mode: 0);
+
+			if(IsYodaMachine)
+				GUIUtility.systemCopyBuffer = text;// Log.ToString();
 		}
 
 		private static void ShowConflictMessage(string location)

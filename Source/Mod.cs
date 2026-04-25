@@ -39,6 +39,23 @@ namespace ACS_Yoda_Tweaks
 			stringBuilder.AppendLine(msg);
 			ShowMessage(stringBuilder.ToString());
 		}
+		private static HashSet<int> _once = new HashSet<int>();
+
+		protected static void Once(string s)
+		{
+			Once(() => ShowMessage(s), s.GetHashCode());
+		}
+
+
+		protected static void Once(Action value, int key = 55)
+		{
+			int val = key;// ?? value.GetHashCode();
+			if (!_once.Contains(val))
+			{
+				_once.Add(val);
+				value.Invoke();
+			}
+		}
 
 		public virtual void OnSave()
 		{ 

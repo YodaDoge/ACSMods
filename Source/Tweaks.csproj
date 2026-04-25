@@ -84,6 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WorldMapTweaks.cs" />
     <Compile Include="MessageIgnore.cs" />
     <Compile Include="ImmortalSaveLoad.cs" />
     <Compile Include="PolicyEventTimer.cs" />
