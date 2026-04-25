@@ -48,6 +48,7 @@ namespace ACS_Yoda_Tweaks
 			new Everywhere(false).Info,
 			new EmptyPrio(false).Info,
 			new ShowManual(false).Info,
+			new PolicyEventTimer(false).Info,
 		};
 
 		private const string ConfigName = "ACS_Yoda_Tweaks";
