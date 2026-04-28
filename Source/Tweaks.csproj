@@ -84,46 +84,46 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WorldMapTweaks.cs" />
+    <Compile Include="UI\WorldMapTweaks.cs" />
     <Compile Include="MessageIgnore.cs" />
-    <Compile Include="ImmortalSaveLoad.cs" />
-    <Compile Include="PolicyEventTimer.cs" />
-    <Compile Include="AutoA2H\AutoA2H.cs" />
-    <Compile Include="AutoA2H\AutoThoughtsWindow.cs" />
-    <Compile Include="AutoA2H\Aggregation.cs" />
-    <Compile Include="AutoA2H\Memory.cs" />
-    <Compile Include="AutoA2H\Study.cs" />
-    <Compile Include="AutoA2H\Scoring.cs" />
-    <Compile Include="AutoA2H\WindowPatch.cs" />
-    <Compile Include="InstantSearch.cs" />
-    <Compile Include="CultivationTweaks\LimitWarnings.cs" />
-    <Compile Include="CultivationTweaks\BalancedAlgo.cs" />
-    <Compile Include="CultivationTweaks\PracticePatches.cs" />
-    <Compile Include="BedPriority.cs" />
-    <Compile Include="ReactiveDisciples.cs" />
-    <Compile Include="MapSeedFix.cs" />
-    <Compile Include="CaseInsensitivity.cs" />
-    <Compile Include="ShowManual.cs" />
-    <Compile Include="CultivationTweaks\CultivationTweaks.cs" />
-    <Compile Include="EmptyPrio.cs" />
-    <Compile Include="Everywhere.cs" />
-    <Compile Include="SkipCharacterPrompt.cs" />
-    <Compile Include="CopyBuildThing.cs" />
-    <Compile Include="FogRemover.cs" />
+    <Compile Include="Features\ImmortalSaveLoad.cs" />
+    <Compile Include="UI\PolicyEventTimer.cs" />
+    <Compile Include="Features\AutoA2H\AutoA2H.cs" />
+    <Compile Include="Features\AutoA2H\AutoThoughtsWindow.cs" />
+    <Compile Include="Features\AutoA2H\Aggregation.cs" />
+    <Compile Include="Features\AutoA2H\Memory.cs" />
+    <Compile Include="Features\AutoA2H\Study.cs" />
+    <Compile Include="Features\AutoA2H\Scoring.cs" />
+    <Compile Include="Features\AutoA2H\WindowPatch.cs" />
+    <Compile Include="UI\InstantSearch.cs" />
+    <Compile Include="Tweak\Cultivation\LimitWarnings.cs" />
+    <Compile Include="Tweak\Cultivation\BalancedAlgo.cs" />
+    <Compile Include="Tweak\Cultivation\PracticePatches.cs" />
+    <Compile Include="Tweak\BedPriority.cs" />
+    <Compile Include="Tweak\ReactiveDisciples.cs" />
+    <Compile Include="Fixes\MapSeedFix.cs" />
+    <Compile Include="UI\CaseInsensitivity.cs" />
+    <Compile Include="Tweak\ShowManual.cs" />
+    <Compile Include="Tweak\Cultivation\CultivationTweaks.cs" />
+    <Compile Include="Tweak\EmptyPrio.cs" />
+    <Compile Include="Features\Everywhere.cs" />
+    <Compile Include="Tweak\SkipCharacterPrompt.cs" />
+    <Compile Include="Tweak\CopyBuildThing.cs" />
+    <Compile Include="Features\FogRemover.cs" />
     <Compile Include="Mod.cs" />
-    <Compile Include="SmeltManual.cs" />
+    <Compile Include="Tweak\SmeltManual.cs" />
     <Compile Include="ACS_Yoda_Tweaks.cs" />
-    <Compile Include="MindfulDresser.cs" />
-    <Compile Include="AutoPause.cs" />
-    <Compile Include="AmbientLightMod.cs" />
-    <Compile Include="DummyDetector.cs" />
-    <Compile Include="MasterNoBreakGuard.cs" />
-    <Compile Include="OneClickInterrogatePatch.cs" />
-    <Compile Include="HandworkPriority.cs" />
-    <Compile Include="SpiritAnimalPlayFix.cs" />
-    <Compile Include="A2H_SortOrder.cs" />
+    <Compile Include="Tweak\MindfulDresser.cs" />
+    <Compile Include="Features\AutoPause.cs" />
+    <Compile Include="Features\AmbientLightMod.cs" />
+    <Compile Include="Fixes\DummyDetector.cs" />
+    <Compile Include="Tweak\MasterNoBreakGuard.cs" />
+    <Compile Include="Features\OneClickInterrogatePatch.cs" />
+    <Compile Include="Tweak\HandworkPriority.cs" />
+    <Compile Include="Fixes\SpiritAnimalPlayFix.cs" />
+    <Compile Include="UI\A2H_SortOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShowArtifactCraftingResult.cs" />
+    <Compile Include="Fixes\ShowArtifactCraftingResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md">
@@ -142,5 +142,6 @@
       <Link>SteamDescription.txt</Link>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

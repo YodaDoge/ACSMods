@@ -119,7 +119,6 @@ namespace ACS_Yoda_Tweaks
 
 			private static bool WantsSingleRoom(Npc npc) => npc.Rank > g_emNpcRank.Worker && npc.PropertyMgr.Practice.GongStateLevel > g_emGongStageLevel.None;
 
-
 			private static int CountBedsInRoom(BuildingThing t)
 			{
 				return t.AtRoom?.m_lisThingsInRoom.Count(x => x.TagData.CheckTag("Sleep") > 0) ?? 50;

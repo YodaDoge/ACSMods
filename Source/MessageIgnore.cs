@@ -26,7 +26,7 @@ namespace ACS_Yoda_Tweaks
 
 		public static Dictionary<int, string> Messages = new Dictionary<int, string>()
 		{
-			{42, "Back from adventure" }, //48 = old
+			{42, "Back from adventure" }, 
 			{22, "Unstable Mental State" },
 			{54, "Unsuitable Grow Condition" },
 			{21, "Mood deteriorating" },
