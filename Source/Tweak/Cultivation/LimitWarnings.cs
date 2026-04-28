@@ -9,9 +9,8 @@ namespace ACS_Yoda_Tweaks
 {
 	public partial class CultivationTweaks : Mod
 	{
-
 		[HarmonyPatch]
-		public static partial class Patch
+		public static class PatchLimits
 		{
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(JobLeave2Explore), "OnEnterJob")]

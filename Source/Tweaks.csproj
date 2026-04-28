@@ -107,7 +107,7 @@
     <Compile Include="Tweak\Cultivation\CultivationTweaks.cs" />
     <Compile Include="Tweak\EmptyPrio.cs" />
     <Compile Include="Features\Everywhere.cs" />
-    <Compile Include="Tweak\SkipCharacterPrompt.cs" />
+    <Compile Include="UI\SkipCharacterPrompt.cs" />
     <Compile Include="Tweak\CopyBuildThing.cs" />
     <Compile Include="Features\FogRemover.cs" />
     <Compile Include="Mod.cs" />
