@@ -13,7 +13,7 @@ namespace ACS_Yoda_Tweaks
 	public class ImmortalSaveLoad : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("ImmortalSaveLoad", "Enable Immortal Save/Load", false);
+		private static Meta _info = new Meta("ImmortalSaveLoad", "Immortal Save/Load", false);
 
 		public ImmortalSaveLoad(bool defaultEnabled) : base(defaultEnabled)
 		{

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using XiaWorld;
+using static XiaWorld.AuctionData;
 using static XiaWorld.OutspreadMgr;
 
 namespace ACS_Yoda_Tweaks
@@ -13,7 +14,7 @@ namespace ACS_Yoda_Tweaks
 	public class PolicyEventTimer : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("AgencyEventTimer", "Show time to next policy event", false);
+		private static Meta _info = new Meta("AgencyEventTimer", "Show next policy event time", false);
 
 		private static bool _pauseAfterLoad = false;
 
@@ -24,59 +25,37 @@ namespace ACS_Yoda_Tweaks
 		[HarmonyPatch]
 		public static class Patch
 		{
-			private const string Name = "PolicyEventTimer";
-
 			[HarmonyPostfix]
-			[HarmonyPatch(typeof(Wnd_OpenOutsWindow), "OnInit")]
-			public static void OnInit_Postfix(Wnd_OpenOutsWindow __instance)
+			[HarmonyPatch(typeof(Wnd_OpenOutsWindow), "SetFouse")]
+			public static void FocusUpdate(Wnd_OpenOutsWindow __instance, EventContext context, ref OutspreadMgr.Region ___region)
 			{
-				try
-				{
-					var lbl = new GRichTextField();
-					lbl.text = "unkown";
-					lbl.name = Name;
-
-					__instance.UIInfo.AddChild(lbl);
-				}
-				catch (Exception ex)
-				{
-					ShowMessage(ex);
-				}
+				ShowNextEventTime(__instance, ___region);
 			}
 
-			[HarmonyPostfix]
+				[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_OpenOutsWindow), "UpRegionPolicy")]
-			public static void UpRegionPolicy(Wnd_OpenOutsWindow __instance, Region region)
-			{
-				ShowNextEventTime(__instance, region, region?.RegionName);
-			}
-
-			[HarmonyPostfix]
-			[HarmonyPatch(typeof(Wnd_OpenOutsWindow), "ShowRegion")]
-			public static void ShowNextEventTime(Wnd_OpenOutsWindow __instance, OutspreadMgr.Region ___region, string regionname)
+			public static void ShowNextEventTime(Wnd_OpenOutsWindow __instance, OutspreadMgr.Region region)
 			{
 				try
 				{
-					var lbl = __instance.UIInfo.GetChild(Name);
-					lbl.text = "?";
+					OutspreadMgr.Instance.Step(0.0001f);
+					var nextStory = (region.RegionPolicy.lastPolicyTime + GetPolicyInterval(region)) - World.Instance.TolSecondD;
 
-					var nextStory = (___region.RegionPolicy.lastPolicyTime + GetPolicyInterval(___region)) - World.Instance.TolSecondD;
-
+					string next = OutspreadMgr.Instance.GetPolicyDef(region.Policy)?.DisplayName;
 					if (nextStory > 180)
 					{
 						nextStory /= 600;
-						lbl.text = $"{nextStory:N1} d";
+						next += $" {nextStory:N1}d";
 					}
 					else
-						lbl.text = $"{nextStory:N0} s";
+						next += $" {nextStory:N0}s";
 
-					var target = __instance.UIMain.m_qingxiang.position;
-					lbl.SetPosition(target.x - 85, target.y + 40 , target.z - 1);
+					__instance.UIMain.m_qingxiang.title += next;
+
 					//ShowMessage($"{region.DisplayName} using {region.Policy} next story in  {nextStory} days");
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
-					ShowMessage(ex);
 				}
 			}
 

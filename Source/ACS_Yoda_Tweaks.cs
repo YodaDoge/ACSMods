@@ -61,6 +61,29 @@ namespace ACS_Yoda_Tweaks
 		public static void OnInit()
 		{
 			WarnIfHarmonyConflict();
+			var file = KLog.logFilePath;
+
+			if (IsYodaMachine)
+			{
+				try
+				{
+					using (var stream = new FileStream(
+							file,
+							FileMode.Open,
+							FileAccess.Read,
+							FileShare.ReadWrite))
+					using (var reader = new StreamReader(stream, Encoding.UTF8))
+					{
+						string content = reader.ReadToEnd();
+						if (content.Contains("at HarmonyLib.PatchClassProcessor.ReportException"))
+							ShowMessage("One or more mods failed to apply ");
+					}
+				}
+				catch (Exception ex)
+				{
+					ShowMessage(ex.ToString());
+				}
+			}
 		}
 
 		public static void OnLoad()
@@ -77,7 +100,7 @@ namespace ACS_Yoda_Tweaks
 		{
 			var msg = Wnd_Message.Show(text, title: title ?? ModName, txt: text, bnt: 1, mode: 0);
 
-			if(IsYodaMachine)
+			if (IsYodaMachine)
 				GUIUtility.systemCopyBuffer = text;// Log.ToString();
 		}
 
@@ -128,26 +151,24 @@ namespace ACS_Yoda_Tweaks
 			foreach (var item in mods)
 			{
 				var checkState = Configuration.GetCheckBox(ConfigName, item.Name);
-				KLog.Dbg($"Saved {item.Name} enabled {checkState}");
 				item.Enabled = checkState;
 			}
+
 			MLLMain.AddOrOverWriteSave(ConfigName, mods.ToDictionary(key => key.Name, va => va.Enabled));
-
 			bool v = MLLMain.AddOrOverWriteSave(A2H.Name, A2H.AutoNPC);
-
+			MessageIgnore.Save();
 		}
 
 		private static void LoadSavedConfig()
 		{
 			Dictionary<string, bool> config = MLLMain.GetSaveOrDefault<Dictionary<string, bool>>(ConfigName) ?? new Dictionary<string, bool>();
-
 			foreach (var mod in mods)
 			{
 				if (config.TryGetValue(mod.Name, out bool enabled))
 				{
 					mod.Enabled = enabled;
 				}
-				else if(IsYodaMachine)
+				else if (IsYodaMachine)
 					mod.Enabled = true;
 
 				//add does nothing if checkbox already exists
@@ -157,6 +178,7 @@ namespace ACS_Yoda_Tweaks
 			}
 
 			var a2h = MLLMain.GetSaveOrDefault<Dictionary<int, List<string>>>(AutoA2H.A2H.Name);
+			var result = MessageIgnore.Load();
 			A2H.InitNpcCache(a2h);
 		}
 	}

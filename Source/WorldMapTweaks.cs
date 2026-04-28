@@ -44,7 +44,7 @@ namespace ACS_Yoda_Tweaks
 			public static void DiscipleListAddSoftRecall(Wnd_World __instance, PlacesMgr.MapExploreData data, Npc npc, UI_BntPlaceNpcs npcbtn)
 			{
 				var btn = npcbtn.m_n13;
-				if(npcbtn.m_n13.enabled)
+				if (npcbtn.m_n13.enabled)
 					SetOnClick(__instance, btn, false);
 			}
 
@@ -66,10 +66,40 @@ namespace ACS_Yoda_Tweaks
 				var txtName = __instance.m_name;
 				//txtName.fontsize += 4;
 
-				txtName.width += 40;
+				txtName.width += 45;
+				txtName.align = AlignType.Left;
+				txtName.root.margin = new Margin() { left = 5 };
 				var lblTime = __instance.m_time;
-				lblTime.width += 40; //default 80
-				var callback = __instance.m_n13;
+				lblTime.width -= 3; //default 80
+				lblTime.align = AlignType.Right;
+				lblTime.x += 13;
+			}
+
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(UI_BntPlace_Npc), "ConstructFromXML")]
+			public static void BiggerDiscipleWorldMapName(UI_BntPlace_Npc __instance, XML xml)
+			{
+				var txtName = __instance.m_title;
+				txtName.fontsize += 2;
+				txtName.width += 30;
+			}
+
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(UI_Bnt_SelectNpcItem), "ConstructFromXML")]
+			public static void BiggerDiscipleSelectionNames(UI_Bnt_SelectNpcItem __instance, XML xml)
+			{
+				var lblName = __instance.m_title; // .title = text
+				//Once($"h{lblName.height} w{lblName.width} fs{lblName.fontsize}");
+				__instance.m_title.singleLine = false;
+				__instance.m_title.fontsize -= 4;
+				__instance.m_title.width += 6;
+				__instance.m_title.height += 14;
+				__instance.m_title.align = AlignType.Center;
+				__instance.m_title.verticalAlign = VertAlignType.Middle;
+				lblName.y -= 6;
+				lblName.x -= 2;
+				//__instance.height += 8;
+
 			}
 
 			private static void SoftRecall(Wnd_World __instance, EventContext context, bool updateOpenShow)
@@ -94,7 +124,7 @@ namespace ACS_Yoda_Tweaks
 					else
 						PlacesMgr.Instance.CallBackNpc(data);
 
-					if(updateOpenShow)
+					if (updateOpenShow)
 						__instance.GetType().GetMethod("ShowNpcInfo", BindingFlags.NonPublic | BindingFlags.Instance)
 									.Invoke(__instance, new object[] { data, false });
 					__instance.UpdateNpcs();

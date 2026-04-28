@@ -88,7 +88,7 @@ namespace ACS_Yoda_Tweaks
 
 			public static bool ShouldDoFun(Npc npc)
 			{
-				return ShouldDoFun(npc.Needs.GetNeedValue(g_emNeedType.MindState), GetMinMindState(npc) + 2, MaxStable);
+				return ShouldDoFun(npc.Needs.GetNeedValue(g_emNeedType.MindState), GetMinMindState(npc) + 2, MaxStable+4);
 			}
 
 			private static bool ShouldDoFun(float myValue, float minValue, float maxValue)

@@ -100,7 +100,7 @@
     <Compile Include="CultivationTweaks\BalancedAlgo.cs" />
     <Compile Include="CultivationTweaks\PracticePatches.cs" />
     <Compile Include="BedPriority.cs" />
-    <Compile Include="DiscipleWhip.cs" />
+    <Compile Include="ReactiveDisciples.cs" />
     <Compile Include="MapSeedFix.cs" />
     <Compile Include="CaseInsensitivity.cs" />
     <Compile Include="ShowManual.cs" />

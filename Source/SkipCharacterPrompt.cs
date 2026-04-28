@@ -47,6 +47,19 @@ namespace ACS_Yoda_Tweaks
 
 				}
 			}
+
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(Wnd_SelectNpc), "OnListClick")]
+			[HarmonyPriority(1000)]
+			public static void OnShowUpdate(Wnd_SelectNpc __instance, EventContext context)
+			{
+				if (!Input.GetKey(KeyCode.LeftControl))
+					return;
+
+				var okButton = __instance.UIInfo.m_n27;
+				if (okButton.enabled)
+					okButton.onClick.Call();
+			}
 		}
 	}
 }

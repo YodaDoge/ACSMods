@@ -61,12 +61,13 @@ namespace ACS_Yoda_Tweaks
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(JobBrokenNeck), "OnLeaveJob")]
-			public static void OnLeaveBreakthrough(JobBrokenNeck __instance, KStateQUnit unit)
+			[HarmonyPatch(typeof(JobAbsorbLing), "OnLeaveJob")]
+			public static void OnLeaveBreakthrough(JobBase __instance, KStateQUnit unit)
 			{
 				__instance.Worker.JumpOutFromBuilding();
 			}
 
-				[HarmonyPostfix]
+			[HarmonyPostfix]
 			[HarmonyPatch(typeof(ToilAbsorbLing), "OnStepToil")]
 			public static void AutoCancelMeditation(ToilAbsorbLing __instance, float dt, KStateQUnit unit)
 			{

@@ -29,6 +29,9 @@ In the Search Panel, NPC's which still carry a Friendship manual have (秘籍) a
 Workers prefer beds in rooms with multiple beds and vice versa. Rooms with a single bed are named after their residents.
 [*][b]Reactive Disciples[/b] *
 Many resumable Actvities (leisure, cultivation, hauling etc.) are immediately interrupted when receiving new orders e.g. equip, eat, talk or miracles
+[*][b]World Map[/b]
+Disciples can be stopped from repeating their adventure via Ctrl+Click on the recall button. 
+Disciple Names in the List are bigger sized
 [*][b]UI Improvements[/b] 
 - Many Windows have their Input fields focused initially
 - Searching is now case-insensitive (Manual pavillion, Universe, Search Panel) 
@@ -69,4 +72,6 @@ Freshly accepted Disciples start with hard working enabled and no work prioritie
 [*][b]Animal Autothink[/b]
 You can define which thought shards an animal should use. 
 It will automatically handle thinking, memorizing, studying and forming thoughts.
+[*][b]Immortal Save/Load[/b]
+[*][b]Show next policy event time[/b]
 [/list]
