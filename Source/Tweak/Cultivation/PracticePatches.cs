@@ -18,12 +18,13 @@ namespace ACS_Yoda_Tweaks
 			public static void PracticeSkillToil(ToilPracticeSkill __instance, float dt, KStateQUnit unit)
 			{
 				if (!_info.Enabled) return;
-
+				var npc = __instance.npc;
 				if (__instance.npc.PropertyMgr.Practice.PracticeMode != g_emPracticeBehaviourKind.None)
 					return;
 
 				if (__instance.npc.Needs.GetNeedValue(g_emNeedType.MindState) < GetMinMindState(__instance.npc))
 				{
+					npc.JumpOutFromBuilding(true);
 					__instance.npc.JobEngine.InterruptJob();
 				}
 			}

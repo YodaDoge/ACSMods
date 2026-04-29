@@ -58,7 +58,6 @@ namespace ACS_Yoda_Tweaks
 						else if (npc.PropertyMgr.Practice.TouchNeck && !NeedsRest(npc))
 						{
 							__result = JobMgr.Instance.CreateJob("JobPracticeSkill", null);
-
 						}
 						else
 						{

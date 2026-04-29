@@ -42,7 +42,16 @@ namespace ACS_Yoda_Tweaks
 
 				//var toil = npc.JobEngine.CurJob.GetCurToil();
 				if (_alwaysSkipJobs.Contains(npc.JobEngine.CurJob.GetType()) && npc.JobEngine.CurJob.CanInterruptJob())
+				{
+					AddLog($"{npc.GetName()} interrupted {npc.JobEngine.CurJob?.jobdef?.Name} ");
+
+					if (npc.InBuilding != null)
+					{
+						AddLog("Is walkable: " + npc.InBuilding.map.CheckGridWalkAble(npc.InBuilding.Key));
+					}
+					npc.JumpOutFromBuilding(true);
 					npc.JobEngine.CurJob.InterruptJob();
+				}
 			}
 
 			[HarmonyPostfix]
@@ -70,7 +79,7 @@ namespace ACS_Yoda_Tweaks
 
 				if (!(__instance is Npc npc) || !npc.IsPlayerThing || !npc.IsSmartRace)
 					return;
-
+				AddLog($"{npc.GetName()} received cmd {type} is executing {npc.JobEngine.CurJob?.CMD?.CommandType}");
 				TryCancelJob(npc);
 			}
 

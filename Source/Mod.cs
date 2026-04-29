@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -17,8 +18,8 @@ namespace ACS_Yoda_Tweaks
 
 		public static void ShowMessage(string message, string title = null) => ACS_Yoda_Tweaks.ShowMessage(message);
 
-		private const int LogLength = 5;
-		private static Queue<string> Log = new Queue<string>(LogLength);
+		private const int LogLength = 8;
+		private static Queue<string> Log = new Queue<string>();
 
 		public static void AddLog(string msg, params string[] fmt) => AddLog(string.Format(msg, fmt));
 		public static void AddLog(string msg)
@@ -28,15 +29,19 @@ namespace ACS_Yoda_Tweaks
 			Log.Enqueue(msg);
 		}
 
-		public static void ShowLog(string msg)
+		public static void ShowLog(string msg = "")
 		{
 			StringBuilder stringBuilder = new StringBuilder();
-			while (Log.Count > 0)
+			foreach (var item in Log.Reverse())
 			{
-				stringBuilder.Append(Log.Dequeue());
+				stringBuilder.AppendLine(item);
 			}
-			stringBuilder.AppendLine("__________");
-			stringBuilder.AppendLine(msg);
+
+			if (!string.IsNullOrEmpty(msg))
+			{
+				stringBuilder.AppendLine("__________");
+				stringBuilder.AppendLine(msg);
+			}
 			ShowMessage(stringBuilder.ToString());
 		}
 		private static HashSet<int> _once = new HashSet<int>();
@@ -46,6 +51,15 @@ namespace ACS_Yoda_Tweaks
 			Once(() => ShowMessage(s), s.GetHashCode());
 		}
 
+		protected static bool Once(int key)
+		{
+			if (!_once.Contains(key))
+			{
+				_once.Add(key);
+				return true;
+			}
+			return false;
+		}
 
 		protected static void Once(Action value, int key = 55)
 		{
@@ -58,11 +72,11 @@ namespace ACS_Yoda_Tweaks
 		}
 
 		public virtual void OnSave()
-		{ 
+		{
 		}
 
 		public virtual void OnLoad()
-		{ 
+		{
 		}
 
 		public static void ShowMessage(Exception ex)

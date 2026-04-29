@@ -61,8 +61,11 @@ namespace ACS_Yoda_Tweaks
 		public static void OnInit()
 		{
 			WarnIfHarmonyConflict();
-			var file = KLog.logFilePath;
+		}
 
+		public static void OnLoad()
+		{
+			var file = KLog.logFilePath;
 			if (IsYodaMachine)
 			{
 				try
@@ -84,22 +87,22 @@ namespace ACS_Yoda_Tweaks
 					ShowMessage(ex.ToString());
 				}
 			}
-		}
 
-		public static void OnLoad()
-		{
+
 			//loading another save might reset the subscription. manual unsubscribe to avoid double subscribe
 			Configuration.Unsubscribe(OnSave);
 			Configuration.Subscribe(OnSave);
 
 			mods = GetDefaults();
 			LoadSavedConfig();
+
+
 		}
 
 		public static void ShowMessage(string text, string title = null)
 		{
 			var msg = Wnd_Message.Show(text, title: title ?? ModName, txt: text, bnt: 1, mode: 0);
-
+			msg.width += 800;
 			if (IsYodaMachine)
 				GUIUtility.systemCopyBuffer = text;// Log.ToString();
 		}
@@ -178,8 +181,23 @@ namespace ACS_Yoda_Tweaks
 			}
 
 			var a2h = MLLMain.GetSaveOrDefault<Dictionary<int, List<string>>>(AutoA2H.A2H.Name);
-			var result = MessageIgnore.Load();
 			A2H.InitNpcCache(a2h);
+			MessageIgnore.Load();
+		}
+		[HarmonyPatch]
+		public static class Patch
+		{
+			[HarmonyPatch(typeof(Wnd_GameMain), "__clickGamePlayMenu")]
+			public static void Postfix(EventContext context, Wnd_GameMain __instance)
+			{
+				if (!IsYodaMachine)
+					return;
+				GButton gButton = (GButton)context.data;
+				if (gButton.name == "pause" && UnityEngine.Input.GetKey(KeyCode.LeftControl))
+				{
+					ShowLog("");
+				}
+			}
 		}
 	}
 }

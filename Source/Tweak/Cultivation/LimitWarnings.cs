@@ -58,14 +58,7 @@ namespace ACS_Yoda_Tweaks
 				var npc = __instance.Worker;
 				if (HasAdventureNeck(npc))
 				{
-					if (MessageMgr.UseOldMessage)
-					{
-						MsgMgr.Instance.AddMsg(26, __instance.Worker);
-					}
-					else
-					{
-						MessageMgr.Instance.AddMessage(35, new List<Thing> { __instance.Worker });
-					}
+					MessageMgr.Instance.AddMessage(35, new List<Thing> { __instance.Worker });
 				}
 			}
 

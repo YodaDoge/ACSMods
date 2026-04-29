@@ -64,7 +64,7 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(JobAbsorbLing), "OnLeaveJob")]
 			public static void OnLeaveBreakthrough(JobBase __instance, KStateQUnit unit)
 			{
-				__instance.Worker.JumpOutFromBuilding();
+				__instance.Worker.JumpOutFromBuilding(true);
 			}
 
 			[HarmonyPostfix]
@@ -80,6 +80,7 @@ namespace ACS_Yoda_Tweaks
 				if (__instance.Job.CMD.def.Param == 6 &&
 				(npc.Needs.GetNeedValue(g_emNeedType.MindState) < GetMinMindState(npc) || npc.PropertyMgr.Practice.TouchNeck))
 				{
+					npc.JumpOutFromBuilding(true);
 					npc.JobEngine.InterruptJob();
 				}
 			}
@@ -99,6 +100,7 @@ namespace ACS_Yoda_Tweaks
 				if (__instance.npc.PropertyMgr.Practice.TouchNeck ||
 				__instance.npc.Needs.GetNeedValue(g_emNeedType.MindState) < GetMinMindState(__instance.npc))
 				{
+					npc.JumpOutFromBuilding(true);
 					__instance.npc.JobEngine.InterruptJob(forceSuccess: true);
 				}
 			}

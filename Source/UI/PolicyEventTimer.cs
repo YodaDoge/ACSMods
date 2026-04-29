@@ -32,7 +32,7 @@ namespace ACS_Yoda_Tweaks
 				ShowNextEventTime(__instance, ___region);
 			}
 
-				[HarmonyPostfix]
+			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_OpenOutsWindow), "UpRegionPolicy")]
 			public static void ShowNextEventTime(Wnd_OpenOutsWindow __instance, OutspreadMgr.Region region)
 			{
@@ -50,7 +50,7 @@ namespace ACS_Yoda_Tweaks
 					else
 						next += $" {nextStory:N0}s";
 
-					__instance.UIMain.m_qingxiang.title += next;
+					__instance.UIMain.m_qingxiang.title = next;
 
 					//ShowMessage($"{region.DisplayName} using {region.Policy} next story in  {nextStory} days");
 				}

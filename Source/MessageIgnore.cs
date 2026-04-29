@@ -4,10 +4,13 @@ using KTV;
 using ModLoaderLite;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using XiaWorld;
+using XiaWorld.LSBTree;
 using XiaWorld.UI.InGame;
+using static XiaWorld.MessageMgr;
 
 namespace ACS_Yoda_Tweaks
 {
@@ -26,7 +29,7 @@ namespace ACS_Yoda_Tweaks
 
 		public static Dictionary<int, string> Messages = new Dictionary<int, string>()
 		{
-			{42, "Back from adventure" }, 
+			{42, "Back from adventure" },
 			{22, "Unstable Mental State" },
 			{54, "Unsuitable Grow Condition" },
 			{21, "Mood deteriorating" },
@@ -34,28 +37,29 @@ namespace ACS_Yoda_Tweaks
 
 		public static void Save()
 		{
-			if (MessagesToIgnore != null)
-				MLLMain.AddOrOverWriteSave(_info.Name, MessagesToIgnore);
+			MLLMain.AddOrOverWriteSave(_info.Name, MessagesToIgnore);
 		}
 
-		public static HashSet<int> Load()
+		public static void Load()
 		{
-			return MLLMain.GetSaveOrDefault<HashSet<int>>(_info.Name);
+			MessagesToIgnore = MLLMain.GetSaveOrDefault<HashSet<int>>(_info.Name) ?? new HashSet<int>();
 		}
 
 		[HarmonyPatch]
 		public static class Patch
 		{
-			[HarmonyPrefix]
-			[HarmonyPatch(typeof(MessageMgr), "AddMessage")]
-			public static bool FilterMessage(int msgid, List<Thing> things = null, string param = null, int brannum = -1, int targetkey = 0, int other = 0, string other2 = null, string tips = null, bool needUp = false)
+
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(MessageMgr), "_DoAddMessage")]
+			public static void FilterMessage(MessageMgr __instance, ref MessageData __result, int msgid, List<Thing> things, string param, int brannum, int targetkey, int other, string other2, string tips)
 			{
 				//ShowMessage("Added message " + msgid + " " + things?.FirstOrDefault()?.GetName());
-				return !MessagesToIgnore?.Contains(msgid) != false;
+				if (MessagesToIgnore?.Contains(msgid) != true)
+					return;
+				__result._RemoveTime = World.Instance.TolSecond - 1;
 			}
 
 			static List<UI_item_msgshowevent> _customFilterUIElements = new List<UI_item_msgshowevent>();
-
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_MsgShowConfig), "OnShowUpdate")]
@@ -63,8 +67,6 @@ namespace ACS_Yoda_Tweaks
 			{
 				try
 				{
-					if (MessagesToIgnore == null)
-						MessagesToIgnore = MLLMain.GetSaveOrDefault<HashSet<int>>(_info.Name) ?? new HashSet<int>();
 					foreach (var item in Messages)
 					{
 						UI_item_msgshowevent uI_item_msgshowevent = ___UIInfo.m_n137.AddItemFromPool() as UI_item_msgshowevent;
@@ -79,7 +81,6 @@ namespace ACS_Yoda_Tweaks
 				{
 					ShowMessage(ex);
 				}
-
 			}
 
 			[HarmonyPrefix]
@@ -96,7 +97,7 @@ namespace ACS_Yoda_Tweaks
 					___UIInfo.m_n137.RemoveChild(uI_item_msgshowevent);
 				}
 				_customFilterUIElements.Clear();
-				var isNew = !MLLMain.AddOrOverWriteSave(_info.Name, MessagesToIgnore);
+				Save();
 			}
 		}
 	}

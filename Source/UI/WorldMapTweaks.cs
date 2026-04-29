@@ -31,6 +31,8 @@ namespace ACS_Yoda_Tweaks
 
 			private static EventListener _defaultClick;
 
+
+
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_World), "OnInit")]
 			public static void AddSoftRecallShortcut(Wnd_World __instance)
@@ -89,7 +91,7 @@ namespace ACS_Yoda_Tweaks
 			public static void BiggerDiscipleSelectionNames(UI_Bnt_SelectNpcItem __instance, XML xml)
 			{
 				var lblName = __instance.m_title; // .title = text
-				//Once($"h{lblName.height} w{lblName.width} fs{lblName.fontsize}");
+												  //Once($"h{lblName.height} w{lblName.width} fs{lblName.fontsize}");
 				__instance.m_title.singleLine = false;
 				__instance.m_title.fontsize -= 4;
 				__instance.m_title.width += 6;

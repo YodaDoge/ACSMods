@@ -39,6 +39,14 @@ namespace ACS_Yoda_Tweaks
 				FindFittingBed(npc);
 			}
 
+
+			//[HarmonyPostfix]
+			//[HarmonyPatch(typeof(NpcPractice), "_UpgradeStage")]
+			//public static void Up2Disciple(Npc ___me, bool noevent = false)
+			//{
+			//	ShowLog(Environment.StackTrace);
+			//}
+
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(NpcPractice), "Up2Disciple")]
 			public static void Up2Disciple(Npc ___me)
@@ -79,7 +87,10 @@ namespace ACS_Yoda_Tweaks
 				if (bed != npc.MyBed && npc.MyBed != null && npc.MyBed.AtRoom?.Name?.StartsWith(npc.GetName()) == true)
 				{
 					if (CountBedsInRoom(npc.MyBed) == 1)
+					{
 						npc.MyBed.AtRoom.ChangeName("Room");
+						AddLog("Removed RoomName for " + npc.GetName());
+					}
 				}
 			}
 

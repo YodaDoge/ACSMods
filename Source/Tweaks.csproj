@@ -84,6 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UI\Misc.cs" />
     <Compile Include="UI\WorldMapTweaks.cs" />
     <Compile Include="MessageIgnore.cs" />
     <Compile Include="Features\ImmortalSaveLoad.cs" />
@@ -144,4 +145,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>start "" "C:\Program Files (x86)\Steam\steamapps\common\AmazingCultivationSimulator\Amazing Cultivation Simulator.exe"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
