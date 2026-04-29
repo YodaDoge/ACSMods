@@ -32,7 +32,7 @@ public class DummyDetector : Mod
 			
 			if (npc.InBuilding == null || __instance.Worker.InBuilding.TagData.CheckTag("BasePractice") <= 0)
 			{
-				AddLog($"{npc.ToString()} Searching");
+				//AddLog($"{npc.ToString()} Searching");
 				BuildingThing buildingThing = __instance.Worker.map.Things.FindBuilding(__instance.Worker, 200, "BasePractice", 0, needworkspace: true, issort: true);
 				if (buildingThing != null)
 				{
@@ -42,7 +42,7 @@ public class DummyDetector : Mod
 					list.Add(ToilGoto.GotoThing(buildingThing, g_emPathEndMode.Touch, num));
 					list.Add(new ToilJump2Building(buildingThing, num));
 				}
-				AddLog($"{npc.ToString()} found Dummy "+flag);
+				//AddLog($"{npc.ToString()} found Dummy "+flag);
 			}
 			if (__instance.Worker.InBuilding != null && __instance.Worker.InBuilding.TagData.CheckTag("BasePractice") > 0)
 			{

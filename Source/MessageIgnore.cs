@@ -49,14 +49,53 @@ namespace ACS_Yoda_Tweaks
 		public static class Patch
 		{
 
+			//[HarmonyPrefix]
+			//[HarmonyPatch(typeof(MessageMgr), "AddMessage")]
+			//public static bool FilterMessage(int msgid, List<Thing> things = null, string param = null, int brannum = -1, int targetkey = 0, int other = 0, string other2 = null, string tips = null, bool needUp = false)
+			//{
+			//	//ShowMessage("Added message " + msgid + " " + things?.FirstOrDefault()?.GetName());
+			//	return !MessagesToIgnore?.Contains(msgid) != false;
+			//}
+
 			[HarmonyPostfix]
-			[HarmonyPatch(typeof(MessageMgr), "_DoAddMessage")]
-			public static void FilterMessage(MessageMgr __instance, ref MessageData __result, int msgid, List<Thing> things, string param, int brannum, int targetkey, int other, string other2, string tips)
+			[HarmonyPatch(typeof(Wnd_MessageBox), "OnRightClickItem")]
+			public static void LogMsgId(Wnd_MessageBox __instance, EventContext context)
 			{
+				GObject gObject = context.sender as GObject;
+				MessageMgr.MessageData messageData = gObject.data as MessageMgr.MessageData;
+				MessageMgr.GetMessageInfo(messageData, out var attribute, out var _);
 				//ShowMessage("Added message " + msgid + " " + things?.FirstOrDefault()?.GetName());
-				if (MessagesToIgnore?.Contains(msgid) != true)
-					return;
-				__result._RemoveTime = World.Instance.TolSecond - 1;
+				AddLog($"{messageData._MessageID} things:{string.Join(" ", messageData._ThingID.Select(x => x.ToString()).ToArray())} rt:{attribute._ID} ob:{messageData._OnlyBox}");
+			}
+
+
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(Wnd_MessageBox), "UpShow")]
+			public static void FilterMessage(Wnd_MessageBox __instance)
+			{
+				try
+				{
+					//ShowMessage("Added message " + msgid + " " + things?.FirstOrDefault()?.GetName());
+					List<MessageData> toRemove = new List<MessageData>();
+					foreach (var item in MessageMgr.Instance.m_mapLevelMsg)
+					{
+						if (MessagesToIgnore?.Contains(item._AttributID) != true)
+							continue;
+
+						//AddLog($"UpShow "+ item._AttributID);
+						MessageMgr.GetMessageInfo(item, out var attribute, out var _);
+						item._OnlyBox = true; //to the shadow realm!
+						if (attribute._RemoveType == MessageMgr.Message_RemoveType.Lookover)
+						{
+							toRemove.Add(item);
+						}
+					}
+					toRemove.ForEach(MessageMgr.Instance.RemoveMessage);
+				}
+				catch (Exception ex)
+				{
+					ShowMessage(ex);
+				}
 			}
 
 			static List<UI_item_msgshowevent> _customFilterUIElements = new List<UI_item_msgshowevent>();

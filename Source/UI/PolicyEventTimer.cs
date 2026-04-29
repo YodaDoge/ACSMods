@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using XiaWorld;
+using XiaWorld.UI.InGame;
 using static XiaWorld.AuctionData;
 using static XiaWorld.OutspreadMgr;
 
@@ -32,31 +33,66 @@ namespace ACS_Yoda_Tweaks
 				ShowNextEventTime(__instance, ___region);
 			}
 
+			static int fontSize = 0;
+
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(Wnd_QuickCityWindow), "UpRegionPolicy")]
+			public static void UpRegionPolicy(Wnd_QuickCityWindow __instance, OutspreadMgr.Region region, UI_QuickCityItem qbtn)
+			{
+				if (region == null)
+					return;
+				try
+				{
+					OutspreadMgr.Instance.Step(0.00001f);
+					qbtn.m_qingxiang.title = PolicyEventString(region, true);
+					var txt = qbtn.m_qingxiang.GetTextField();
+					txt.singleLine = false;
+					if (fontSize == 0)
+					{
+						fontSize = txt.fontsize - 2;
+					}
+					txt.fontsize = fontSize;
+					//txt.width = 150;
+					txt.align = AlignType.Center;
+				}
+				catch (Exception)
+				{
+
+				}
+			}
+
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_OpenOutsWindow), "UpRegionPolicy")]
 			public static void ShowNextEventTime(Wnd_OpenOutsWindow __instance, OutspreadMgr.Region region)
 			{
 				try
 				{
-					OutspreadMgr.Instance.Step(0.0001f);
-					var nextStory = (region.RegionPolicy.lastPolicyTime + GetPolicyInterval(region)) - World.Instance.TolSecondD;
+					var btn = __instance.UIMain.m_qingxiang;
 
-					string next = OutspreadMgr.Instance.GetPolicyDef(region.Policy)?.DisplayName;
-					if (nextStory > 180)
-					{
-						nextStory /= 600;
-						next += $" {nextStory:N1}d";
-					}
-					else
-						next += $" {nextStory:N0}s";
-
-					__instance.UIMain.m_qingxiang.title = next;
-
+					OutspreadMgr.Instance.Step(0.00001f);
+					string next = PolicyEventString(region);
+					btn.title = next;
 					//ShowMessage($"{region.DisplayName} using {region.Policy} next story in  {nextStory} days");
 				}
 				catch (Exception)
 				{
 				}
+			}
+
+			private static string PolicyEventString(Region region, bool lineBreak = false)
+			{
+				var nextStory = (region.RegionPolicy.lastPolicyTime + GetPolicyInterval(region)) - World.Instance.TolSecondD;
+
+				string next = OutspreadMgr.Instance.GetPolicyDef(region.Policy)?.DisplayName;
+				next += lineBreak ? "\r\n" : " ";
+				if (nextStory > 180)
+				{
+					nextStory /= 600;
+					next += $"{nextStory:N1}d";
+				}
+				else
+					next += $"{nextStory:N0}s";
+				return next;
 			}
 
 			private static float specFocusInterval;

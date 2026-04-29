@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using XiaWorld;
+using static XiaWorld.AuctionData;
+using static XiaWorld.OutspreadMgr;
 
 namespace ACS_Yoda_Tweaks
 {
@@ -13,19 +15,37 @@ namespace ACS_Yoda_Tweaks
 		public static class PatchLimits
 		{
 			[HarmonyPostfix]
-			[HarmonyPatch(typeof(JobLeave2Explore), "OnEnterJob")]
-			public static void StartAdventure(JobLeave2Explore __instance, KStateQUnit unit)
+			[HarmonyPatch(typeof(CommandGoMapExplore), "CouldBeFind")]
+			public static void StartAdventure(CommandGoMapExplore __instance, Npc npc)
 			{
-				var npc = __instance.Worker;
+				//var npc = __instance.Worker;
 				if (HasAdventureNeck(npc))
 				{
-					if (MessageMgr.UseOldMessage)
+					//MessageMgr.GetMessageInfo(item, out var attribute, out var _);
+					var msg = MessageMgr.Instance.m_mapLevelMsg.FirstOrDefault(x => x._AttributID == 35 && x._ThingID?.Contains(npc.ID) == true);
+					if (msg != null)
 					{
-						MsgMgr.Instance.RemoveMsg(26, __instance.Worker);
+						AddLog("Remove adv. limit msg " + npc.GetName());
+						msg._OnlyBox = true;
+						Wnd_MessageBox.Instance.UpdateMessage();
 					}
-					else
+					//MessageMgr.Instance.RemoveMessage(35, new List<Thing> { __instance.Worker });
+				}
+			}
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(Command), "FinishCommand")]
+			public static void RestoreAdventureLimitMessage(Command __instance, bool del = false, bool debug = false, bool mustRemove = false)
+			{
+				if (__instance is CommandGoMapExplore cmd && cmd.OwnerThing is Npc npc)
+				{
+					//var npc = __instance.OwnerThing as Npc; // __instance.Worker;
+					if (HasAdventureNeck(npc))
 					{
-						MessageMgr.Instance.RemoveMessage(35, new List<Thing> { __instance.Worker });
+						//var msg = MessageMgr.Instance.m_mapLevelMsg.FirstOrDefault(x => x._AttributID == 35 && x._ThingID?.Contains(npc.ID) == true);
+						AddLog("restore adv limit msg " + npc.GetName());
+						//msg._OnlyBox = false;
+						MessageMgr.Instance.RemoveMessage(35, new List<Thing> { npc });
+						MessageMgr.Instance.AddMessage(35, new List<Thing> { npc }, needUp: true);
 					}
 				}
 			}
@@ -46,19 +66,9 @@ namespace ACS_Yoda_Tweaks
 					var name = itm.GetName().Replace("Talisman of", string.Empty)
 											.Replace(" Talisman", string.Empty)
 											.Replace("Illustration of ", string.Empty)
+											.Replace("Everlasting", "Lasting")
 											.Trim();
 					itm.SetName(name);
-				}
-			}
-
-			[HarmonyPostfix]
-			[HarmonyPatch(typeof(JobLeave2Explore), "OnLeaveJob")]
-			public static void RestoreLimitMessageOnFail(JobLeave2Explore __instance, KStateQUnit unit)
-			{
-				var npc = __instance.Worker;
-				if (HasAdventureNeck(npc))
-				{
-					MessageMgr.Instance.AddMessage(35, new List<Thing> { __instance.Worker });
 				}
 			}
 
