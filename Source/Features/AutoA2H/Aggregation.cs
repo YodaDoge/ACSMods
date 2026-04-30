@@ -12,8 +12,14 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 	{
 		public static void ThinkIfYouCan(Npc npc)
 		{
-			if (!IsAutoNPC(npc) || npc.JobEngine.CurJob?.jobdef.Name == "JobYsThink")
+			if (!IsAutoNPC(npc))
 			{
+				return;
+			}
+
+			if (npc.JobEngine.CurJob?.jobdef.Name == "JobYsThink")
+			{
+				MessageMgr.Instance.RemoveMessage(34001, new List<Thing> { npc });
 				return;
 			}
 
@@ -58,7 +64,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 					{
 						MessageMgr.Instance.RemoveMessage(34001, new List<Thing> { npc });
 					}
-					;
 				}
 			}
 			catch (Exception ex)
