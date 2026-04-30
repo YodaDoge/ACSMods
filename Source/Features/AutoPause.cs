@@ -31,17 +31,15 @@ namespace ACS_Yoda_Tweaks
 				if (!_info.Enabled || World.Instance.TolSecond <= 3f) return;
 
 				_pauseAfterLoad = true;
-				if (MainManager.Instance != null)
-					MainManager.Instance.Pause();
 			}
 
 			[HarmonyPostfix]
-			[HarmonyPatch(typeof(Wnd_GameMain), "OnUpdate")]
-			public static void OnUpdate_Postfix(Wnd_GameMain __instance)
+			[HarmonyPatch(typeof(MainManager), "Step")]
+			public static void OnUpdate_Postfix(float dt)
 			{
 				if (!_info.Enabled) return;
 
-				if ((_pauseAfterLoad || !Application.isFocused) && MainManager.Instance != null)
+				if (_pauseAfterLoad || !Application.isFocused)
 				{
 					MainManager.Instance.Pause();
 					_pauseAfterLoad = false;
