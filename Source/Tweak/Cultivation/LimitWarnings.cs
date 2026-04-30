@@ -18,35 +18,26 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(CommandGoMapExplore), "CouldBeFind")]
 			public static void StartAdventure(CommandGoMapExplore __instance, Npc npc)
 			{
-				//var npc = __instance.Worker;
 				if (HasAdventureNeck(npc))
 				{
-					//MessageMgr.GetMessageInfo(item, out var attribute, out var _);
 					var msg = MessageMgr.Instance.m_mapLevelMsg.FirstOrDefault(x => x._AttributID == 35 && x._ThingID?.Contains(npc.ID) == true);
 					if (msg != null)
 					{
-						AddLog("Remove adv. limit msg " + npc.GetName());
-						msg._OnlyBox = true;
+						MessageMgr.Instance.RemoveMessage(35, new List<Thing> { npc });
 						Wnd_MessageBox.Instance.UpdateMessage();
 					}
-					//MessageMgr.Instance.RemoveMessage(35, new List<Thing> { __instance.Worker });
 				}
 			}
+
 			[HarmonyPostfix]
-			[HarmonyPatch(typeof(Command), "FinishCommand")]
-			public static void RestoreAdventureLimitMessage(Command __instance, bool del = false, bool debug = false, bool mustRemove = false)
+			[HarmonyPatch(typeof(JobLeave2Explore), "OnLeaveJob")]
+			public static void RestoreLimitMessageOnFail(JobLeave2Explore __instance, KStateQUnit unit)
 			{
-				if (__instance is CommandGoMapExplore cmd && cmd.OwnerThing is Npc npc)
+				var npc = __instance.Worker;
+				if (HasAdventureNeck(npc) && npc.CheckCommand("CommandGoMapExplore", checkcount:true)?.Any(x => x != null) != true)
 				{
-					//var npc = __instance.OwnerThing as Npc; // __instance.Worker;
-					if (HasAdventureNeck(npc))
-					{
-						//var msg = MessageMgr.Instance.m_mapLevelMsg.FirstOrDefault(x => x._AttributID == 35 && x._ThingID?.Contains(npc.ID) == true);
-						AddLog("restore adv limit msg " + npc.GetName());
-						//msg._OnlyBox = false;
-						MessageMgr.Instance.RemoveMessage(35, new List<Thing> { npc });
-						MessageMgr.Instance.AddMessage(35, new List<Thing> { npc }, needUp: true);
-					}
+					MessageMgr.Instance.AddMessage(35, new List<Thing> { npc });
+					Wnd_MessageBox.Instance.UpdateMessage();
 				}
 			}
 
