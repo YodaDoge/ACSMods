@@ -54,8 +54,5 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 			}
 		}
-
-		private static g_emThingType[] studyItemTypes = new g_emThingType[] { g_emThingType.Building, g_emThingType.Item, g_emThingType.Plant, g_emThingType.None, };
-
 	}
 }
