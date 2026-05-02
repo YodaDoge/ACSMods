@@ -15,9 +15,9 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				int existScore = ExistsAsAgg ? -100 : 0;
 				bool isEmotion = AggType == EmotionType;
 				return existScore
-				+ existingAggTypeCount * -22
+				+ existingAggTypeCount * -32
 				+ level * 11
-				+ (isEmotion ? level * 5 : 0)
+				+ (isEmotion ? level * 3 : 0)
 				//+ Math.Min(3, existingTotalCount) * 7
 				+ ExistingMemories * 4;
 			}

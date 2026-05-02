@@ -37,12 +37,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 					var raceDef = HMgr.RaceInfos.GetDef(npc.RaceDefName);
 					RefreshMemory(scorings, npc, raceDef, newAgg.Name);
 
-					npc.A2H.RemoveAllTState();
-					newAgg.frags.ForEach(x => x.TState = 1);
-
-					var finalThought = newAgg.Name;
-
-					StartAggrThink(npc, finalThought);
+					StartAggrThink(npc, newAgg);
 					return;
 				}
 
@@ -72,6 +67,8 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				KLog.Dbg(ex.ToString());
 			}
 		}
+
+
 
 		private static bool TryFormFinalFrag(Npc npc)
 		{
@@ -123,13 +120,14 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				{ "Emotion", "AEmotion" }
 			};
 
-		private static void StartAggrThink(Npc npc, string fragName)
+		private static void StartAggrThink(Npc npc, ThinkFragScoring score)
 		{
-			//Wnd_A2HCreateAgg.CreateAgg method
-			var think2Consider = npc.A2H.thinkFrags.Where(x => x.frags[0] == fragName).ToList();
+			npc.A2H.RemoveAllTState();
+			score.frags.ForEach(x => x.TState = 1);
 
-			HEFragmentDef def = IManagerModule_LoopInterval<HumanoidEvolutionMgr>.Instance.Fragments.GetDef(fragName);
-			ThinkAggregate aggregate = HMgr.GetAggregate(think2Consider, FragAggName2AggDefName.SafeGet(def.Type));
+			//Wnd_A2HCreateAgg.CreateAgg method
+			HEFragmentDef def = IManagerModule_LoopInterval<HumanoidEvolutionMgr>.Instance.Fragments.GetDef(score.Name);
+			ThinkAggregate aggregate = HMgr.GetAggregate(score.frags, FragAggName2AggDefName.SafeGet(def.Type));
 
 			float num = 600f;
 			if (npc.A2H.thinkFinals != null)
