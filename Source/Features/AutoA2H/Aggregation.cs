@@ -72,10 +72,10 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 		private static bool TryFormFinalFrag(Npc npc)
 		{
-			var aggs = npc.A2H.thinkAggregates ?? new List<ThinkAggregate>();
-
-			var wantedAggsByType = aggs.Where(x => IsWantedFrag(npc, x.frag))
-					.Where(x => !string.IsNullOrEmpty(x.Combine)).GroupBy(x => x.Combine).ToList();
+			var wantedAggsByType = npc.A2H.thinkAggregates
+					.Where(x => IsWantedFrag(npc, x.frag))
+					.Where(x => !string.IsNullOrEmpty(x.Combine))
+					.GroupBy(x => x.Combine).ToList();
 
 			if (wantedAggsByType.Count >= 3)
 			{
