@@ -81,22 +81,7 @@ namespace ACS_Yoda_Tweaks
 				return npc.PropertyMgr.Practice.TouchNeck && npc.PropertyMgr.Practice.CurNeck?.Kind == g_emGongBottleNeckType.Explore;
 			}
 
-			[HarmonyPostfix]
-			[HarmonyPatch(typeof(JobPaintCharm), "OnLeaveJob")]
-			public static void ShorterTalismanNames(JobPaintCharm __instance, KStateQUnit unit)
-			{
-				if (IsYodaMachine)
-				{
-					var itm = ThingMgr.Instance.FindThingByID((__instance.CMD as CommandPaintCharm).CharmItemId) as ItemThing;
 
-					var name = itm.GetName().Replace("Talisman of", string.Empty)
-											.Replace(" Talisman", string.Empty)
-											.Replace("Illustration of ", string.Empty)
-											.Replace("Everlasting", "Lasting")
-											.Trim();
-					itm.SetName(name);
-				}
-			}
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(JobBrokenNeck), "OnEnterJob")]

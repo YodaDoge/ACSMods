@@ -57,6 +57,7 @@ namespace ACS_Yoda_Tweaks
 					//does nothing if flag doesnt exist, 
 					__instance.npc.SubSpecialFlag(g_emNpcSpecailFlag.FLAG_PRACTIVING);
 				}
+				__instance.npc.JumpOutFromBuilding(true);
 			}
 
 			[HarmonyPostfix]
@@ -77,8 +78,10 @@ namespace ACS_Yoda_Tweaks
 				if (!npc.IsPlayerThing || npc.GongKind == g_emGongKind.God || npc.GongKind == g_emGongKind.Body)
 					return;
 
-				if (__instance.Job.CMD.def.Param == 6 &&
-				(npc.Needs.GetNeedValue(g_emNeedType.MindState) < GetMinMindState(npc) || npc.PropertyMgr.Practice.TouchNeck))
+				if (__instance.Job.CMD.def.Param == 6 
+						&&		(npc.Needs.GetNeedValue(g_emNeedType.MindState) < GetMinMindState(npc)
+								|| npc.PropertyMgr.Practice.TouchNeck)
+								|| HasCraftingCommand(npc))
 				{
 					npc.JumpOutFromBuilding(true);
 					npc.JobEngine.InterruptJob();
@@ -89,7 +92,8 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(ToilPractice), "OnStepToil")]
 			public static void AutoCancelCultivation(ToilPractice __instance, float dt, KStateQUnit unit)
 			{
-				if (!_info.Enabled) return;
+				if (!_info.Enabled)
+					return;
 				var npc = __instance.npc;
 
 				if (__instance.npc.PropertyMgr.Practice.PracticeMode != g_emPracticeBehaviourKind.None
@@ -97,8 +101,8 @@ namespace ACS_Yoda_Tweaks
 					|| npc.PropertyMgr.Practice.GongStateLevel >= g_emGongStageLevel.God2)
 					return;
 
-				if (__instance.npc.PropertyMgr.Practice.TouchNeck ||
-				__instance.npc.Needs.GetNeedValue(g_emNeedType.MindState) < GetMinMindState(__instance.npc))
+				if (__instance.npc.PropertyMgr.Practice.TouchNeck
+					|| __instance.npc.Needs.GetNeedValue(g_emNeedType.MindState) < GetMinMindState(__instance.npc))
 				{
 					npc.JumpOutFromBuilding(true);
 					__instance.npc.JobEngine.InterruptJob(forceSuccess: true);
