@@ -152,14 +152,26 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			{
 				if (!_info.Enabled)
 					return;
-				var npc = __instance.Worker;
-				//using JobGoToWalkable code here
-				if (!npc.CheckKeyStayOK(npc.Key))
+				try
 				{
-					var safeKey = WorldMgr.Instance.curWorld.map.GetWalkableAround(npc.Key, 50, noself: true, 0, (int key) => npc.CheckKeyStayOK(key));
-					var toilGo = ToilGoto.GotoGrid(safeKey, (npc.map.CheckPath(npc.Key, safeKey, g_emPathEndMode.OnPos, nearest: false, fogpath: false) > 0) ? g_emPathEndMode.OnPos : g_emPathEndMode.Immediately);
-					__result.Insert(0, toilGo);
+					var npc = __instance.Worker;
+					//using JobGoToWalkable code here
+					AddLog("1");
+					if (!npc.CheckKeyStayOK(npc.Key))
+					{
+						var safeKey = WorldMgr.Instance.curWorld.map.GetWalkableAround(npc.Key, 50, noself: true, 0, (int key) => npc.CheckKeyStayOK(key));
+						if (safeKey != 0)
+						{
+							var toilGo = ToilGoto.GotoGrid(safeKey, (npc.map.CheckPath(npc.Key, safeKey, g_emPathEndMode.OnPos, nearest: false, fogpath: false) > 0) ? g_emPathEndMode.OnPos : g_emPathEndMode.Immediately);
+							__result.Insert(0, toilGo);
+						}
+					}
 				}
+				catch (Exception ex)
+				{
+					ShowMessage(ex);
+				}
+
 			}
 		}
 	}

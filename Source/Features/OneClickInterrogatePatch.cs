@@ -71,5 +71,60 @@ public class OneClickInterrogate : Mod
 				KLog.Dbg("[OCI] error" + ex.ToString());
 			}
 		}
+
+		//[HarmonyPatch(typeof(Wnd_JianghuTalk), "OnInit")]
+		//public static void AddFavor(ref Wnd_JianghuTalk __instance)
+		//{
+		//	if (!_info.Enabled) return;
+
+		//	try
+		//	{
+		//		string btnName = "Yoda.MaxFavor";
+		//		Wnd_JianghuTalk talkWindow = __instance;
+		//		if (talkWindow.UIInfo.GetChild(btnName) == null)
+		//		{
+		//			GButton gButton = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
+		//			gButton.name = btnName;
+		//			gButton.title = "Max Favor";
+		//			gButton.text = "Max Favor";
+		//			talkWindow.UIInfo.AddChild(gButton);
+		//			gButton.onClick.Add((EventCallback0)delegate
+		//			{
+		//				Npc player = (Npc)Traverse.Create(talkWindow).Field("player").GetValue();
+		//				Npc npc = (Npc)Traverse.Create(talkWindow).Field("target").GetValue();
+						
+		//				int num = (int)Traverse.Create(talkWindow).Field("targetseed").GetValue();
+		//				int num2 = 0;
+		//				foreach (KeyValuePair<int, JianghuMgr.JHNpcData> knowNpcDatum in JianghuMgr.Instance.KnowNpcData)
+		//				{
+		//					int key = knowNpcDatum.Key;
+		//					if (key != num)
+		//					{
+		//						for (g_emJHNpcDataType g_emJHNpcDataType = g_emJHNpcDataType.Feature; g_emJHNpcDataType <= g_emJHNpcDataType.Hobby3; g_emJHNpcDataType++)
+		//						{
+		//							bool flag = JianghuMgr.Instance.IsKnowNpc(key, g_emJHNpcDataType);
+		//							bool flag2 = JianghuMgr.Instance.CheckNpcKnowOther(num, key, g_emJHNpcDataType);
+		//							if (!flag && flag2)
+		//							{
+		//								JianghuMgr.Instance.UnLockNpcDataKnow(key, g_emJHNpcDataType);
+		//								num2++;
+		//							}
+		//						}
+		//					}
+		//				}
+		//				string t = string.Format("{0}{1}{2}{3}{4}{5}", player.GetName(), " interrogates ", npc.GetName(), " about all sect members and learned ", num2, " things.");
+		//				talkWindow.SetTxt(t);
+		//			});
+		//		}
+		//		else
+		//		{
+		//			GButton gButton = (GButton)talkWindow.UIInfo.GetChild("OneClick.Interrogate");
+		//		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		KLog.Dbg("[OCI] error" + ex.ToString());
+		//	}
+		//}
 	}
 }

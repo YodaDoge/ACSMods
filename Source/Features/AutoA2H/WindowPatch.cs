@@ -29,7 +29,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 					__instance.AddChild(panelAutoThink);
 					panelAutoThink.SetPosition(panelAutoThink.position.x - (panelAutoThink.size.x + 2), panelAutoThink.y + 10, panelAutoThink.z - 1);
 				}
-
 				panelAutoThink.Update(npc, selectedThoughts);
 				_panelAutoThink = panelAutoThink;
 			}

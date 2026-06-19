@@ -28,24 +28,46 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(Wnd_GameMain), "OnInit")]
 			public static void OnInit_Postfix(Wnd_GameMain __instance)
 			{
-				if (!_info.Enabled || World.Instance.TolSecond <= 3f) return;
+				if (!_info.Enabled || World.Instance.TolSecond <= 3f) 
+				return;
 
 				_pauseAfterLoad = true;
 			}
-
+			static int ticks = 0;
+			static int tickUntilPause = 10;
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(MainManager), "Step")]
 			public static void OnUpdate_Postfix(float dt)
 			{
-				if (!_info.Enabled) return;
+				if (!_info.Enabled) 
+					return;
 
-				if (_pauseAfterLoad || !Application.isFocused)
+				if (_pauseAfterLoad && ticks < tickUntilPause)
+				{
+					ticks++;
+					return;
+				}
+
+				if (_pauseAfterLoad)
 				{
 					MainManager.Instance.Pause();
 					_pauseAfterLoad = false;
+					ticks = 0;
 				}
 
+				if (Application.isFocused && _focusLossPause)
+				{ 
+					_focusLossPause = false;
+					MainManager.Instance.Run();
+				}
+
+				if (!Application.isFocused && MainManager.Instance.Runing)
+				{
+					MainManager.Instance.Pause();
+					_focusLossPause = true;
+				}
 			}
+			private static bool _focusLossPause = false;
 		}
 	}
 }

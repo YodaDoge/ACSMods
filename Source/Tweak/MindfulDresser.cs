@@ -134,8 +134,41 @@ public class MindfulDresser : Mod
 		}
 
 		[HarmonyPrefix]
+		[HarmonyPatch(typeof(BehaviourCutoff), "Check")]
+		public static bool UpgradeAxe(ref JobBase __result, Npc npc, int seachr = 10000, bool tryfind = false)
+		{
+			try
+			{
+
+				__result = LookForUpgrade(npc, "Item_SysAxe");
+				return __result == null;
+			}
+			catch (Exception ex)
+			{
+				ShowMessage(ex);
+			}
+			return true;
+		}
+
+		[HarmonyPrefix]
+		[HarmonyPatch(typeof(BehaviourMine), "Check")]
+		public static bool UpgradePick(ref JobBase __result, Npc npc, int seachr = 10000, bool tryfind = false)
+		{
+			__result = LookForUpgrade(npc, "Item_SysPickaxe");
+			return __result == null;
+		}
+
+		[HarmonyPrefix]
+		[HarmonyPatch(typeof(BehaviourPlant), "Check")]
+		public static bool UpgradePlow(ref JobBase __result, Npc npc, int seachr = 10000, bool tryfind = false)
+		{
+			__result = LookForUpgrade(npc, "Item_SysSickle");
+			return __result == null;
+		}
+
+		[HarmonyPrefix]
 		[HarmonyPatch(typeof(ThingsData), "FindItem")]
-		public static void FindItem(Npc npc, int r, string name, int okey = 0, bool issort = false, string tag = null, int tagmin = 0, int tagmax = 9999, Func<ItemThing, bool> con = null, bool StrictSort = false)
+		public static void DontEquipDivine(Npc npc, int r, string name, int okey = 0, bool issort = false, string tag = null, int tagmin = 0, int tagmax = 9999, Func<ItemThing, bool> con = null, bool StrictSort = false)
 		{
 			if (tag == "_WearAble" && npc.IsPlayerThing && con != null)
 			{
@@ -180,6 +213,34 @@ public class MindfulDresser : Mod
 				}
 			}
 			return false;
+		}
+
+		private static JobBase LookForUpgrade(Npc me, string tool)
+		{
+			var current = GetEfficency(me, me.Equip.FindTool(tool));
+			var itemThing = me.map.Things.FindItems(me, 9999, 20, tool, con: x => !IsFengShuiItem(x) && GetEfficency(me, x) > current)?.OrderByDescending(x => GetEfficency(me, x))?.FirstOrDefault();
+			if (itemThing != null && me.CheckEquipCell(itemThing) != g_emEquipType.None)
+			{
+				Command command = me.AddCommand("EquipItem", itemThing);
+				me.WearCMD = command.ID;
+				AddLog("{0} current eff {2} new eff {3} found Upgrade {1}", me.Name, itemThing.GetName(), current.ToString(), GetEfficency(me, itemThing).ToString());
+				return JobMgr.Instance.CreateJob("JobEquipItem", command); ;
+			}
+			return null;
+		}
+
+		private static float GetEfficency(Npc me, ItemThing item)
+		{
+			if (item == null)
+				return 0f;
+			float qualityEquipValue = item.GetQualityEquipValue();
+			float num = 1f * qualityEquipValue;
+			if (item.StuffDef != null && item.StuffDef.Item.BeMaterial != null)
+			{
+				num = item.StuffDef.Item.BeMaterial.WorkSpeedCoefficientWhenBeMain;
+			}
+			num += (float)me.CheckSpecialFlag(g_emNpcSpecailFlag.UpgradeEquipModifier);
+			return num;
 		}
 
 		private static IEnumerable<KeyValuePair<ItemThing, bool>> GetTali(Npc me)
