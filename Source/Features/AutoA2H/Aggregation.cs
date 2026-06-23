@@ -156,7 +156,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				{
 					var npc = __instance.Worker;
 					//using JobGoToWalkable code here
-					AddLog("1");
 					if (!npc.CheckKeyStayOK(npc.Key))
 					{
 						var safeKey = WorldMgr.Instance.curWorld.map.GetWalkableAround(npc.Key, 50, noself: true, 0, (int key) => npc.CheckKeyStayOK(key));

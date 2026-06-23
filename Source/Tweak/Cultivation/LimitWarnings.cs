@@ -28,6 +28,13 @@ namespace ACS_Yoda_Tweaks
 				}
 			}
 
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(JobBrokenNeck), "OnEnterJob")]
+			public static void OnEnterBCToil(JobBrokenNeck __instance, KStateQUnit unit)
+			{
+				RemoveLimitWarning(__instance.Worker);
+			}
+
 			private static void RestoreLimitWarning(Npc npc)
 			{
 				MessageMgr.Instance.AddMessage(35, new List<Thing> { npc });
@@ -36,9 +43,11 @@ namespace ACS_Yoda_Tweaks
 
 			private static void RemoveLimitWarning(Npc npc)
 			{
-				var msg = MessageMgr.Instance.m_mapLevelMsg.FirstOrDefault(x => x._AttributID == 35 && x._ThingID?.Contains(npc.ID) == true);
-				if (msg != null)
+				var msgs = MessageMgr.Instance.m_mapLevelMsg.Where(x => x._AttributID == 35 && x._ThingID?.Contains(npc.ID) == true).ToList();
+				foreach (var msg in msgs)
 				{
+					
+					AddLog("Removed limit msg for " + npc.Name);
 					msg._OnlyBox = true;
 					//MessageMgr.Instance.RemoveMessage(35, new List<Thing> { npc });
 					Wnd_MessageBox.Instance.UpdateMessage();
@@ -83,12 +92,7 @@ namespace ACS_Yoda_Tweaks
 
 
 
-			[HarmonyPostfix]
-			[HarmonyPatch(typeof(JobBrokenNeck), "OnEnterJob")]
-			public static void OnEnterBCToil(JobBrokenNeck __instance, KStateQUnit unit)
-			{
-				RemoveLimitWarning(__instance.Worker);
-			}
+
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(JobBrokenNeck), "OnLeaveJob")]

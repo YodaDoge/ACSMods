@@ -89,7 +89,6 @@ namespace ACS_Yoda_Tweaks
 					if (CountBedsInRoom(npc.MyBed) == 1)
 					{
 						npc.MyBed.AtRoom.ChangeName("Room");
-						AddLog("Removed RoomName for " + npc.GetName());
 					}
 				}
 			}

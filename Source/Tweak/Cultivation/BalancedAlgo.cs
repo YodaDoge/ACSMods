@@ -38,8 +38,6 @@ namespace ACS_Yoda_Tweaks
 				if (!_info.Enabled || (npc.Rank != g_emNpcRank.Disciple) || npc.PropertyMgr.Practice.GongStateLevel > g_emGongStageLevel.God )
 					return true;
 
-				AddLog($"{npc.Name} state {npc.PropertyMgr.Practice.GongStateLevel} neck {npc.PropertyMgr.Practice.CurNeck?.Kind}");
-				
 				try
 				{
 					if (npc.JobEngine.NeedWait()
@@ -76,7 +74,6 @@ namespace ACS_Yoda_Tweaks
 								//see: UILogicMode_IndividualCommand
 								var cmd = npc.AddCommand("ClosedDoor", npc.MyPractice.Key, npc.MyPractice, 2);
 								cmd.WorkParam3 = "ClosedDoor";
-								AddLog("ClosedDoor " + npc.Name);
 								__result = JobMgr.Instance.CreateJob("JobAbsorbLing", cmd);
 							}
 							else
