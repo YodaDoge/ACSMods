@@ -56,7 +56,7 @@ namespace ACS_Yoda_Tweaks
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Command), "FinishCommand")]
-			public static void FinishCommand(Command __instance, bool del = false, bool debug = false, bool mustRemove = false)
+			public static void MapExploreFinish(Command __instance, bool del = false, bool debug = false, bool mustRemove = false)
 			{
 				if (!(__instance.OwnerThing is Npc npc) || !(__instance is CommandGoMapExplore cmd))
 					return;
@@ -66,13 +66,6 @@ namespace ACS_Yoda_Tweaks
 					RestoreLimitWarning(npc);
 				}
 			}
-
-				//[HarmonyPostfix]
-				//[HarmonyPatch(typeof(CommandGoMapExplore), "CouldBeFind")]
-				//public static void StartAdventure(CommandGoMapExplore __instance, Npc npc)
-				//{
-
-				//}
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(JobLeave2Explore), "OnLeaveJob")]
@@ -90,10 +83,6 @@ namespace ACS_Yoda_Tweaks
 				return npc.PropertyMgr.Practice.TouchNeck && npc.PropertyMgr.Practice.CurNeck?.Kind == g_emGongBottleNeckType.Explore;
 			}
 
-
-
-
-
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(JobBrokenNeck), "OnLeaveJob")]
 			public static void RestoreLimitMessageOnFail(JobBrokenNeck __instance, KStateQUnit unit)
@@ -102,7 +91,7 @@ namespace ACS_Yoda_Tweaks
 
 				if (fail)
 				{
-				//handled by message "failed breakthrough";
+					//handled by message "failed breakthrough";
 					//RestoreLimitWarning(npc);
 					//RemoveLimitWarning(__instance.Worker);
 				}
