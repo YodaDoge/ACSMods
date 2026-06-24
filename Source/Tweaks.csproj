@@ -84,6 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Tweak\Cultivation\AutoTalisman.cs" />
     <Compile Include="UI\Misc.cs" />
     <Compile Include="UI\WorldMapTweaks.cs" />
     <Compile Include="MessageIgnore.cs" />

@@ -18,10 +18,10 @@ namespace ACS_Yoda_Tweaks
 
 		public static void ShowMessage(string message, string title = null) => ACS_Yoda_Tweaks.ShowMessage(message);
 
-		private const int LogLength = 8;
+		private const int LogLength = 20;
 		private static Queue<string> Log = new Queue<string>();
 
-		public static void AddLog(string msg, params string[] fmt) => AddLog(string.Format(msg, fmt));
+		public static void AddLog(string msg, params object[] fmt) => AddLog(string.Format(msg, fmt));
 		public static void AddLog(string msg)
 		{
 			while (Log.Count >= LogLength)

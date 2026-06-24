@@ -1,12 +1,15 @@
 ﻿using ACS_Yoda_Tweaks;
 using HarmonyLib;
+using rail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using UnityEngine;
 using XiaWorld;
 using XiaWorld.Fight;
+using static XiaWorld.AuctionData;
 
 public class MindfulDresser : Mod
 {
@@ -89,8 +92,10 @@ public class MindfulDresser : Mod
 				//TODO: Feature - FindBetterTool
 
 				var equippedTali = GetTali(me).Select(x => x.Key).ToList();
-
-				if (equippedTali.Count < 3)
+				int maxActiveFu = 3 + me.AddActiveFuCount +
+								  (me.IsRealPlayerThing ? RuntimeVar.Var.ExtraFuActive : 0);
+				maxActiveFu = Mathf.Clamp(maxActiveFu, 0, 6);
+				if (maxActiveFu < 3)
 				{
 					//TODO: if crafter => check craftingtable
 					foreach (var usefulTaliName in genericTalisman)
@@ -111,6 +116,8 @@ public class MindfulDresser : Mod
 				if (LookForTool(me, "Item_SmallBell"))
 					return;
 				if (LookForTool(me, "Item_PerfumeBag"))
+					return;
+				if (LookForTool(me, "Item_Bracelet"))
 					return;
 			}
 			lastCheckDict[me] = World.Instance.TolSecond;
@@ -223,7 +230,6 @@ public class MindfulDresser : Mod
 			{
 				Command command = me.AddCommand("EquipItem", itemThing);
 				me.WearCMD = command.ID;
-				AddLog("{0} current eff {2} new eff {3} found Upgrade {1}", me.Name, itemThing.GetName(), current.ToString(), GetEfficency(me, itemThing).ToString());
 				return JobMgr.Instance.CreateJob("JobEquipItem", command); ;
 			}
 			return null;
@@ -243,18 +249,16 @@ public class MindfulDresser : Mod
 			return num;
 		}
 
-		private static IEnumerable<KeyValuePair<ItemThing, bool>> GetTali(Npc me)
+		public static IEnumerable<KeyValuePair<ItemThing, g_emEquipType>> GetTali(Npc me)
 		{
 			for (g_emEquipType fuSlot = g_emEquipType.Fu1; fuSlot < g_emEquipType._FuEnd; fuSlot++)
 			{
 				ItemThing equip = me.Equip.GetEquip(fuSlot);
 				if (equip != null && me.CheckEquipCell(equip) != g_emEquipType.None)
 				{
-					yield return new KeyValuePair<ItemThing, bool>(equip, me.Equip.CheckActive(fuSlot));
+					yield return new KeyValuePair<ItemThing, g_emEquipType>(equip, fuSlot);
 				}
 			}
 		}
-
-
 	}
 }

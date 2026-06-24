@@ -29,7 +29,7 @@ namespace ACS_Yoda_Tweaks
 		{
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_GameMain), "OnInit")]
-			public static void OnInit_Postfix(Wnd_GameMain __instance)
+			public static void MultiEatItem(Wnd_GameMain __instance)
 			{
 				try
 				{
@@ -63,7 +63,7 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_SelectNpc), "OnShowUpdate")]
 			[HarmonyPriority(1000)]
-			public static void OnShowUpdate(Wnd_SelectNpc __instance, List<Npc> ___npcs, params object[] objs)
+			public static void AutoUseSingleAdventureNpc(Wnd_SelectNpc __instance, List<Npc> ___npcs, params object[] objs)
 			{
 				if (___npcs.Count == 1)
 				{
@@ -84,7 +84,7 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_SelectNpc), "OnListClick")]
 			[HarmonyPriority(1000)]
-			public static void OnShowUpdate(Wnd_SelectNpc __instance, EventContext context)
+			public static void InstantOkSelect(Wnd_SelectNpc __instance, EventContext context)
 			{
 				if (!Input.GetKey(KeyCode.LeftControl))
 					return;

@@ -35,7 +35,7 @@ namespace ACS_Yoda_Tweaks
 			public static bool GetBalancedCultivationActivity(ref JobBase __result, BehaviourBasePractice __instance, ref Npc npc, int seachr = 10000, bool tryfind = false)
 			{
 
-				if (!_info.Enabled || (npc.Rank != g_emNpcRank.Disciple) || npc.PropertyMgr.Practice.GongStateLevel > g_emGongStageLevel.God )
+				if (!_info.Enabled || (npc.Rank != g_emNpcRank.Disciple) || npc.PropertyMgr.Practice.GongStateLevel > g_emGongStageLevel.God)
 					return true;
 
 				try
@@ -49,6 +49,8 @@ namespace ACS_Yoda_Tweaks
 					if (npc.Rank == g_emNpcRank.Disciple && npc.CanDoDiscipleWork && npc.GongKind == g_emGongKind.Dao && npc.CanDoMagic()
 						&& npc.PropertyMgr.Practice.PracticeMode == g_emPracticeBehaviourKind.None)
 					{
+						AutoTalisman.Patch.ToggleTalisman(npc, AutoTalisman.TaliType.Cultivation);
+
 						bool doFun = ShouldDoFun(npc);
 						if (doFun)
 						{
@@ -62,8 +64,34 @@ namespace ACS_Yoda_Tweaks
 							{
 								jobPlayWithBuilding.FunID = fun.ID;
 							}
+							return false;
 						}
-						else if (npc.PropertyMgr.Practice.TouchNeck && !NeedsRest(npc))
+						if (npc.PropertyMgr.Practice.TouchNeck)
+						{
+							try
+							{
+								var neck = npc.PropertyMgr.Practice.CurNeck;
+								bool isFreeChanceNeck = neck.Kind == g_emGongBottleNeckType.Chance && neck.ResourceCost?.Any(x => x.kind != g_emPracticeResourceType.Ling) == false && neck.ItemCost?.Any() == false;
+								bool hasMana = npc.PropertyMgr.Practice.CheckResource(g_emPracticeResourceType.Ling, npc.MaxLing * 0.992f);
+
+								if (isFreeChanceNeck && hasMana && npc.MyPractice != null)
+								{
+									var breakRate = npc.PropertyMgr.Practice.GetBrokenRate(0, npc.MyPractice.Key);
+									if (breakRate > 0.5f)
+									{
+										var cmd = npc.AddCommand("BrokenNeck", npc.MyPractice.Key, npc.MyPractice);
+										__result = JobMgr.Instance.CreateJob("JobBrokenNeck", cmd);
+										return false;
+									}
+								}
+							}
+							catch (Exception ex)
+							{
+								ShowMessage(ex);
+							}
+						}
+
+						if (npc.PropertyMgr.Practice.TouchNeck && !NeedsRest(npc))
 						{
 							__result = JobMgr.Instance.CreateJob("JobPracticeSkill", null);
 						}
@@ -95,7 +123,7 @@ namespace ACS_Yoda_Tweaks
 
 			public static bool ShouldDoFun(Npc npc)
 			{
-				return ShouldDoFun(npc.Needs.GetNeedValue(g_emNeedType.MindState), GetMinMindState(npc) + 2, MaxStable+4) || npc.Needs.GetNeedValue(g_emNeedType.Practice) < 40;
+				return ShouldDoFun(npc.Needs.GetNeedValue(g_emNeedType.MindState), GetMinMindState(npc) + 2, MaxStable + 4) || npc.Needs.GetNeedValue(g_emNeedType.Practice) < 40;
 			}
 
 			private static bool ShouldDoFun(float myValue, float minValue, float maxValue)
