@@ -49,12 +49,12 @@ namespace ACS_Yoda_Tweaks
 					if (npc.Rank == g_emNpcRank.Disciple && npc.CanDoDiscipleWork && npc.GongKind == g_emGongKind.Dao && npc.CanDoMagic()
 						&& npc.PropertyMgr.Practice.PracticeMode == g_emPracticeBehaviourKind.None)
 					{
-						AutoTalisman.Patch.ToggleTalisman(npc, AutoTalisman.TaliType.Cultivation);
+						if (!npc.PropertyMgr.Practice.TouchNeck)
+							AutoTalisman.Patch.ToggleTalisman(npc, AutoTalisman.TaliType.Cultivation);
 
 						bool doFun = ShouldDoFun(npc);
 						if (doFun)
 						{
-
 							__result = npc.Fun.GetFun(out var fun);
 							if (__result is JobLookAtSky jobLookAtSky)
 							{

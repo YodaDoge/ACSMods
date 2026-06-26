@@ -254,7 +254,7 @@ public class MindfulDresser : Mod
 			for (g_emEquipType fuSlot = g_emEquipType.Fu1; fuSlot < g_emEquipType._FuEnd; fuSlot++)
 			{
 				ItemThing equip = me.Equip.GetEquip(fuSlot);
-				if (equip != null && me.CheckEquipCell(equip) != g_emEquipType.None)
+				if (equip != null)
 				{
 					yield return new KeyValuePair<ItemThing, g_emEquipType>(equip, fuSlot);
 				}

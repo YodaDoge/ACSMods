@@ -1,10 +1,12 @@
 ﻿using HarmonyLib;
+using Light2D;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 using XiaWorld;
+using static XiaWorld.AuctionData;
 
 namespace ACS_Yoda_Tweaks
 {
@@ -78,27 +80,33 @@ namespace ACS_Yoda_Tweaks
 						return;
 
 					var talismans = MindfulDresser.Patch.GetTali(npc).ToList();
-					
+
 					int maxActiveFu = 3 + npc.AddActiveFuCount + RuntimeVar.Var.ExtraFuActive;
 					maxActiveFu = Mathf.Clamp(maxActiveFu, 0, 6);
 
-					maxActiveFu -= talismans.Where(x => npc.Equip.CheckActive(x.Value)).Count(x =>
+					foreach (var negative in talismans.Where(x => IsFuPositive(x.Key, wantedType) == false))
 					{
-						var t = GetFuType(npc, x.Key);
-						return t == wantedType || t == TaliType.Ignore;
-					});
+						npc.Equip.CloseItemthing(negative.Key, negative.Value);
+					}
 
-					var activeUnwanted = talismans.Where(x =>
-													GetFuType(npc, x.Key) != wantedType &&
-													GetFuType(npc, x.Key) != TaliType.Ignore &&
-													npc.Equip.CheckActive(x.Value));
-					
-					foreach (var item in activeUnwanted)
-						npc.Equip.CloseItemthing(item.Key, item.Value);
+					var inActivePositive = talismans.Where(x => IsFuPositive(x.Key, wantedType) == true && !npc.Equip.CheckActive(x.Value)).ToArray();
+					var usedSlots = talismans.Where(x => npc.Equip.CheckActive(x.Value)).ToList();
 
-					var inActiveWanted = talismans.Where(x => GetFuType(npc, x.Key) == wantedType && !npc.Equip.CheckActive(x.Value));
-					foreach (var item in inActiveWanted.Take(maxActiveFu))
-						npc.Equip.ActiveItemThing(item.Key, item.Value);
+
+					foreach (var fu in inActivePositive)
+					{
+						if (usedSlots.Count() >= maxActiveFu)
+						{
+							var neutralToDisable = usedSlots.FirstOrDefault(x => IsFuPositive(x.Key, wantedType) == null);
+
+							if (neutralToDisable.Key == null) //default of the struct
+								break;
+
+							npc.Equip.CloseItemthing(neutralToDisable.Key, neutralToDisable.Value);
+							usedSlots.Remove(neutralToDisable);
+						}
+						npc.Equip.ActiveItemThing(fu.Key, fu.Value);
+					}
 				}
 				catch (Exception ex)
 				{
@@ -113,8 +121,6 @@ namespace ACS_Yoda_Tweaks
 			Adventure,
 			Battle,
 			Breakthrough,
-			Ignore,
-			None
 		}
 
 		private static string[] BCProbs = new string[] { "MindState" };
@@ -122,54 +128,33 @@ namespace ACS_Yoda_Tweaks
 		private static string[] BattleProps = new string[] { "Shield", "Fabao", "Spell", "Artifact" };
 		private static string[] AdventureProps = new string[] { "FindSpeed", "WorldMapFly" };
 
-		private static bool IsMatch(List<ItemEquptData> mods, string[] targetMods)
+		static Dictionary<TaliType, string[]> associatedMods = new Dictionary<TaliType, string[]>() {
+		{ TaliType.Cultivation, CultivationProbs },
+		{ TaliType.Battle, BattleProps },
+		{ TaliType.Breakthrough, BCProbs },
+		{ TaliType.Adventure, AdventureProps } };
+
+		public static bool? IsFuPositive(ItemThing fuItem, TaliType fuType)
 		{
-			var matches = mods.Where(x => x.Type == 0 && targetMods.Any(t => x.name.IndexOf(t) >= 0));
-			bool any = false;
-			foreach (var item in matches)
+			if (fuItem.GetName().Contains("Heavensent") && (fuType == TaliType.Cultivation || fuType == TaliType.Adventure || fuType == TaliType.Breakthrough))
+				return true;
+			var fuMods = fuItem.EquptData;
+
+			var targetMods = associatedMods[fuType];
+			var matchingMods = fuMods.Where(x => HasModMatch(x, targetMods)).ToArray();
+			if (!matchingMods.Any())
 			{
-				any = true;
-				var modVal = item.addp + item.addv + item.baddp + item.baddv;
-				//AddLog("mod {0} val {1}", item.name, modVal.ToString());
-				if (modVal < 0)
-					return false;
+				return null;
 			}
 
-			//else if (equptDatum.Type == 1)
-			//{
-			//	g_emNpcSkillType type2 = GameUlt.String2Enum<g_emNpcSkillType>(equptDatum.name);
-			//	AddLog("Skill " + type2);
-			//}
-			//else if (equptDatum.Type == 2 && equptDatum.basefive != null)
-			//{
-			//	for (int i = 0; i < equptDatum.basefive.Length; i++)
-			//	{
-			//		AddLog("Attr " + (g_emNpcBasePropertyType)i);
-			//	}
-			//}
-
-			return any;
-
+			var modValues = matchingMods.Select(item => item.addp + item.addv + item.baddp + item.baddv);
+			bool allPositive = modValues.All(x => x >= 0);
+			return allPositive;
 		}
 
-		public static TaliType GetFuType(Npc me, ItemThing item)
+		private static bool HasModMatch(ItemEquptData x, string[] targetMods)
 		{
-			if (item.GetName().Contains("Heavensent"))
-				return TaliType.Ignore;
-
-			if (IsMatch(item.EquptData, CultivationProbs))
-				return TaliType.Cultivation;
-
-			if (IsMatch(item.EquptData, BCProbs))
-				return TaliType.Breakthrough;
-
-			if (IsMatch(item.EquptData, BattleProps))
-				return TaliType.Battle;
-
-			if (IsMatch(item.EquptData, AdventureProps))
-				return TaliType.Adventure;
-
-			return TaliType.None;
+			return x.Type == 0 && targetMods.Any(t => x.name.IndexOf(t) >= 0);
 		}
 	}
 }
