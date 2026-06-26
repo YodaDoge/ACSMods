@@ -84,6 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fixes\A2HThunderWarning.cs" />
     <Compile Include="Tweak\Cultivation\MentorTeachShortcut.cs" />
     <Compile Include="Tweak\Cultivation\AutoTalisman.cs" />
     <Compile Include="UI\Misc.cs" />
