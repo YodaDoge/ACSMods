@@ -39,6 +39,19 @@ namespace ACS_Yoda_Tweaks
 					}
 				}
 			}
+
+
+			[HarmonyPrefix]
+			[HarmonyPatch(typeof(BehaviourMakeItem), MethodType.Constructor, new Type[] { typeof(g_emBehaviourKind), typeof(g_emBehaviourWorkKind), typeof(int), typeof(g_emProduceKind) })]
+			public static void FixWorkTypeOfRites(g_emBehaviourKind kind, ref g_emBehaviourWorkKind workkind, int MPriority, g_emProduceKind makekind)
+			{
+				// Change the workkind to your desired value here
+				if (makekind == g_emProduceKind.Sacrifice)
+				{
+					AddLog("Behaviour change!");
+					workkind = g_emBehaviourWorkKind.Clean;
+				}
+			}
 		}
 	}
 }
