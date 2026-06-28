@@ -34,8 +34,6 @@ namespace ACS_Yoda_Tweaks
 			{
 				var npc = __instance.Worker;
 				var practice = npc.PropertyMgr.Practice;
-				if (practice.CurNeck.Kind == g_emGongBottleNeckType.Gold)
-					return;
 				var type = practice.CurNeck.Kind == g_emGongBottleNeckType.Thunder ? TaliType.Battle : TaliType.Breakthrough;
 				ToggleTalisman(npc, type);
 			}
@@ -76,13 +74,23 @@ namespace ACS_Yoda_Tweaks
 			{
 				try
 				{
-					if (!npc.IsRealPlayerThing)
+					if (!npc.IsRealPlayerThing || npc.Rank != g_emNpcRank.Disciple)
 						return;
 
 					var talismans = MindfulDresser.Patch.GetTali(npc).ToList();
 
 					int maxActiveFu = 3 + npc.AddActiveFuCount + RuntimeVar.Var.ExtraFuActive;
 					maxActiveFu = Mathf.Clamp(maxActiveFu, 0, 6);
+
+					bool log = IsYodaMachine;
+					if (log)
+					{
+						AddLog("{0} equip {1}", npc.Name, wantedType);
+						foreach (var x in talismans)
+						{
+							AddLog("{0}: {1}", x.Key.GetName(), IsFuPositive(x.Key, wantedType));
+						}
+					}
 
 					foreach (var negative in talismans.Where(x => IsFuPositive(x.Key, wantedType) == false))
 					{
@@ -91,7 +99,6 @@ namespace ACS_Yoda_Tweaks
 
 					var inActivePositive = talismans.Where(x => IsFuPositive(x.Key, wantedType) == true && !npc.Equip.CheckActive(x.Value)).ToArray();
 					var usedSlots = talismans.Where(x => npc.Equip.CheckActive(x.Value)).ToList();
-
 
 					foreach (var fu in inActivePositive)
 					{

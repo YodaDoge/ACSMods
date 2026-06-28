@@ -70,8 +70,8 @@ namespace ACS_Yoda_Tweaks
 			public static void Postfix(float dt, World __instance)
 			{
 				//KLog.Dbg($"Ambilight Hit { _info.Enabled} color {RenderSettings.ambientSkyColor}");
-				if (!_info.Enabled) return;
-
+				if (!_info.Enabled) 
+					return;
 				var daySecond = __instance.DaySecond;
 				var now = (int)daySecond;
 				if (now == lastSec)

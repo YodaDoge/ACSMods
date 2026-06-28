@@ -33,7 +33,7 @@ public class DummyDetector : Mod
 			if (npc.InBuilding == null || __instance.Worker.InBuilding.TagData.CheckTag("BasePractice") <= 0)
 			{
 				//AddLog($"{npc.ToString()} Searching");
-				BuildingThing buildingThing = __instance.Worker.map.Things.FindBuilding(__instance.Worker, 200, "BasePractice", 0, needworkspace: true, issort: true);
+				BuildingThing buildingThing = __instance.Worker.map.Things.FindBuilding(__instance.Worker, 300, "BasePractice", 0, needworkspace: true, issort: true);
 				if (buildingThing != null)
 				{
 					flag = true;
