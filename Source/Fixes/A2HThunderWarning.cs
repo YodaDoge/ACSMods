@@ -48,7 +48,6 @@ namespace ACS_Yoda_Tweaks
 				// Change the workkind to your desired value here
 				if (makekind == g_emProduceKind.Sacrifice)
 				{
-					AddLog("Behaviour change!");
 					workkind = g_emBehaviourWorkKind.Clean;
 				}
 			}
