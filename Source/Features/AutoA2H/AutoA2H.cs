@@ -56,7 +56,12 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 		public static bool IsWantedFrag(Npc npc, string fragName)
 		{
-			return AutoNPC[npc.ID].Contains(fragName) && !IsUsedFrag(npc, fragName);
+			var wanted = AutoNPC[npc.ID].Contains(fragName);
+			var fragType = HMgr.Fragments.GetDef(fragName).Type;
+
+			bool typeExhausted = AutoNPC[npc.ID].Select(x => HMgr.Fragments.GetDef(x)).Where(x => x.Type == fragType).All(x => IsUsedFrag(npc, x.Name));
+
+			return wanted && (!IsUsedFrag(npc, fragName) || typeExhausted);
 		}
 
 		//copy of Panel_NpcPractice.IsUsedFrag
@@ -69,8 +74,6 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 		{
 			return HMgr.Fragments.GetDef(frag.frags[0]);
 		}
-
-		private static HEFragmentDef GetFragDef(IGrouping<string, ThinkFrag> frags) => GetFragDef(frags.First());
 
 		private static string EmotionType = "AEmotion";
 
