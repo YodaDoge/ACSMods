@@ -70,13 +70,13 @@ namespace ACS_Yoda_Tweaks
 			//	GetPublicGImages(__instance).ForEach(x => x.height += 30);
 			//}
 
-			public static IEnumerable<GImage> GetPublicGImages(UI_Panel_ThingInfo instance)
-			{
-				return typeof(UI_Panel_ThingInfo)
-					.GetFields(BindingFlags.Instance | BindingFlags.Public)
-					.Where(f => f.FieldType == typeof(GImage))
-					.Select(f => (GImage)f.GetValue(instance));
-			}
+			//public static IEnumerable<GImage> GetPublicGImages(UI_Panel_ThingInfo instance)
+			//{
+			//	return typeof(UI_Panel_ThingInfo)
+			//		.GetFields(BindingFlags.Instance | BindingFlags.Public)
+			//		.Where(f => f.FieldType == typeof(GImage))
+			//		.Select(f => (GImage)f.GetValue(instance));
+			//}
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(JobPaintCharm), "OnLeaveJob")]
