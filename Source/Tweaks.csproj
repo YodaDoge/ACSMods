@@ -82,11 +82,16 @@
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\AmazingCultivationSimulator\Amazing Cultivation Simulator_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\AmazingCultivationSimulator\Amazing Cultivation Simulator_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fixes\A2HThunderWarning.cs" />
     <Compile Include="Tweak\Cultivation\MentorTeachShortcut.cs" />
     <Compile Include="Tweak\Cultivation\AutoTalisman.cs" />
+    <Compile Include="UI\BranchDropDown.cs" />
+    <Compile Include="UI\RightClick.cs" />
     <Compile Include="UI\Misc.cs" />
     <Compile Include="UI\WorldMapTweaks.cs" />
     <Compile Include="MessageIgnore.cs" />
