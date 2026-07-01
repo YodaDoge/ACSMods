@@ -13,7 +13,7 @@ namespace ACS_Yoda_Tweaks
 	public class AutoTalisman : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("AutoTalisman", "AutoTalisman", false);
+		private static Meta _info = new Meta("AutoTalisman", "Auto Manage Talisman", false);
 		public AutoTalisman(bool defaultEnabled) : base(defaultEnabled)
 		{
 		}
@@ -26,6 +26,33 @@ namespace ACS_Yoda_Tweaks
 			public static void EquipAdventureFu(JobLeave2Explore __instance, KStateQUnit unit)
 			{
 				ToggleTalisman(__instance.Worker, TaliType.Adventure);
+			}
+
+			private static string[] _mindstateFu = new string[] { "Spell_MindState2", "Spell_Fu", "Spell_MindState1"};
+			private static string[] _cultivationSpeedFu = new string[] { "Spell_DeepPracticeSpeedSpecialCoefficient2", "Spell_DeepPracticeSpeedSpecialCoefficient1" };
+			private static string[] _adventureSpeedFu = new string[] {"Spell_WorldMapFlySpeed", "Spell_MoveSpeed2", };
+
+
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(NpcPractice), "Up2Disciple")]
+			public static void Up2Disciple(Npc ___me)
+			{
+				try
+				{
+					if (!___me.IsRealPlayerThing)
+						return;
+
+					MindfulDresser.LookForTalisman(___me, "Spell_ReadNovel", false); // for GC Breakthrough
+					MindfulDresser.LookForTalisman(___me, "Spell_TongTian1", false); //heavenSent
+					MindfulDresser.LookForTalisman(___me, "Spell_Shield1", false); //DarkArmor
+					_mindstateFu.FirstOrDefault(x => MindfulDresser.LookForTalisman(___me, x, false));
+					_cultivationSpeedFu.FirstOrDefault(x => MindfulDresser.LookForTalisman(___me, x, false));
+					_adventureSpeedFu.FirstOrDefault(x => MindfulDresser.LookForTalisman(___me, x, false));
+				}
+				catch (Exception ex)
+				{
+					ShowMessage(ex);
+				}
 			}
 
 			[HarmonyPostfix]

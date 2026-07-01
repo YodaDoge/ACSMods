@@ -20,6 +20,22 @@ public class MindfulDresser : Mod
 	{
 	}
 
+	public static bool LookForTalisman(Npc me, string spell, bool instantAssign = true)
+	{
+		ItemThing itemThing = me.map.Things.FindItem(me, 9999, "Item_SpellLv3", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
+		itemThing = itemThing ?? me.map.Things.FindItem(me, 9999, "Item_SpellLv2", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
+		itemThing = itemThing ?? me.map.Things.FindItem(me, 9999, "Item_Spell", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
+		if (itemThing != null)
+		{
+			Command command = me.AddCommand("EquipItem", itemThing);
+			if(instantAssign)
+				me.WearCMD = command.ID;
+			return true;
+		}
+		return false;
+	}
+	private static bool IsFengShuiItem(ItemThing thing) => thing.FSItemState > 0;
+
 	[HarmonyPatch]
 	public static class Patch
 	{
@@ -188,22 +204,6 @@ public class MindfulDresser : Mod
 				};
 				con = chain;
 			}
-		}
-
-		private static bool IsFengShuiItem(ItemThing thing) => thing.FSItemState > 0;
-
-		private static bool LookForTalisman(Npc me, string spell)
-		{
-			ItemThing itemThing = me.map.Things.FindItem(me, 9999, "Item_SpellLv3", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
-			itemThing = itemThing ?? me.map.Things.FindItem(me, 9999, "Item_SpellLv2", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
-			itemThing = itemThing ?? me.map.Things.FindItem(me, 9999, "Item_Spell", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
-			if (itemThing != null)
-			{
-				Command command = me.AddCommand("EquipItem", itemThing);
-				me.WearCMD = command.ID;
-				return true;
-			}
-			return false;
 		}
 
 		private static bool LookForTool(Npc me, string tool)
