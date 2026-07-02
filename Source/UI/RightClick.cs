@@ -55,7 +55,7 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(XiaWorld.UILogicMgr), nameof(XiaWorld.UILogicMgr.OnMapClick))]
 			public static bool OnWorldClick(XiaWorld.UILogicMgr __instance, Vector3 pos, int key, int bnt)
 			{
-				if (GameWatch.Instance.Mode == g_emGameMode.RPG)
+				if (GameWatch.Instance.Mode != g_emGameMode.HardCore && GameWatch.Instance.Mode != g_emGameMode.Normal)
 					return true;
 
 				if (bnt == 1)
@@ -65,7 +65,8 @@ namespace ACS_Yoda_Tweaks
 
 					if (thing is Npc me)
 					{
-						AddLog(thing.ToString());
+						if (me.FightBody.IsFighting || !me.IsRealPlayerThing)
+							return true;
 
 						var map = World.Instance.map;
 						var things = map.Things.GetThingsAtGrid(key);
@@ -78,7 +79,7 @@ namespace ACS_Yoda_Tweaks
 							if (collider2D != null)
 							{
 								Npc npc = collider2D.GetComponentInParent<NpcView>().npc;
-								if (npc.IsSelectAble)
+								if (npc.IsSelectAble && !npc.IsRealPlayerThing && !npc.FightBody.IsFighting && npc.IsSmartRace)
 								{
 									GameWatch.Instance.PlayUIAudio("Sound/UI/clicknpc");
 									me.AddCommand("TryTalk", npc);
@@ -89,7 +90,7 @@ namespace ACS_Yoda_Tweaks
 
 						foreach (var item in things)
 						{
-							if (item is ItemThing itm)
+							if (item is ItemThing itm && itm.Camp == XiaWorld.Fight.g_emFightCamp.Player)
 							{
 								me.AddCommand("EquipItem", itm);
 								GameWatch.Instance.PlayUIAudio("Sound/UI/click");
@@ -98,16 +99,15 @@ namespace ACS_Yoda_Tweaks
 							else if (item is BuildingThing building)
 							{
 								//AddLog(building.def.Name);
-								bool wtf = building.def.Name == "Building_BookShelf_CangJing";
-								if (wtf)
+								if (building.def.Name == "Building_BookShelf_CangJing")
 								{
 									AddLog(me.Rank.ToString());
 									AddLog(me.GongKind.ToString());
-									if (me.IsRealPlayerThing && me.CanDoMagic() && me.Rank == g_emNpcRank.Disciple && me.GongKind == g_emGongKind.Dao)
+									if (me.CanDoMagic() && me.Rank == g_emNpcRank.Disciple && me.GongKind == g_emGongKind.Dao)
 										Wnd_CangJingGeWindow.Instance.Show(building, 1, me);
 								}
 
-								//Assign Bed/Practice
+								//Assign Bed/Practice°
 							}
 						}
 					}
