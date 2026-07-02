@@ -51,32 +51,33 @@ namespace ACS_Yoda_Tweaks
 			//	return false; // skip original
 			//}
 
-			[HarmonyPatch(typeof(XiaWorld.UILogicMgr), nameof(XiaWorld.UILogicMgr.OnMapClick))]
 			[HarmonyPrefix]
-			static bool OnMapClick_Prefix(XiaWorld.UILogicMgr __instance, Vector3 pos, int key, int bnt)
+			[HarmonyPatch(typeof(XiaWorld.UILogicMgr), nameof(XiaWorld.UILogicMgr.OnMapClick))]
+			public static bool OnWorldClick(XiaWorld.UILogicMgr __instance, Vector3 pos, int key, int bnt)
 			{
+				if (GameWatch.Instance.Mode == g_emGameMode.RPG)
+					return true;
 
 				if (bnt == 1)
 				{
 					var curMode = UILogicMgr.Instance.GetCurMode();
 					var thing = (curMode as UILogicMode_Select)?.CurSelectThing;
-					AddLog(thing.ToString());
 
 					if (thing is Npc me)
 					{
-						AddLog("me");
+						AddLog(thing.ToString());
+
 						var map = World.Instance.map;
 						var things = map.Things.GetThingsAtGrid(key);
 
 						Collider2D[] array = Physics2D.OverlapPointAll(pos, 1024);
 						Collider2D[] array2 = array;
 
-						Npc npc = null;
 						foreach (Collider2D collider2D in array2)
 						{
 							if (collider2D != null)
 							{
-								npc = collider2D.GetComponentInParent<NpcView>().npc;
+								Npc npc = collider2D.GetComponentInParent<NpcView>().npc;
 								if (npc.IsSelectAble)
 								{
 									GameWatch.Instance.PlayUIAudio("Sound/UI/clicknpc");
@@ -88,12 +89,25 @@ namespace ACS_Yoda_Tweaks
 
 						foreach (var item in things)
 						{
-							AddLog(item.ToString());
 							if (item is ItemThing itm)
 							{
 								me.AddCommand("EquipItem", itm);
 								GameWatch.Instance.PlayUIAudio("Sound/UI/click");
 								return false;
+							}
+							else if (item is BuildingThing building)
+							{
+								//AddLog(building.def.Name);
+								bool wtf = building.def.Name == "Building_BookShelf_CangJing";
+								if (wtf)
+								{
+									AddLog(me.Rank.ToString());
+									AddLog(me.GongKind.ToString());
+									if (me.IsRealPlayerThing && me.CanDoMagic() && me.Rank == g_emNpcRank.Disciple && me.GongKind == g_emGongKind.Dao)
+										Wnd_CangJingGeWindow.Instance.Show(building, 1, me);
+								}
+
+								//Assign Bed/Practice
 							}
 						}
 					}
@@ -101,20 +115,6 @@ namespace ACS_Yoda_Tweaks
 				return true;
 			}
 
-			//[HarmonyPostfix]
-			//[HarmonyPatch(typeof(UI_Panel_ThingInfo), "ConstructFromXML")]
-			//public static void MoveBuffsBottom(UI_Panel_ThingInfo __instance, XML xml)
-			//{
-			//	__instance.m_buffs.rootContainer.y -= 30;
-			//	__instance.m_buffs.container.y -= 30;
-			//	__instance.m_buffs.displayObject.y -= 30;
-			//	__instance.m_buffs.width = __instance.width;
-			//	__instance.m_buffs.align = AlignType.Left;
-			//	__instance.m_buffs.verticalAlign = VertAlignType.Top;
-			//	AddLog("is null "+ (__instance.m_buffs.parent.parent == null));
-			//	AddLog(__instance.m_buffs.y.ToString());
-			//	GetPublicGImages(__instance).ForEach(x => x.height += 30);
-			//}
 		}
 	}
 }
