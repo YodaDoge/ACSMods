@@ -46,7 +46,7 @@ namespace ACS_Yoda_Tweaks
 				cbx.onChanged.Add(AssignBranch);
 
 				__instance.AddChild(cbx);
-				cbx.minWidth = cbx.maxWidth = 40;
+				cbx.minWidth = cbx.maxWidth = cbx.dropdown.maxWidth = cbx.dropdown.minWidth = 20;
 				cbx.fontsize = cbx.titleFontSize = 8;
 				cbx.UpdateDropdownList();
 			}
