@@ -46,7 +46,7 @@ namespace ACS_Yoda_Tweaks
 				cbx.onChanged.Add(AssignBranch);
 
 				__instance.AddChild(cbx);
-				cbx.minWidth = cbx.maxWidth = cbx.dropdown.maxWidth = cbx.dropdown.minWidth = 20;
+				cbx.width = cbx.minWidth = cbx.maxWidth  = 75;
 				cbx.fontsize = cbx.titleFontSize = 8;
 				cbx.UpdateDropdownList();
 			}
@@ -109,6 +109,12 @@ namespace ACS_Yoda_Tweaks
 				var cbx = ___Panel.GetChild(_Name) as UI_ComboBox;
 				if (!cbx.visible || _lastNpc == npc)
 					return;
+				cbx.enabled = !SchoolMgr.Instance.Tangs?.Any(x => x.Master == npc.ID) == true || SchoolMgr.Instance.MasterID == npc.ID;
+				if (!cbx.enabled)
+				{
+					cbx.items = new[] { "Master" };
+					return;
+				}
 
 				_lastNpc = npc;
 				cbx.items = new[] { "None" }.Concat(SchoolMgr.Instance.Tangs.Select(x => x.Name)).ToArray();

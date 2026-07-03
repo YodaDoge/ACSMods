@@ -119,10 +119,10 @@ namespace ACS_Yoda_Tweaks
 								}
 
 								if (isBed)
-									me.SetBed(null);
+									me.SetBed(building);
 								else if (me.Rank == g_emNpcRank.Disciple)
-									me.SetPracticePlace(null);
-								me.SetBed(building);
+									me.SetPracticePlace(building);
+
 								GameWatch.Instance.PlayUIAudio("Sound/UI/click");
 								return false;
 							}
