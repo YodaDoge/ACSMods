@@ -25,29 +25,29 @@ namespace ACS_Yoda_Tweaks
 		{
 		}
 
-		[HarmonyPatch]
-		public static class Patch
-		{
-			private static HashSet<Type> _alwaysSkipJobs = new HashSet<Type> { typeof(JobPlayWithBuilding), typeof(JobPlayWithSelf),
+		private static HashSet<Type> _alwaysSkipJobs = new HashSet<Type> { typeof(JobPlayWithBuilding), typeof(JobPlayWithSelf),
 			typeof(JobPlayWithSth), typeof(JobIdle), typeof(JobPractice), typeof(JobPracticeSkill), typeof(JobLookAtSky),
 			typeof(JobBasePractice), typeof(JobMoveThingTo),
 			typeof(JobMoveBuilding) , typeof(JobHarvest), typeof(JobPlant), typeof(JobCleanFloor), typeof(JobCutoff),
 			typeof(JobBuild), typeof(JobCleanFloor), typeof(JobRemoveFloor), typeof(JobFree), typeof(JobAbsorbLing)
 			};
 
-			public static void TryCancelJob(Npc npc)
+		public static void TryCancelJob(Npc npc)
+		{
+			if (npc.JobEngine.CurJob == null)
+				return;
+
+			//var toil = npc.JobEngine.CurJob.GetCurToil();
+			if (_alwaysSkipJobs.Contains(npc.JobEngine.CurJob.GetType()) && npc.JobEngine.CurJob.CanInterruptJob())
 			{
-				if (npc.JobEngine.CurJob == null)
-					return;
-
-				//var toil = npc.JobEngine.CurJob.GetCurToil();
-				if (_alwaysSkipJobs.Contains(npc.JobEngine.CurJob.GetType()) && npc.JobEngine.CurJob.CanInterruptJob())
-				{
-					npc.JumpOutFromBuilding(true);
-					npc.JobEngine.CurJob.InterruptJob();
-				}
+				npc.JumpOutFromBuilding(true);
+				npc.JobEngine.CurJob.InterruptJob();
 			}
+		}
 
+		[HarmonyPatch]
+		public static class Patch
+		{
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(UILogicMode_IndividualCommand), "OnApplyFinish")]
 			public static void OnApplyFinish(UILogicMode_IndividualCommand __instance, Thing ___BindThing, ref bool did)

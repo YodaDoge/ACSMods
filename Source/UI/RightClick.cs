@@ -61,8 +61,7 @@ namespace ACS_Yoda_Tweaks
 				if (bnt != 1)
 					return true;
 
-				var curMode = UILogicMgr.Instance.GetCurMode();
-				var me = (curMode as UILogicMode_Select)?.CurSelectThing as Npc;
+				var me = (UILogicMgr.Instance.GetCurMode() as UILogicMode_Select)?.CurSelectThing as Npc;
 
 				if (me == null || me.FightBody.IsFighting || !me.IsRealPlayerThing)
 					return true;
@@ -79,6 +78,7 @@ namespace ACS_Yoda_Tweaks
 						{
 							GameWatch.Instance.PlayUIAudio("Sound/UI/clicknpc");
 							me.AddCommand("TryTalk", npc);
+							ReactiveDisciples.TryCancelJob(me);
 							return false;
 						}
 					}
@@ -89,6 +89,7 @@ namespace ACS_Yoda_Tweaks
 					if (thing is ItemThing itm && itm.Camp == XiaWorld.Fight.g_emFightCamp.Player)
 					{
 						me.AddCommand("EquipItem", itm);
+						ReactiveDisciples.TryCancelJob(me);
 						GameWatch.Instance.PlayUIAudio("Sound/UI/click");
 						return false;
 					}
@@ -97,44 +98,39 @@ namespace ACS_Yoda_Tweaks
 						//AddLog(building.def.Name);
 						if (building.def.Name == "Building_BookShelf_CangJing")
 						{
-							AddLog(me.Rank.ToString());
-							AddLog(me.GongKind.ToString());
 							if (me.CanDoMagic() && me.Rank == g_emNpcRank.Disciple && me.GongKind == g_emGongKind.Dao)
 								Wnd_CangJingGeWindow.Instance.Show(building, 1, me);
 						}
 						else if (building.BuildingState >= g_emBuildingState.Working && building.TagData.CheckTag("Practice") > 0)
 						{
-							if (building.CheckOwner(me) == false)
-							{
-								var isBed = building.def.Building.IsBed > 0;
-								if (building.Owners?.Count > 0)
-								{
-									foreach (var o in building.Owners.ToArray())
-									{
-										if (isBed)
-											o.SetBed(null);
-										else
-											o.SetPracticePlace(null);
-									}
-								}
-
-								if (isBed)
-									me.SetBed(building);
-								else if (me.Rank == g_emNpcRank.Disciple)
-									me.SetPracticePlace(building);
-
-								GameWatch.Instance.PlayUIAudio("Sound/UI/click");
+							if (building.CheckOwner(me))
 								return false;
+
+							var isBed = building.def.Building.IsBed > 0;
+							if (building.Owners?.Count > 0)
+							{
+								foreach (var o in building.Owners.ToArray())
+								{
+									if (isBed)
+										o.SetBed(null);
+									else
+										o.SetPracticePlace(null);
+								}
 							}
+
+							if (isBed)
+								me.SetBed(building);
+							else if (me.Rank == g_emNpcRank.Disciple)
+								me.SetPracticePlace(building);
+
+							GameWatch.Instance.PlayUIAudio("Sound/UI/click");
+							return false;
 						}
-						//Assign Bed/Practice°
 					}
 				}
 
 				return true;
 			}
-
-
 		}
 	}
 }
