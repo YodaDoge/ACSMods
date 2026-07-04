@@ -98,7 +98,7 @@ namespace ACS_Yoda_Tweaks
 				if (_lastNpc != t)
 					_lastNpc = null;
 				var cbx = ___Panel.GetChild(_Name) as UI_ComboBox;
-				cbx.visible = t is Npc npc && npc.IsRealPlayerThing && GameWatch.Instance.Mode != g_emGameMode.RPG && SchoolMgr.Instance.Tangs?.Count > 0;
+				cbx.visible = t is Npc npc && npc.IsRealPlayerThing && GameWatch.Instance.Mode != g_emGameMode.RPG && SchoolMgr.Instance.Tangs?.Count > 0 && npc.IsSmartRace;
 			}
 
 			private static Npc _npc;

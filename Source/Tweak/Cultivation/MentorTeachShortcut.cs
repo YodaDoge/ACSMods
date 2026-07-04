@@ -28,15 +28,17 @@ namespace ACS_Yoda_Tweaks
 					return;
 				if (__instance.things != null && __instance.things.Count > 1)
 					return;
-				AddLog("Teach Shortcut");
+
 				var npc = (Npc)__instance.thing;
-				if (!npc.IsRealPlayerThing || npc.PropertyMgr.Practice?.Master == null)
+				var master = npc.PropertyMgr.Practice?.Master;
+				if (!npc.IsRealPlayerThing || master == null || !master.IsSelectAble || !master.IsAlive || master.IsInRemote || !master.IsValid)
 					return;
+
 				UIMainMenuListDef_Data data = new UIMainMenuListDef_Data
 				{
 					Icon = "res/Sprs/ui/icon_chuanshou01"
 				};
-				UILogicMgr.Instance.ChangeMode(g_emUILogicMode.IndividualCommand, data, false, npc.PropertyMgr.Practice.Master, g_emIndividualCommandType.Teach);
+				UILogicMgr.Instance.ChangeMode(g_emUILogicMode.IndividualCommand, data, false, master, g_emIndividualCommandType.Teach);
 			}
 		}
 	}
