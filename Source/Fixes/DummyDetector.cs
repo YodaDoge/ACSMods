@@ -23,7 +23,8 @@ public class DummyDetector : Mod
 		[HarmonyPatch(typeof(JobBasePractice), "GetToilList")]
 		public static bool Prefix(ref List<ToilBase> __result, JobBasePractice __instance, ref bool ___freepractice)
 		{
-			if (!_info.Enabled) return true;
+			if (!_info.Enabled) 
+				return true;
 			var npc = __instance.Worker;
 			List<ToilBase> list = new List<ToilBase>();
 			__result = list;

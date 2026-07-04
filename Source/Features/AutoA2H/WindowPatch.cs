@@ -22,7 +22,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			private static void InitPanel(Wnd_A2HCreateAgg __instance, Npc npc, List<string> selectedThoughts)
 			{
 				var panelAutoThink = _panelAutoThink; // private variable to make findref stuff easier
-				if (_panelAutoThink == null || string.IsNullOrEmpty(PanelName) || __instance.GetChild(PanelName) == null) // nullcheck in unity is special! hence double check with the string
+				if (_panelAutoThink == null || string.IsNullOrEmpty(PanelName) || __instance.GetChild(PanelName) == null) 
 				{
 					panelAutoThink = new AutoThoughtsWindow();
 					PanelName = panelAutoThink.name;
@@ -44,6 +44,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 
 				try
 				{
+					AddLog("ShowNpc");
 					_hadError = false;
 					InitNullLists(npc);
 					var window = SingletonWindowEx<Wnd_A2HCreateAgg, UI_A2HCreateAgg>.Instance;
@@ -63,7 +64,7 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			[HarmonyPatch(typeof(Wnd_A2HCreateAgg), "OnHide")]
 			public static void OnHide(Wnd_A2HCreateAgg __instance, Npc ___npc)
 			{
-				if (!_info.Enabled || _hadError)
+				if (!_info.Enabled || _hadError || _panelAutoThink == null)
 					return;
 
 				try

@@ -23,7 +23,8 @@ public class SmeltManual : Mod
 		[HarmonyPatch(typeof(JobCangJingGe), "OnLeaveJob")]
 		public static void Prefix(JobCangJingGe __instance, KStateQUnit unit)
 		{
-			if (!_info.Enabled) return;
+			if (!_info.Enabled) 
+				return;
 
 			if (!unit.IsFinished)
 				return;

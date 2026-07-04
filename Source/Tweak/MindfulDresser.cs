@@ -28,7 +28,7 @@ public class MindfulDresser : Mod
 		if (itemThing != null)
 		{
 			Command command = me.AddCommand("EquipItem", itemThing);
-			if(instantAssign)
+			if (instantAssign)
 				me.WearCMD = command.ID;
 			return true;
 		}
@@ -69,6 +69,34 @@ public class MindfulDresser : Mod
 			npc.NoRideHorse = npc.GetSpeed() >= horse.Speed;
 		}
 
+		[HarmonyPostfix]
+		[HarmonyPatch(typeof(NpcPractice), "Up2Disciple")]
+		public static void Up2Disciple(Npc ___me)
+		{
+			try
+			{
+				var me = ___me;
+				if (!___me.IsRealPlayerThing)
+					return;
+				
+				var t = me.Equip.FindTool(ItemSickle);
+				if (t != null)
+					me.Equip.UnEquipItem(t);
+
+				t = me.Equip.FindTool(ItemAxe);
+				if (t != null)
+					me.Equip.UnEquipItem(t);
+
+				t = me.Equip.FindTool(ItemPickAxe);
+				if (t != null)
+					me.Equip.UnEquipItem(t);
+
+			}
+			catch (Exception ex)
+			{
+				ShowMessage(ex);
+			}
+		}
 
 		[HarmonyPostfix]
 		[HarmonyPatch(typeof(NpcFeeling), "Step")]
@@ -156,14 +184,15 @@ public class MindfulDresser : Mod
 			}
 		}
 
+		private const string ItemAxe = "Item_SysAxe";
+
 		[HarmonyPrefix]
 		[HarmonyPatch(typeof(BehaviourCutoff), "Check")]
 		public static bool UpgradeAxe(ref JobBase __result, Npc npc, int seachr = 10000, bool tryfind = false)
 		{
 			try
 			{
-
-				__result = LookForUpgrade(npc, "Item_SysAxe");
+				__result = LookForUpgrade(npc, ItemAxe);
 				return __result == null;
 			}
 			catch (Exception ex)
@@ -172,20 +201,21 @@ public class MindfulDresser : Mod
 			}
 			return true;
 		}
+		private const string ItemPickAxe = "Item_SysPickaxe";
 
 		[HarmonyPrefix]
 		[HarmonyPatch(typeof(BehaviourMine), "Check")]
 		public static bool UpgradePick(ref JobBase __result, Npc npc, int seachr = 10000, bool tryfind = false)
 		{
-			__result = LookForUpgrade(npc, "Item_SysPickaxe");
+			__result = LookForUpgrade(npc, ItemPickAxe);
 			return __result == null;
 		}
-
+		private const string ItemSickle = "Item_SysSickle";
 		[HarmonyPrefix]
 		[HarmonyPatch(typeof(BehaviourPlant), "Check")]
 		public static bool UpgradePlow(ref JobBase __result, Npc npc, int seachr = 10000, bool tryfind = false)
 		{
-			__result = LookForUpgrade(npc, "Item_SysSickle");
+			__result = LookForUpgrade(npc, ItemSickle);
 			return __result == null;
 		}
 

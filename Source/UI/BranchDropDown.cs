@@ -41,12 +41,12 @@ namespace ACS_Yoda_Tweaks
 				cbx.values = new string[] { "None", "Test" };
 				cbx.selectedIndex = 0;
 				//cbx.z = __instance.z - 1;
-				cbx.x -= 50;
+				cbx.x -= 60;
 				cbx.y -= 30;
 				cbx.onChanged.Add(AssignBranch);
 
 				__instance.AddChild(cbx);
-				cbx.width = cbx.minWidth = cbx.maxWidth  = 75;
+				cbx.width = cbx.minWidth = cbx.maxWidth  = 70;
 				cbx.fontsize = cbx.titleFontSize = 8;
 				cbx.UpdateDropdownList();
 			}
@@ -101,7 +101,6 @@ namespace ACS_Yoda_Tweaks
 				cbx.visible = t is Npc npc && npc.IsRealPlayerThing && GameWatch.Instance.Mode != g_emGameMode.RPG && SchoolMgr.Instance.Tangs?.Count > 0 && npc.IsSmartRace;
 			}
 
-			private static Npc _npc;
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Panel_ThingInfo), "ShowNpc")]
 			public static void UpdateBranches(Panel_ThingInfo __instance, UI_Panel_ThingInfo ___Panel, Npc npc)
