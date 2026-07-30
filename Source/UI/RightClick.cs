@@ -18,7 +18,7 @@ namespace ACS_Yoda_Tweaks
 	public class RightClick : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("RightClick", "Rightclick to equip, use Pavillion, assign Bed/Pillow", true);
+		private static Meta _info = new Meta("RightClick", "Rightclick Support", true);
 
 		private static bool _pauseAfterLoad = false;
 

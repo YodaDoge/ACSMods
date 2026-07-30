@@ -37,7 +37,7 @@ namespace ACS_Yoda_Tweaks
 				var master = npc.PropertyMgr.Practice?.Master;
 				
 				if (!npc.IsRealPlayerThing || master == null || !master.IsSelectAble || !master.IsAlive || master.IsInRemote || !master.IsValid || master.map != World.Instance.map
-					|| master.InTomb || master.IsPuppet || master.IsZombie)
+					|| master.InTomb || master.IsPuppet || master.IsZombie || master.ActDisable || master.IsGod || master.IsHide)
 					return;
 
 				UIMainMenuListDef_Data data = new UIMainMenuListDef_Data

@@ -45,10 +45,11 @@ Disciple Names in the List are bigger sized
 - Dropdown on Disciples Panel to see/change their assigned Branch
 - Shift+T with a disciple selected instructs their mentor to teach
 [*][b]Rightclick Support[/b] *
-On sect map use rightclick to
+On sect map use rightclick to:
 - Assign Beds/Cushions/Altars
-- Talk to visitor
+- Talk to visitors
 - Equip Items
+- Learn from Manual Pavillions
 [*][b]Meditation and Cultivation Tweaks[/b] [i]*[/i]
 Meditation uses Spirit Root Sympathy. 
 Meditation is cancelled upon dropping to 50 Mental State or less 
@@ -84,4 +85,6 @@ You can define which thought shards an animal should use.
 It will automatically handle thinking, memorizing, studying and forming thoughts.
 [*][b]Immortal Save/Load[/b]
 [*][b]Show next policy event time[/b]
+[*][b]Auto Toggle Talisman[/b]
+Entering Breakthrough, Cultivation, Adventures or Fights will enable appropiate Talismans. 
 [/list]
