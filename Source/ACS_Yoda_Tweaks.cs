@@ -49,7 +49,9 @@ namespace ACS_Yoda_Tweaks
 			new EmptyPrio(false).Info,
 			new ShowManual(false).Info,
 			new PolicyEventTimer(false).Info,
-			new ImmortalSaveLoad(false).Info
+			new ImmortalSaveLoad(false).Info, 
+			new RightClick(true).Info,
+			new AutoTalisman(false).Info
 		};
 
 		private const string ConfigName = "ACS_Yoda_Tweaks";

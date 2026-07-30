@@ -13,6 +13,8 @@ SourceCode and Readme: [url]https://github.com/YodaDoge/ACSMods/[/url]
 [*]Universe Storage now shows items after opening
 [*]Many search operations are no longer case-sensitive
 [*]Mindful dressing now clothes naked disciples, even when their temperature range is met
+[*]Disciples which cannot do adventures, due to pending Tribulation, are no longer selectable for adventures
+[*]An alert is shown once shapeshifting tribulation has 100 seconds left
 [/list]
 
 [h2]Default Features[/h2]
@@ -40,12 +42,20 @@ Disciple Names in the List are bigger sized
 - On Adventures with a single Disciple, interactions skip the character selection prompt
 - Animal thoughts are now sorted by Type → Level → Name. Memorized shards use a bold font
 - Spirit Fly toggles when a spirit contract is equipped, based on its speed compared to the disciple
-[*][b](Beta) Meditation and Cultivation Tweaks[/b] [i]*[/i]
+- Dropdown on Disciples Panel to see/change their assigned Branch
+- Shift+T with a disciple selected instructs their mentor to teach
+[*][b]Rightclick Support[/b] *
+On sect map use rightclick to
+- Assign Beds/Cushions/Altars
+- Talk to visitor
+- Equip Items
+[*][b]Meditation and Cultivation Tweaks[/b] [i]*[/i]
 Meditation uses Spirit Root Sympathy. 
 Meditation is cancelled upon dropping to 50 Mental State or less 
 Inners on a balanced cultivation plan maintain at least 50 mental state with fun activities.
 They cultivate until they reach a bottleneck; afterwards, they switch to practicing for XP and Qi-regen. 
 Meditation is automatically used when available.
+Standard Bottlenecks (no GC, Adventure, Peon or any costs) are automatically attempted, if chance is >50%
 [b]Elysium Compatible[/b]: This logic is naturally bypassed if the Disciple is managed by Elysium
 [/list]
 *= Can be disabled in Mod settings

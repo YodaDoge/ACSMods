@@ -18,7 +18,7 @@ namespace ACS_Yoda_Tweaks
 	public class RightClick : Mod
 	{
 		public override Meta Info => _info;
-		private static Meta _info = new Meta("RightClick", "Rightclick like its 2005", true);
+		private static Meta _info = new Meta("RightClick", "Rightclick to equip, use Pavillion, assign Bed/Pillow", true);
 
 		private static bool _pauseAfterLoad = false;
 
@@ -29,28 +29,6 @@ namespace ACS_Yoda_Tweaks
 		[HarmonyPatch]
 		public static class Patch
 		{
-			//[HarmonyPostfix]
-			//[HarmonyPatch(typeof(Wnd_SelectNpc), "OnListClick")]
-			//[HarmonyPriority(1000)]
-			//public static void InstantOkSelect(Wnd_SelectNpc __instance, EventContext context)
-			//{
-			//	if (!Input.GetKey(KeyCode.LeftControl))
-			//		return;
-
-			//	var okButton = __instance.UIInfo.m_n27;
-			//	if (okButton.enabled)
-			//		okButton.onClick.Call();
-			//}
-
-
-			//[HarmonyPatch(typeof(XiaWorld.UILogicMode_Select), nameof(XiaWorld.UILogicMode_Select.RightClick_Global))]
-			//[HarmonyPrefix]
-			//static bool RightClick_Global_Prefix()
-			//{
-			//	// replacement logic
-			//	return false; // skip original
-			//}
-
 			[HarmonyPrefix]
 			[HarmonyPatch(typeof(XiaWorld.UILogicMgr), nameof(XiaWorld.UILogicMgr.OnMapClick))]
 			public static bool OnWorldClick(XiaWorld.UILogicMgr __instance, Vector3 pos, int key, int bnt)

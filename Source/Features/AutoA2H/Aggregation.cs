@@ -41,14 +41,11 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 					return;
 				}
 
-				if (npc.A2H.CanThinkCount <= 10)
+				var studyForNewAggType = scorings.Where(x => x.existingAggTypeCount == 0 && x.existingTotalCount == 2).ToList();
+				if (TryStudy(npc, studyForNewAggType))
 				{
-					var studyForNewAggType = scorings.Where(x => x.existingAggTypeCount == 0 && x.existingTotalCount == 2).ToList();
-					if (TryStudy(npc, studyForNewAggType))
-					{
-						MessageMgr.Instance.RemoveMessage(34001, new List<Thing> { npc });
-						return;
-					}
+					MessageMgr.Instance.RemoveMessage(34001, new List<Thing> { npc });
+					return;
 				}
 
 				//study anything we keep score of

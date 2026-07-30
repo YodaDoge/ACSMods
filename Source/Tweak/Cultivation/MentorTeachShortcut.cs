@@ -22,8 +22,12 @@ namespace ACS_Yoda_Tweaks
 		{
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Panel_ThingInfo), "OnUpdate")]
-			public static void EquipAdventureFu(Panel_ThingInfo __instance, float dt, UI_Panel_ThingInfo ___Panel)
+			public static void PanelThingInfo_Update(Panel_ThingInfo __instance, float dt, UI_Panel_ThingInfo ___Panel)
 			{
+				//disabled until bug is removed that makes missing mentors valid for teaching...
+				//if (!IsYodaMachine)
+				//	return;
+
 				if (!___Panel.visible || __instance.thing?.ThingType != g_emThingType.Npc || !UnityEngine.Input.GetKey(KeyCode.LeftShift) || !UnityEngine.Input.GetKeyDown(KeyCode.T))
 					return;
 				if (__instance.things != null && __instance.things.Count > 1)
@@ -31,7 +35,9 @@ namespace ACS_Yoda_Tweaks
 
 				var npc = (Npc)__instance.thing;
 				var master = npc.PropertyMgr.Practice?.Master;
-				if (!npc.IsRealPlayerThing || master == null || !master.IsSelectAble || !master.IsAlive || master.IsInRemote || !master.IsValid)
+				
+				if (!npc.IsRealPlayerThing || master == null || !master.IsSelectAble || !master.IsAlive || master.IsInRemote || !master.IsValid || master.map != World.Instance.map
+					|| master.InTomb || master.IsPuppet || master.IsZombie)
 					return;
 
 				UIMainMenuListDef_Data data = new UIMainMenuListDef_Data

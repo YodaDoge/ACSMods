@@ -84,7 +84,7 @@ namespace ACS_Yoda_Tweaks
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Panel_ThingInfo), "UpdateThings")]
-			public static void Blergh(Panel_ThingInfo __instance, UI_Panel_ThingInfo ___Panel)
+			public static void MultiThingSelection(Panel_ThingInfo __instance, UI_Panel_ThingInfo ___Panel)
 			{
 				_lastNpc = null;
 				var cbx = ___Panel.GetChild(_Name) as UI_ComboBox;
@@ -93,7 +93,7 @@ namespace ACS_Yoda_Tweaks
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Panel_ThingInfo), "UpdateThing")]
-			public static void Reset(Panel_ThingInfo __instance, UI_Panel_ThingInfo ___Panel, Thing t = null, AreaBase a = null)
+			public static void SingleThingSelection(Panel_ThingInfo __instance, UI_Panel_ThingInfo ___Panel, Thing t = null, AreaBase a = null)
 			{
 				if (_lastNpc != t)
 					_lastNpc = null;
@@ -108,6 +108,7 @@ namespace ACS_Yoda_Tweaks
 				var cbx = ___Panel.GetChild(_Name) as UI_ComboBox;
 				if (!cbx.visible || _lastNpc == npc)
 					return;
+
 				cbx.enabled = SchoolMgr.Instance.Tangs?.Any(x => x.Master == npc.ID) != true && SchoolMgr.Instance.MasterID != npc.ID;
 				if (!cbx.enabled)
 				{
