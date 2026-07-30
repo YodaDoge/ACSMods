@@ -35,7 +35,7 @@ namespace ACS_Yoda_Tweaks
 			new ReactiveDisciples(true).Info,
 			new MindfulDresser(true).Info,
 			new CultivationTweaks(true).Info,
-
+			new RightClick(true).Info,
 
 			//default off
 			new MasterNoBreakGuard(false).Info,
@@ -50,7 +50,6 @@ namespace ACS_Yoda_Tweaks
 			new ShowManual(false).Info,
 			new PolicyEventTimer(false).Info,
 			new ImmortalSaveLoad(false).Info, 
-			new RightClick(true).Info,
 			new AutoTalisman(false).Info
 		};
 
