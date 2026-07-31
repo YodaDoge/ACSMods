@@ -70,12 +70,13 @@ namespace ACS_Yoda_Tweaks
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(ToilAbsorbLing), "OnStepToil")]
-			public static void AutoCancelMeditation(ToilAbsorbLing __instance, float dt, KStateQUnit unit)
+			public static void AutoCancelMeditation(ToilAbsorbLing __instance, float dt, KStateQUnit unit, MagicDef ___magic)
 			{
-				if (!_info.Enabled) return;
+				if (!_info.Enabled) 
+					return;
 
 				var npc = __instance.npc;
-				if (!npc.IsPlayerThing || npc.GongKind == g_emGongKind.God || npc.GongKind == g_emGongKind.Body)
+				if (!npc.IsPlayerThing || ___magic?.Name != "ClosedDoor" || npc.GongKind == g_emGongKind.God || npc.GongKind == g_emGongKind.Body)
 					return;
 
 				if (__instance.Job.CMD.def.Param == 6 
