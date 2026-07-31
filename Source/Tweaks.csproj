@@ -139,6 +139,9 @@
     <None Include="..\README.md">
       <Link>README.md</Link>
     </None>
+    <None Include="info.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Images\Preview.png">
