@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using XiaWorld;
 
 namespace ACS_Yoda_Tweaks
 {
@@ -15,6 +16,7 @@ namespace ACS_Yoda_Tweaks
 			Info.Enabled = defaultEnabled;
 		}
 		public static bool IsYodaMachine => ACS_Yoda_Tweaks.IsYodaMachine;
+		public static bool OnSchoolMap => World.Instance.GameMode == g_emGameMode.Normal || World.Instance.GameMode == g_emGameMode.HardCore;
 
 		public static void ShowMessage(string message, string title = null) => ACS_Yoda_Tweaks.ShowMessage(message);
 

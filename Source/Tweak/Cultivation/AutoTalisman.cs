@@ -135,10 +135,14 @@ namespace ACS_Yoda_Tweaks
 					//	}
 					//}
 
+					if (talismans.Count(x => IsFuPositive(x.Key, wantedType) == true && npc.Equip.CheckActive(x.Value)) == maxActiveFu)
+						return;
+
 					foreach (var negative in talismans.Where(x => IsFuPositive(x.Key, wantedType) == false))
 					{
 						npc.Equip.CloseItemthing(negative.Key, negative.Value);
 					}
+
 
 					var inActivePositive = talismans.Where(x => IsFuPositive(x.Key, wantedType) == true && !npc.Equip.CheckActive(x.Value)).ToArray();
 					var usedSlots = talismans.Where(x => npc.Equip.CheckActive(x.Value)).ToList();
@@ -206,5 +210,10 @@ namespace ACS_Yoda_Tweaks
 		{
 			return x.Type == 0 && targetMods.Any(t => x.name.IndexOf(t) >= 0);
 		}
+
+		//private static bool GetModVal(ItemEquptData itm, string[] targetMods)
+		//{
+		//	return itm.Type == 0 && targetMods.Where(t => itm.name.IndexOf(t) >= 0).Sum(x => 
+		//}
 	}
 }

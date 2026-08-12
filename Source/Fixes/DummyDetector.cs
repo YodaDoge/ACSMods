@@ -26,6 +26,9 @@ public class DummyDetector : Mod
 			if (!_info.Enabled) 
 				return true;
 			var npc = __instance.Worker;
+			if (!npc.IsRealPlayerThing)
+				return true;
+
 			List<ToilBase> list = new List<ToilBase>();
 			__result = list;
 			var freepractice = ___freepractice;

@@ -33,14 +33,14 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(XiaWorld.UILogicMgr), nameof(XiaWorld.UILogicMgr.OnMapClick))]
 			public static bool OnWorldClick(XiaWorld.UILogicMgr __instance, Vector3 pos, int key, int bnt)
 			{
-				if (GameWatch.Instance.Mode != g_emGameMode.HardCore && GameWatch.Instance.Mode != g_emGameMode.Normal)
+				if (!OnSchoolMap)
 					return true;
 
 				if (bnt != 1)
 					return true;
 
 				var me = (UILogicMgr.Instance.GetCurMode() as UILogicMode_Select)?.CurSelectThing as Npc;
-
+				AddLog(UILogicMgr.Instance.GetCurMode().ToString());
 				if (me == null || me.FightBody.IsFighting || !me.IsRealPlayerThing)
 					return true;
 
@@ -64,7 +64,7 @@ namespace ACS_Yoda_Tweaks
 
 				foreach (var thing in World.Instance.map.Things.GetThingsAtGrid(key))
 				{
-					if (thing is ItemThing itm && itm.Camp == XiaWorld.Fight.g_emFightCamp.Player)
+					if (thing is ItemThing itm && (itm.Camp == XiaWorld.Fight.g_emFightCamp.Player ||itm.Camp == XiaWorld.Fight.g_emFightCamp.None ))
 					{
 						me.AddCommand("EquipItem", itm);
 						ReactiveDisciples.TryCancelJob(me);

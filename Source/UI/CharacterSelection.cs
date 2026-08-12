@@ -65,11 +65,15 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPriority(1000)]
 			public static void AutoUseSingleAdventureNpc(Wnd_SelectNpc __instance, List<Npc> ___npcs, params object[] objs)
 			{
-				if (___npcs.Count == 1)
+				if (Wnd_World.Instance?.isShowing == true)
+					return;
+				if (___npcs?.Count == 1)
 				{
 					try
 					{
 						var lst = __instance.UIInfo.m_n25;
+						if (lst.numItems <= 0)
+							return;
 						lst.AddSelection(0, false, true);
 						__instance.UIInfo.m_n27.onClick.Call();
 					}

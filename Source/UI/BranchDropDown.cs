@@ -98,7 +98,7 @@ namespace ACS_Yoda_Tweaks
 				if (_lastNpc != t)
 					_lastNpc = null;
 				var cbx = ___Panel.GetChild(_Name) as UI_ComboBox;
-				cbx.visible = t is Npc npc && npc.IsRealPlayerThing && GameWatch.Instance.Mode != g_emGameMode.RPG && SchoolMgr.Instance.Tangs?.Count > 0 && npc.IsSmartRace;
+				cbx.visible = t is Npc npc && npc.IsRealPlayerThing && OnSchoolMap && SchoolMgr.Instance.Tangs?.Count > 0 && npc.IsSmartRace;
 			}
 
 			[HarmonyPostfix]

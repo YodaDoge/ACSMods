@@ -185,6 +185,7 @@ namespace ACS_Yoda_Tweaks
 			A2H.InitNpcCache(a2h);
 			MessageIgnore.Load();
 		}
+
 		[HarmonyPatch]
 		public static class Patch
 		{
@@ -196,6 +197,7 @@ namespace ACS_Yoda_Tweaks
 				GButton gButton = (GButton)context.data;
 				if (gButton.name == "pause" && UnityEngine.Input.GetKey(KeyCode.LeftControl))
 				{
+					AddLog(World.Instance.GameMode.ToString());
 					ShowLog("");
 				}
 			}

@@ -106,9 +106,14 @@ public class MindfulDresser : Mod
 			float lastWearCheck = lastCheckDict.GetOrCreate(me);
 			if (World.Instance.TolSecond - lastWearCheck < checkInterval)
 				return;
-
+				
 			bool hasValidWearCMD = me.WearCMD > 0 && CommandMgr.Instance.FindCommandByID(me.WearCMD) != null;
-			if (hasValidWearCMD)
+			if (hasValidWearCMD || OnSchoolMap)
+				return;
+
+			bool validForAutoEquip = me.AutoWear && me.IsRealPlayerThing && me.IsSmartRace && (me.Rank == g_emNpcRank.Worker || me.GongKind == g_emGongKind.Dao);
+
+			if (!validForAutoEquip)
 				return;
 
 			if (me.PropertyMgr.MoodData.CheckMood("NeedTrousers"))
@@ -119,11 +124,6 @@ public class MindfulDresser : Mod
 
 			if (!_info.Enabled) return;
 
-			bool validForAutoEquip = me.AutoWear && !me.IsVistor && me.IsSmartRace && me.EnemyType != g_emEnemyType.PlayerAttacker && (me.Rank == g_emNpcRank.Worker || me.GongKind == g_emGongKind.Dao);
-			if (!validForAutoEquip)
-				return;
-
-
 			if (me.Rank == g_emNpcRank.Worker)
 			{
 				if (LookForTool(me, "Item_SmallBell"))
@@ -133,8 +133,6 @@ public class MindfulDresser : Mod
 					return;
 
 				//TODO: Scraper/facemask if appropiate job is assigned
-				//TODO: Feature - FindBetterTool
-
 				var equippedTali = GetTali(me).Select(x => x.Key).ToList();
 				int maxActiveFu = 3 + me.AddActiveFuCount +
 								  (me.IsRealPlayerThing ? RuntimeVar.Var.ExtraFuActive : 0);
@@ -171,10 +169,14 @@ public class MindfulDresser : Mod
 		{
 			ItemThing itemThing = me.map.Things.FindItem(me, 200, null, 0, issort: false, "_WearAble", 0, 9999, delegate (ItemThing it)
 			{
+				if (it.Camp != g_emFightCamp.Player)
+					return false;
 				if (it.def.Item.Equip.NeedSex != g_emNpcSex.None && it.def.Item.Equip.NeedSex != me.Sex)
 				{
 					return false;
-				}
+				} 
+				if (it.Rate >= 9 || IsFengShuiItem(it))
+					return false;
 				return it.TagData.CheckTag(itemTag) > 0;
 			});
 			if (itemThing != null)
