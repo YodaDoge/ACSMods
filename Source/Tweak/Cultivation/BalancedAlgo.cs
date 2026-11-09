@@ -50,7 +50,7 @@ namespace ACS_Yoda_Tweaks
 						&& npc.PropertyMgr.Practice.PracticeMode == g_emPracticeBehaviourKind.None)
 					{
 						if (!npc.PropertyMgr.Practice.TouchNeck)
-							AutoTalisman.Patch.ToggleTalisman(npc, AutoTalisman.TaliType.Cultivation);
+							AutoTalismanToggle.Patch.ToggleTalisman(npc, AutoTalismanToggle.TaliType.Cultivation);
 
 						bool doFun = ShouldDoFun(npc);
 						if (doFun)

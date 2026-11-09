@@ -40,7 +40,6 @@ namespace ACS_Yoda_Tweaks
 					return true;
 
 				var me = (UILogicMgr.Instance.GetCurMode() as UILogicMode_Select)?.CurSelectThing as Npc;
-				AddLog(UILogicMgr.Instance.GetCurMode().ToString());
 				if (me == null || me.FightBody.IsFighting || !me.IsRealPlayerThing)
 					return true;
 

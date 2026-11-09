@@ -2,19 +2,19 @@
 using Light2D;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 using XiaWorld;
-using static XiaWorld.AuctionData;
 
 namespace ACS_Yoda_Tweaks
 {
-	public class AutoTalisman : Mod
+	public class AutoTalismanToggle : Mod
 	{
 		public override Meta Info => _info;
 		private static Meta _info = new Meta("AutoTalisman", "Auto Toggle suitable Talisman", false);
-		public AutoTalisman(bool defaultEnabled) : base(defaultEnabled)
+		public AutoTalismanToggle(bool defaultEnabled) : base(defaultEnabled)
 		{
 		}
 
@@ -30,10 +30,9 @@ namespace ACS_Yoda_Tweaks
 				ToggleTalisman(__instance.Worker, TaliType.Adventure);
 			}
 
-			private static string[] _mindstateFu = new string[] { "Spell_MindState2", "Spell_Fu", "Spell_MindState1"};
+			private static string[] _mindstateFu = new string[] { "Spell_MindState2", "Spell_Fu", "Spell_MindState1" };
 			private static string[] _cultivationSpeedFu = new string[] { "Spell_DeepPracticeSpeedSpecialCoefficient2", "Spell_DeepPracticeSpeedSpecialCoefficient1" };
-			private static string[] _adventureSpeedFu = new string[] {"Spell_WorldMapFlySpeed", "Spell_MoveSpeed2", };
-
+			private static string[] _adventureSpeedFu = new string[] { "Spell_WorldMapFlySpeed", "Spell_MoveSpeed2", };
 
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(NpcPractice), "Up2Disciple")]
@@ -66,10 +65,21 @@ namespace ACS_Yoda_Tweaks
 			{
 				if (!_info.Enabled)
 					return;
-
 				var npc = __instance.Worker;
+
+				if (npc.GongKind != g_emGongKind.Dao)
+					return;
+
 				var practice = npc.PropertyMgr.Practice;
 				var type = practice.CurNeck.Kind == g_emGongBottleNeckType.Thunder ? TaliType.Battle : TaliType.Breakthrough;
+
+				//AddLog("{0} enter neck type {1}", __instance.Worker.GetName(), practice.CurNeck.Kind);
+				if (practice.CurNeck.Kind == g_emGongBottleNeckType.God)
+				{
+					//var kind = (__instance.CMD as CommandBrokenNeck).brokenkind;
+					// age/attainment/xx tribulation
+					type = TaliType.Battle;
+				}
 				ToggleTalisman(npc, type);
 			}
 
@@ -142,7 +152,6 @@ namespace ACS_Yoda_Tweaks
 					{
 						npc.Equip.CloseItemthing(negative.Key, negative.Value);
 					}
-
 
 					var inActivePositive = talismans.Where(x => IsFuPositive(x.Key, wantedType) == true && !npc.Equip.CheckActive(x.Value)).ToArray();
 					var usedSlots = talismans.Where(x => npc.Equip.CheckActive(x.Value)).ToList();
