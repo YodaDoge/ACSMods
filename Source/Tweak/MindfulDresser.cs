@@ -106,9 +106,8 @@ public class MindfulDresser : Mod
 			float lastWearCheck = lastCheckDict.GetOrCreate(me);
 			if (World.Instance.TolSecond - lastWearCheck < checkInterval)
 				return;
-				
 			bool hasValidWearCMD = me.WearCMD > 0 && CommandMgr.Instance.FindCommandByID(me.WearCMD) != null;
-			if (hasValidWearCMD || OnSchoolMap)
+			if (hasValidWearCMD || !OnSchoolMap)
 				return;
 
 			bool validForAutoEquip = me.AutoWear && me.IsRealPlayerThing && me.IsSmartRace && (me.Rank == g_emNpcRank.Worker || me.GongKind == g_emGongKind.Dao);
@@ -122,7 +121,8 @@ public class MindfulDresser : Mod
 			if (me.PropertyMgr.MoodData.CheckMood("NeedClothes"))
 				FindClothing(me, "_LableClothes");
 
-			if (!_info.Enabled) return;
+			if (!_info.Enabled) 
+				return;
 
 			if (me.Rank == g_emNpcRank.Worker)
 			{
