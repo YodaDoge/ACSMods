@@ -78,7 +78,7 @@ public class MindfulDresser : Mod
 				var me = ___me;
 				if (!___me.IsRealPlayerThing)
 					return;
-				
+
 				var t = me.Equip.FindTool(ItemSickle);
 				if (t != null)
 					me.Equip.UnEquipItem(t);
@@ -121,7 +121,7 @@ public class MindfulDresser : Mod
 			if (me.PropertyMgr.MoodData.CheckMood("NeedClothes"))
 				FindClothing(me, "_LableClothes");
 
-			if (!_info.Enabled) 
+			if (!_info.Enabled)
 				return;
 
 			if (me.Rank == g_emNpcRank.Worker)
@@ -137,7 +137,7 @@ public class MindfulDresser : Mod
 				int maxActiveFu = 3 + me.AddActiveFuCount +
 								  (me.IsRealPlayerThing ? RuntimeVar.Var.ExtraFuActive : 0);
 				maxActiveFu = Mathf.Clamp(maxActiveFu, 0, 6);
-				if (maxActiveFu < 3)
+				if (equippedTali.Count < maxActiveFu)
 				{
 					//TODO: if crafter => check craftingtable
 					foreach (var usefulTaliName in genericTalisman)
@@ -174,7 +174,7 @@ public class MindfulDresser : Mod
 				if (it.def.Item.Equip.NeedSex != g_emNpcSex.None && it.def.Item.Equip.NeedSex != me.Sex)
 				{
 					return false;
-				} 
+				}
 				if (it.Rate >= 9 || IsFengShuiItem(it))
 					return false;
 				return it.TagData.CheckTag(itemTag) > 0;

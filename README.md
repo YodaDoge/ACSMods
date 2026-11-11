@@ -3,7 +3,7 @@
 Application restart required after enabling this mod! <br/>
 Can be added/removed from ongoing saves.
 
-## Fixes
+### Fixes
 * Spirit Animal now generates Leisure when performing any Playing actions or interactions with Disciples.
 * Artifact Crafting message will not be removed when the Artifact is hauled
 * Outers will now search for training Dummies more diligently. 
@@ -14,7 +14,7 @@ Can be added/removed from ongoing saves.
 * Universe Storage search is now case-insensitive
 * Mindful dressing now clothes naked disciples
 
-## Default Features
+### Default Features
 * **Handworking Station Priority** <br/> 
 Handworking will now be performed at the same priority as Stonecutting while respecting the priority setting on the workbench. 
 * **Smarter Dressers*** <br/> 
@@ -44,7 +44,7 @@ Meditation will automatically be used when available. <br/>
 
 *= Can be disabled in Mod settings
 
-## Optional Features
+### Optional Features
 Following Features must be enabled in the MLL menu (Esc => MLL)
 
 * **Auto Pause on Load**
@@ -66,9 +66,7 @@ Following Features must be enabled in the MLL menu (Esc => MLL)
   You can define which thought shards an animal should use. <br/>
   It will automatically handle thinking, memorizing, studying and forming thoughts.
 
-SourceCode and Readme: https://github.com/YodaDoge/ACSMods/
-
-## Harmony warning 
+### Harmony warning 
 If an outdated Harmony has been loaded you will see a warning dialog. <br/>
 Using an outdated Harmony version can lead to loss of progress. <br/>
 This mod is not the cause of this, it only warns you about the conflict. <br/>
@@ -76,3 +74,7 @@ Either disable the mod that provides an outdated harmony version, or delete the 
 Most commonly this is caused by [SkillLevelInRecruitment](https://steamcommunity.com/sharedfiles/filedetails/?id=2364620535) providing an outdated harmony version. <br/>
 I recommend using [Iguanas Overhaul](https://github.com/iguanacore/iguana_acs_functions/) instead. <br/>
 If the warning message opened this page for you, the steam-workshop link of the offending Mod has been copied to your clipboard <br/>
+
+### License
+Licensed under the [Creative Commons Attribution 4.0 International Public License](https://creativecommons.org/licenses/by/4.0/) <br/>
+You may Share and Adapt this work as long as credit to the original author is given
