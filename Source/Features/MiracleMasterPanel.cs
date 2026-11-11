@@ -65,6 +65,7 @@ public class MiracleMasterPanel //SearchMainPanel
 			var btn = categoryList.AddItemFromPool() as GButton;
 			btn.data = category.Key;
 			btn.title = category.Key;
+			btn.onClick.Remove(Category_Clicked);
 			btn.onClick.Add(Category_Clicked);
 		}
 		UpdateItemList();

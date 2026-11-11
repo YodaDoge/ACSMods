@@ -28,9 +28,17 @@ namespace ACS_Yoda_Tweaks
 			[HarmonyPatch(typeof(Wnd_GameMain), "OnInit")]
 			public static void AddSaveLoadQuitButtons(Wnd_GameMain __instance, PopupMenu ___MainMenu)
 			{
-				MainMenu = ___MainMenu;
-				if (_info.Enabled)
-					AddSaveLoadQuitButtons();	
+				try
+				{
+					MainMenu = ___MainMenu;
+					if (_info.Enabled)
+						AddSaveLoadQuitButtons();
+				}
+				catch (Exception ex)
+				{
+					ShowMessage(ex);
+				}
+
 			}
 
 			[HarmonyPostfix]

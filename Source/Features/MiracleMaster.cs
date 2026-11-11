@@ -74,6 +74,7 @@ public partial class MiracleMaster : Mod
 				window.width = searchPanelRef.width;
 
 				miraclePanel = new MiracleMasterPanel(window);
+				btn.visible = Mod.OnSchoolMap;
 				btn.onClick.Clear();
 				btn.onClick.Add(x => ToggleWindow(miraclePanel));
 			}

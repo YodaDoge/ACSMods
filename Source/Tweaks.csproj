@@ -114,7 +114,7 @@
     <Compile Include="Tweak\Cultivation\PracticePatches.cs" />
     <Compile Include="Tweak\BedPriority.cs" />
     <Compile Include="Tweak\ReactiveDisciples.cs" />
-    <Compile Include="Fixes\MapSeedFix.cs" />
+    <Compile Include="Fixes\MiscFix.cs" />
     <Compile Include="UI\CaseInsensitivity.cs" />
     <Compile Include="Tweak\ShowManual.cs" />
     <Compile Include="Tweak\Cultivation\CultivationTweaks.cs" />
