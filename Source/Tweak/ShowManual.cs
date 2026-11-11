@@ -48,7 +48,7 @@ namespace ACS_Yoda_Tweaks
 
 						var jnpc = JianghuMgr.Instance.GetKnowNpcData(npc.JiangHuSeed);
 
-						if (jnpc == null || jnpc.KnowOther?.Contains(npc.JiangHuSeed + "_15") != true)
+						if (jnpc == null || jnpc.KnowOther?.Contains(npc.JiangHuSeed + "_"+ (int)g_emJHNpcDataType.Esoterica) != true)
 							bnt.m_n172.m_n176.text += " (秘籍)";
 
 					}

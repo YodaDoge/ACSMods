@@ -73,6 +73,8 @@ public class NoClickSocial : Mod
 				{
 					itemThing.SetCamp(g_emFightCamp.Player);
 					World.Instance.map.DropItem(itemThing, target.Key, beFound: true, needcarry: true, noself: true, needclick: true, 30f);
+					string key = $"{_target.JiangHuSeed}_{(int)g_emJHNpcDataType.Esoterica}";
+					JianghuMgr.Instance.GetKnowNpcData(target.JiangHuSeed).AddKnowKey(key);
 				}
 			}
 		}
