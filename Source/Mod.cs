@@ -15,6 +15,7 @@ namespace ACS_Yoda_Tweaks
 		{
 			Info.Enabled = defaultEnabled;
 		}
+
 		public static bool IsYodaMachine => ACS_Yoda_Tweaks.IsYodaMachine;
 		public static bool OnSchoolMap => World.Instance.GameMode == g_emGameMode.Normal || World.Instance.GameMode == g_emGameMode.HardCore;
 

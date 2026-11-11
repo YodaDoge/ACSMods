@@ -50,7 +50,9 @@ namespace ACS_Yoda_Tweaks
 			new ShowManual(false).Info,
 			new PolicyEventTimer(false).Info,
 			new ImmortalSaveLoad(false).Info, 
-			new AutoTalismanToggle(false).Info
+			new AutoTalismanToggle(false).Info,
+			new MiracleMaster(true).Info,
+			new NoClickSocial(false).Info
 		};
 
 		private const string ConfigName = "ACS_Yoda_Tweaks";
@@ -96,8 +98,6 @@ namespace ACS_Yoda_Tweaks
 
 			mods = GetDefaults();
 			LoadSavedConfig();
-
-
 		}
 
 		public static void ShowMessage(string text, string title = null)
@@ -105,7 +105,10 @@ namespace ACS_Yoda_Tweaks
 			var msg = Wnd_Message.Show(text, title: title ?? ModName, txt: text, bnt: 1, mode: 0);
 			msg.width += 1080;
 			if (IsYodaMachine)
+			{
+				msg.width = 2000;
 				GUIUtility.systemCopyBuffer = text;// Log.ToString();
+			}
 		}
 
 		private static void ShowConflictMessage(string location)

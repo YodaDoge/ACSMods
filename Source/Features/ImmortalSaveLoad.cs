@@ -33,6 +33,7 @@ namespace ACS_Yoda_Tweaks
 					MainMenu = ___MainMenu;
 					if (_info.Enabled)
 						AddSaveLoadQuitButtons();
+					
 				}
 				catch (Exception ex)
 				{

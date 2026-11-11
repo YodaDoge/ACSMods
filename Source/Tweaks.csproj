@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="Features\MiracleMaster.cs" />
     <Compile Include="Features\MiracleMasterPanel.cs" />
+    <Compile Include="Features\NoClickSocial.cs" />
     <Compile Include="Fixes\A2HThunderWarning.cs" />
     <Compile Include="Tweak\Cultivation\MentorTeachShortcut.cs" />
     <Compile Include="Tweak\Cultivation\AutoTalisman.cs" />

@@ -8,13 +8,10 @@ using UnityEngine;
 using XiaWorld;
 using XiaWorld.Fight;
 using XiaWorld.UI.InGame;
-using static XiaWorld.AuctionNpc;
-using static XiaWorld.GodCityBuildingDef.LevelData;
-
 public partial class MiracleMaster : Mod
 {
 	public override Meta Info => _info;
-	private static Meta _info = new Meta("MiracleMaster", "One Click Interrogate Extended", false);
+	private static Meta _info = new Meta("MiracleMaster", "Miracle Overview UI button bottom left", true);
 
 	public MiracleMaster(bool defaultEnabled) : base(defaultEnabled)
 	{
@@ -31,7 +28,6 @@ public partial class MiracleMaster : Mod
 		{
 			try
 			{
-				AddLog("COnstruct");
 				var btn = UI_WndBnt_MenuBuild.CreateInstance();
 				btn.name = btnName;
 				__instance.AddChildAt(btn, __instance.GetChildIndex(__instance.m_producebnt) + 1); //determines layer position so its behind popups!
@@ -51,7 +47,6 @@ public partial class MiracleMaster : Mod
 		{
 			try
 			{
-				AddLog("Init");
 				var btn = (UI_WndBnt_MenuBuild)__instance.UIInfo.GetChild(btnName);
 				btn.visible = true;// _info.Enabled;
 			
@@ -63,7 +58,7 @@ public partial class MiracleMaster : Mod
 				btn.m_icon.scale = __instance.SearchMainPanel.UIInfo.scale;
 				btn.m_icon.x -= 5;
 				btn.m_icon.y -= 2;
-
+				
 				var window = UI_SearchMain.CreateInstance();
 				window.name = "MiracleWIndow";
 				__instance.AddChild(window);

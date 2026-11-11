@@ -103,7 +103,6 @@ namespace ACS_Yoda_Tweaks
 				fu.AddRange(npc.map.Things.FindItems(npc, 9999, 9999, "Item_SpellLv3", con: x => x.m_spell == heavenShroudingSpellName, nocheckAct: true) ?? new List<ItemThing>());
 				fu.AddRange(npc.map.Things.FindItems(npc, 9999, 9999, "Item_SpellLv2", con: x => x.m_spell == heavenShroudingSpellName, nocheckAct: true) ?? new List<ItemThing>());
 				fu.AddRange(npc.map.Things.FindItems(npc, 9999, 9999, "Item_Spell", con: x => x.m_spell == heavenShroudingSpellName, nocheckAct: true) ?? new List<ItemThing>());
-				AddLog("found fu" + fu.Count.ToString());
 
 				var mod = fu.Any() ? fu.Min(x => (int)Math.Round((x.EquptData?.FirstOrDefault(f => f.name == AttainmentMod)?.addv * x.GetQualityEquipValue()) ?? 0)) : 0;
 

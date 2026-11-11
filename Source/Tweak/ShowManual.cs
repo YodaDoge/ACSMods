@@ -29,13 +29,6 @@ namespace ACS_Yoda_Tweaks
 		[HarmonyPatch]
 		public static class Patch
 		{
-			//[HarmonyPostfix]
-			//[HarmonyPatch(typeof(SearchMainPanel), "Show")]
-			//public static void FocusSearch(SearchMainPanel __instance, int select = 0, g_emIndividualCommandType commandType = g_emIndividualCommandType.None)
-			//{
-			//	__instance.UIInfo.m_F.m_title.RequestFocus();
-			//}
-
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(SearchMainPanel), "SetBntInfo")]
 			public static void SetBntInfo(int index, UI_SearchBtn bnt, Thing thing, bool inselect = false)
