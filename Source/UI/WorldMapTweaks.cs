@@ -116,11 +116,12 @@ namespace ACS_Yoda_Tweaks
 						foreach (int id in ids)
 						{
 							Npc npc = ThingMgr.Instance.FindThingByID(id) as Npc;
+							//Just a minor annoyence
 							if (npc.HasSpecialFlag(g_emNpcSpecailFlag.FLAG_CANTEXPLORESTAY))
 							{
-								Wnd_Message.Show(string.Format(TFMgr.Get("{0}正在静修中，不能外出历练。"), npc.GetName()), 1, null, modal: true, GoTexts[gotype], 0, 0, string.Empty);
+								npc.RemoveSpecialFlag(g_emNpcSpecailFlag.FLAG_CANTEXPLORESTAY);
 							}
-							else if (!npc.IsRent)
+							 if (!npc.IsRent)
 							{
 								if (gotype == 2)
 								{
