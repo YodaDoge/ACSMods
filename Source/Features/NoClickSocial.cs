@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using XiaWorld;
 using XiaWorld.Fight;
+using XiaWorld.Modifier;
 using static ACS_Yoda_Tweaks.Mod;
 
 
@@ -19,7 +20,6 @@ public class NoClickSocial : Mod
 	{
 		if (IsYodaMachine)
 			_info.Enabled = true;
-		AddLog("Set to enabled " + IsYodaMachine);
 	}
 
 	[HarmonyPatch]
@@ -50,7 +50,19 @@ public class NoClickSocial : Mod
 			{
 				ShowMessage(ex);
 			}
+		}
 
+
+		[HarmonyPostfix]
+		[HarmonyPatch(typeof(Modifier_Vistor), "OnEnter")]
+		public static void AddFiveMiracles(Modifier_Vistor __instance)
+		{
+			var npc = __instance.Mgr.me;
+			npc.AddMood("NiceThing1", string.Empty);
+			npc.AddMood("NiceThing1", string.Empty);
+			npc.AddMood("NiceThing1", string.Empty);
+			npc.AddMood("NiceThing1", string.Empty);
+			npc.AddMood("NiceThing1", string.Empty);
 		}
 
 		public static void DropManual(Npc target)
