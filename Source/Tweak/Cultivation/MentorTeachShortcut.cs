@@ -20,14 +20,30 @@ namespace ACS_Yoda_Tweaks
 		[HarmonyPatch]
 		public static class Patch
 		{
+			[HarmonyPrefix]
+			[HarmonyPatch(typeof(Wnd_SelectCommon), "Select")]
+			public static void IncreaseMaxManualAmountForTeach(
+						List<string> names,
+						Action<List<int>> cb,
+						ref int mincount,
+						ref int maxcount,
+						List<int> selected,
+						Func<int, bool> con,
+						List<string> _tips,
+						List<bool> _enable,
+						ref string t,
+						Action<UI_NormlSelectItem, int> RenderItem,
+						ref bool forceShowElement)
+			{
+				if (t == TFMgr.Get("请选择秘籍"))
+					maxcount = 30;
+			}
+
+
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Panel_ThingInfo), "OnUpdate")]
 			public static void PanelThingInfo_Update(Panel_ThingInfo __instance, float dt, UI_Panel_ThingInfo ___Panel)
 			{
-				//disabled until bug is removed that makes missing mentors valid for teaching...
-				//if (!IsYodaMachine)
-				//	return;
-
 				if (!___Panel.visible || __instance.thing?.ThingType != g_emThingType.Npc || !UnityEngine.Input.GetKey(KeyCode.LeftShift) || !UnityEngine.Input.GetKeyDown(KeyCode.T))
 					return;
 				if (__instance.things != null && __instance.things.Count > 1)
@@ -35,7 +51,7 @@ namespace ACS_Yoda_Tweaks
 
 				var npc = (Npc)__instance.thing;
 				var master = npc.PropertyMgr.Practice?.Master;
-				
+
 				if (!npc.IsRealPlayerThing || master == null || !master.IsSelectAble || !master.IsAlive || master.IsInRemote || !master.IsValid || master.map != World.Instance.map
 					|| master.InTomb || master.IsPuppet || master.IsZombie || master.ActDisable || master.IsGod || master.IsHide)
 					return;
