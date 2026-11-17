@@ -24,7 +24,9 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 			public GList ConfigList;
 
 			public event EventCallback0 ConfigUpdated;
-			
+
+			static bool Ctrl => UnityEngine.Input.GetKey(KeyCode.LeftControl);
+
 			public AutoThoughtsWindow()
 			{
 				base.contentPane = UIPackage.CreateObject("ModLoaderLite", "ConfigWindow").asCom;
@@ -43,7 +45,12 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				var btnSave = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
 				btnSave.name = "btnCopy";
 				btnSave.title = btnSave.text = "Copy";
-				btnSave.onClick.Add(e => { _copy = GetCheckedThoughts(_npc); });
+				btnSave.onClick.Add(e =>
+				{
+					_copy = GetCheckedThoughts(_npc);
+					if(Ctrl)
+						GUIUtility.systemCopyBuffer = string.Join(";", _copy.ToArray());
+				});
 
 				var btnPaste = (GButton)UIPackage.CreateObjectFromURL("ui://ncbwb41mv9j6ah");
 				btnPaste.name = "btnPaste";
@@ -51,7 +58,14 @@ namespace ACS_Yoda_Tweaks.AutoA2H
 				btnPaste.onClick.Add(e =>
 				{
 					if (_npc != null && _copy != null)
-						Update(_npc, _copy);
+					{
+						if (Ctrl && GUIUtility.systemCopyBuffer.Contains(";"))
+						{
+							Update(_npc, GUIUtility.systemCopyBuffer.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries));
+						}
+						else
+							Update(_npc, _copy);
+					}
 				});
 				AddChild(btnSave);
 				AddChild(btnPaste);
