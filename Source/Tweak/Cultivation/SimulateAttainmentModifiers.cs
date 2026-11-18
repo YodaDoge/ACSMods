@@ -38,7 +38,7 @@ namespace ACS_Yoda_Tweaks
 						yinyang == 1 ? __instance.GetYangDaoHang()
 						: Mathf.Min(__instance.GetYinDaoHang(), __instance.GetYangDaoHang());
 
-					bool hasAttainmentTalisman = MindfulDresser.Patch.GetTali(npc).Any(x => x.Key.EquptData?.Any(e => e.name == AttainmentMod) == true);
+					bool hasAttainmentTalisman = AutoTalismanToggle.GetEquippedTalisman(npc).Any(x => x.Key.EquptData?.Any(e => e.name == AttainmentMod) == true);
 					if (!hasAttainmentTalisman)
 					{
 						var shroudingValue = FindShroudingTalisman(npc);

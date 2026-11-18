@@ -20,11 +20,13 @@ public class MindfulDresser : Mod
 	{
 	}
 
-	public static bool LookForTalisman(Npc me, string spell, bool instantAssign = true)
+	public static bool LookForTalisman(Npc me, string spell, bool instantAssign = true, int minTier = 3)
 	{
-		ItemThing itemThing = me.map.Things.FindItem(me, 9999, "Item_SpellLv3", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
-		itemThing = itemThing ?? me.map.Things.FindItem(me, 9999, "Item_SpellLv2", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
-		itemThing = itemThing ?? me.map.Things.FindItem(me, 9999, "Item_Spell", con: x => !IsFengShuiItem(x) && x.m_spell == spell);
+		ItemThing itemThing = AutoTalismanToggle.TalismanTiers
+												.Take(minTier)
+												.Select(t => me.map.Things.FindItem(me, 9999, t, con: x => !IsFengShuiItem(x) && x.m_spell == spell))
+												.FirstOrDefault(x => x != null);
+
 		if (itemThing != null)
 		{
 			Command command = me.AddCommand("EquipItem", itemThing);
@@ -40,7 +42,7 @@ public class MindfulDresser : Mod
 	public static class Patch
 	{
 		static Dictionary<Npc, float> lastCheckDict = new Dictionary<Npc, float>();
-		const float checkInterval = 60f;
+		const float checkInterval = 20f;
 
 		private static string[] genericTalisman = new string[] {
 		"Spell_MoveSpeed2", //SpiritTravel
@@ -103,14 +105,23 @@ public class MindfulDresser : Mod
 		public static void Step(float dt, NpcFeeling __instance, ref Npc ___me)
 		{
 			var me = ___me;
+			if (!___me.IsRealPlayerThing || me.IsLingShou || !me.AutoWear)
+				return;
+
 			float lastWearCheck = lastCheckDict.GetOrCreate(me);
 			if (World.Instance.TolSecond - lastWearCheck < checkInterval)
 				return;
+
+			if (me.PropertyMgr.MoodData.MoodList.TryGetValue("BedroomExpect", out var moods) && moods.Any(x => x.IsVaild && x.def.Name == "BedroomExpect8"))
+			{
+				BedPriority.Patch.FindFittingBed(me);
+			}
+
 			bool hasValidWearCMD = me.WearCMD > 0 && CommandMgr.Instance.FindCommandByID(me.WearCMD) != null;
 			if (hasValidWearCMD || !OnSchoolMap)
 				return;
 
-			bool validForAutoEquip = me.AutoWear && me.IsRealPlayerThing && me.IsSmartRace && (me.Rank == g_emNpcRank.Worker || me.GongKind == g_emGongKind.Dao);
+			bool validForAutoEquip = me.IsSmartRace && (me.Rank == g_emNpcRank.Worker || me.GongKind == g_emGongKind.Dao);
 
 			if (!validForAutoEquip)
 				return;
@@ -133,7 +144,7 @@ public class MindfulDresser : Mod
 					return;
 
 				//TODO: Scraper/facemask if appropiate job is assigned
-				var equippedTali = GetTali(me).Select(x => x.Key).ToList();
+				var equippedTali = AutoTalismanToggle.GetEquippedTalisman(me).Select(x => x.Key).ToList();
 				int maxActiveFu = 3 + me.AddActiveFuCount +
 								  (me.IsRealPlayerThing ? RuntimeVar.Var.ExtraFuActive : 0);
 				maxActiveFu = Mathf.Clamp(maxActiveFu, 0, 6);
@@ -153,8 +164,6 @@ public class MindfulDresser : Mod
 			}
 			else if (me.GongKind == g_emGongKind.Dao)
 			{
-				if (LookForTool(me, "Item_Dice"))
-					return;
 				if (LookForTool(me, "Item_SmallBell"))
 					return;
 				if (LookForTool(me, "Item_PerfumeBag"))
@@ -194,6 +203,8 @@ public class MindfulDresser : Mod
 		{
 			try
 			{
+				if (CommandMgr.Instance.FindCommand("Cutoff", npc.Key, seachr, npc) != null) //cutoff needs no axe
+					return true;
 				__result = LookForUpgrade(npc, ItemAxe);
 				return __result == null;
 			}
@@ -281,16 +292,7 @@ public class MindfulDresser : Mod
 			return num;
 		}
 
-		public static IEnumerable<KeyValuePair<ItemThing, g_emEquipType>> GetTali(Npc me)
-		{
-			for (g_emEquipType fuSlot = g_emEquipType.Fu1; fuSlot < g_emEquipType._FuEnd; fuSlot++)
-			{
-				ItemThing equip = me.Equip.GetEquip(fuSlot);
-				if (equip != null)
-				{
-					yield return new KeyValuePair<ItemThing, g_emEquipType>(equip, fuSlot);
-				}
-			}
-		}
+		
 	}
 }
+

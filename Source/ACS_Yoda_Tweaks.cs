@@ -96,7 +96,7 @@ namespace ACS_Yoda_Tweaks
 			Configuration.Unsubscribe(OnSave);
 			Configuration.Subscribe(OnSave);
 
-			mods = GetDefaults();
+			mods = mods ?? GetDefaults();
 			LoadSavedConfig();
 		}
 

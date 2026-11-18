@@ -106,7 +106,7 @@ namespace ACS_Yoda_Tweaks
 				}
 			}
 
-			private static void FindFittingBed(Npc npc)
+			public static void FindFittingBed(Npc npc)
 			{
 				//npc.map.Things.FindBuildingForTag
 				var bed = npc.map.Things.FindBuilding(npc, 1000, "Sleep", 0, needworkspace: true, false, 0, 9999, (BuildingThing t) =>
