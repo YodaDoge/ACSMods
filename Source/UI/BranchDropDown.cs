@@ -43,10 +43,11 @@ namespace ACS_Yoda_Tweaks
 				//cbx.z = __instance.z - 1;
 				cbx.x -= 61;
 				cbx.y -= 30;
-				cbx.onChanged.Add(AssignBranch);
+				if (cbx.onChanged.isEmpty)
+					cbx.onChanged.Add(AssignBranch);
 
 				__instance.AddChild(cbx);
-				cbx.width = cbx.minWidth = cbx.maxWidth  = 67;
+				cbx.width = cbx.minWidth = cbx.maxWidth = 67;
 				cbx.fontsize = cbx.titleFontSize = 8;
 				cbx.UpdateDropdownList();
 			}
@@ -56,21 +57,22 @@ namespace ACS_Yoda_Tweaks
 				try
 				{
 					var cbx = context.sender as UI_ComboBox;
-					if (cbx.value != null)
+					bool parse = int.TryParse(cbx.value, out int id);
+					if (!parse)
+						return;
+					if (id > 0)
 					{
-
-						int id = int.Parse(cbx.value);
-						if (id > 0)
-						{
-							var x = new List<int>(SchoolMgr.Instance.GetTang(id).Npcs);
-							x.Add(_lastNpc.ID);
-							SchoolMgr.Instance.SetTangNpcs(id, x);
-						}
+						var x = new List<int>(SchoolMgr.Instance.GetTang(id).Npcs);
+						x.Add(_lastNpc.ID);
+						SchoolMgr.Instance.SetTangNpcs(id, x);
 					}
 					else
+					{
+						AddLog($"Removed {_lastNpc.GetName()} ");
 						SchoolMgr.Instance.TangRemoveNpc(_lastNpc.TangJoined, _lastNpc);
+					}
 
-					EventMgr.Instance.EventTrigger(g_emEvent.UpdateSchool, null);
+					EventMgr.Instance.EventTrigger(g_emEvent.UpdateSchool, (Thing)null);
 				}
 				catch (Exception ex)
 				{
