@@ -123,6 +123,11 @@ namespace ACS_Yoda_Tweaks
 
 			public static bool ShouldDoFun(Npc npc)
 			{
+				var baseMental = npc.GetProperty("MindStateBaseValue");
+				if (baseMental >= 50)
+				{
+					return false;
+				}
 				return ShouldDoFun(npc.Needs.GetNeedValue(g_emNeedType.MindState), GetMinMindState(npc) + 2, MaxStable + 4) || npc.Needs.GetNeedValue(g_emNeedType.Practice) < 40;
 			}
 
