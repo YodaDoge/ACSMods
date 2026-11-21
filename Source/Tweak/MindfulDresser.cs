@@ -20,22 +20,47 @@ public class MindfulDresser : Mod
 	{
 	}
 
-	public static bool LookForTalisman(Npc me, string spell, bool instantAssign = true, int minTier = 3)
+	public enum TaliSearchResult
 	{
-		ItemThing itemThing = AutoTalismanToggle.TalismanTiers
-												.Take(minTier)
-												.Select(t => me.map.Things.FindItem(me, 9999, t, con: x => !IsFengShuiItem(x) && x.m_spell == spell))
-												.FirstOrDefault(x => x != null);
-
-		if (itemThing != null)
-		{
-			Command command = me.AddCommand("EquipItem", itemThing);
-			if (instantAssign)
-				me.WearCMD = command.ID;
-			return true;
-		}
-		return false;
+		Found, NotFound, MaxTier, Invalid
 	}
+
+	public static TaliSearchResult LookForTalisman(Npc npc, string spell)
+	{
+		if (!npc.IsRealPlayerThing || npc.LsInfo != null)
+			return TaliSearchResult.Invalid;
+
+		var talisman = Talisman.GetEquipped(npc, spell);
+		if (talisman?.def.Name == Talisman.TalismanTiers[2]) //max tier already
+			return TaliSearchResult.MaxTier;
+
+		//check if we already have a command to equip this talisman
+		if (npc.CheckCommand("EquipItem")
+				?.OfType<CommandEquipItem>()
+				?.Any(cmd => ThingMgr.Instance.FindThingByID(cmd.ItemId) is ItemThing item && item.m_spell == spell) == true)
+			return TaliSearchResult.Found;
+
+		var mintier = 0; // 1 = worst , 3 = best
+		if (talisman != null)
+			mintier = Array.IndexOf(Talisman.TalismanTiers, talisman.def.Name) + 1;
+
+		ItemThing itemThing = Talisman.TalismanTiers
+										.Skip(mintier)
+										.Select(t => npc.map.Things.FindItem(npc, 9999, t, con: x => !IsFengShuiItem(x) && x.m_spell == spell))
+										.FirstOrDefault(x => x != null);
+		if (itemThing == null)
+		{
+			if (talisman != null)
+				return TaliSearchResult.MaxTier;
+			else
+				return TaliSearchResult.NotFound;
+		}
+
+		var wearCMD = npc.AddCommand("EquipItem", itemThing);
+		npc.WearCMD = wearCMD.ID;
+		return TaliSearchResult.Found;
+	}
+
 	private static bool IsFengShuiItem(ItemThing thing) => thing.FSItemState > 0;
 
 	[HarmonyPatch]
@@ -43,16 +68,6 @@ public class MindfulDresser : Mod
 	{
 		static Dictionary<Npc, float> lastCheckDict = new Dictionary<Npc, float>();
 		const float checkInterval = 20f;
-
-		private static string[] genericTalisman = new string[] {
-		"Spell_MoveSpeed2", //SpiritTravel
-		"Spell_GlobalEfficiency",
-		"Spell_Fatigue",
-		"Spell_Lu" /*Everlasting Status: Butcher&Harvest YIeld; + movespeed*/ ,
-		"Spell_Nutrition1",
-		"Spell_Happy",
-		"Spell_LunHui_ShenShen", /*Prayer: -rec consum; +mood*/ 
-		"Spell_MoveSpeed1" };
 
 		private static string[] maybeTalisman = new string[] { "Spell_TongTian1", /*Heavensent: FiveAttributes*/  "Spell_Intelligence" /*Civil Prosperity: Learnspeed*/ };
 
@@ -105,7 +120,7 @@ public class MindfulDresser : Mod
 		public static void Step(float dt, NpcFeeling __instance, ref Npc ___me)
 		{
 			var me = ___me;
-			if (!___me.IsRealPlayerThing || me.IsLingShou || !me.AutoWear)
+			if (!___me.IsRealPlayerThing || me.IsLingShou || !me.AutoWear || !OnSchoolMap)
 				return;
 
 			float lastWearCheck = lastCheckDict.GetOrCreate(me);
@@ -117,8 +132,8 @@ public class MindfulDresser : Mod
 				BedPriority.Patch.FindFittingBed(me);
 			}
 
-			bool hasValidWearCMD = me.WearCMD > 0 && CommandMgr.Instance.FindCommandByID(me.WearCMD) != null;
-			if (hasValidWearCMD || !OnSchoolMap)
+			bool hasValidWearCMD = me.WearCMD > 0 && CommandMgr.Instance.FindCommandByID(me.WearCMD)?.IsValid() == true;
+			if (hasValidWearCMD)
 				return;
 
 			bool validForAutoEquip = me.IsSmartRace && (me.Rank == g_emNpcRank.Worker || me.GongKind == g_emGongKind.Dao);
@@ -127,7 +142,9 @@ public class MindfulDresser : Mod
 				return;
 
 			if (me.PropertyMgr.MoodData.CheckMood("NeedTrousers"))
+			{
 				FindClothing(me, "_LableTrousers");
+			}
 
 			if (me.PropertyMgr.MoodData.CheckMood("NeedClothes"))
 				FindClothing(me, "_LableClothes");
@@ -144,23 +161,22 @@ public class MindfulDresser : Mod
 					return;
 
 				//TODO: Scraper/facemask if appropiate job is assigned
-				var equippedTali = AutoTalismanToggle.GetEquippedTalisman(me).Select(x => x.Key).ToList();
 				int maxActiveFu = 3 + me.AddActiveFuCount +
 								  (me.IsRealPlayerThing ? RuntimeVar.Var.ExtraFuActive : 0);
 				maxActiveFu = Mathf.Clamp(maxActiveFu, 0, 6);
-				if (equippedTali.Count < maxActiveFu)
-				{
-					//TODO: if crafter => check craftingtable
-					foreach (var usefulTaliName in genericTalisman)
-					{
-						bool hasTali = equippedTali.Any(x => x.m_spell == usefulTaliName);
+				int wornFu = 0;
 
-						if (!hasTali && LookForTalisman(me, usefulTaliName))
-						{
-							return;
-						}
-					}
+				//TODO: Unequip excess talismans if max active fu is reached
+				foreach (var item in Talisman.outerTali)
+				{
+					var result = LookForTalisman(me, item);
+					if (result == TaliSearchResult.MaxTier || result == TaliSearchResult.Found)
+						wornFu++;
+
+					if (wornFu >= maxActiveFu)
+						break;
 				}
+
 			}
 			else if (me.GongKind == g_emGongKind.Dao)
 			{
@@ -176,10 +192,8 @@ public class MindfulDresser : Mod
 
 		private static void FindClothing(Npc me, string itemTag)
 		{
-			ItemThing itemThing = me.map.Things.FindItem(me, 200, null, 0, issort: false, "_WearAble", 0, 9999, delegate (ItemThing it)
+			ItemThing itemThing = me.map.Things.FindItem(me, 400, null, 0, issort: false, "_WearAble", 0, 9999, delegate (ItemThing it)
 			{
-				if (it.Camp != g_emFightCamp.Player)
-					return false;
 				if (it.def.Item.Equip.NeedSex != g_emNpcSex.None && it.def.Item.Equip.NeedSex != me.Sex)
 				{
 					return false;
@@ -188,6 +202,7 @@ public class MindfulDresser : Mod
 					return false;
 				return it.TagData.CheckTag(itemTag) > 0;
 			});
+
 			if (itemThing != null)
 			{
 				Command command = me.AddCommand("EquipItem", itemThing);
@@ -292,7 +307,7 @@ public class MindfulDresser : Mod
 			return num;
 		}
 
-		
+
 	}
 }
 

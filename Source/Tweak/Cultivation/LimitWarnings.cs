@@ -72,7 +72,7 @@ namespace ACS_Yoda_Tweaks
 			public static void RestoreLimitMessageOnFail(JobLeave2Explore __instance, KStateQUnit unit)
 			{
 				var npc = __instance.Worker;
-				if (HasAdventureNeck(npc) && npc.CheckCommand("GoMapExplore", checkcount: true)?.Any(x => x != null) != true)
+				if (HasAdventureNeck(npc) && npc.CheckCommand("GoMapExplore", checkcount: true)?.Any(x => x != null && x.IsValid()) != true)
 				{
 					RestoreLimitWarning(npc);
 				}

@@ -24,7 +24,7 @@ namespace ACS_Yoda_Tweaks
 
 		private static bool NeedsRest(Npc npc)
 		{
-			return npc.Needs.GetNeedValue(g_emNeedType.Rest) < 50;
+			return npc.Needs.GetNeedValue(g_emNeedType.Rest) <= 40;
 		}
 
 		public CultivationTweaks(bool defaultEnabled) : base(defaultEnabled)

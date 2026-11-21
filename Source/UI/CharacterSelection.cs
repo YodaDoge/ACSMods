@@ -27,6 +27,7 @@ namespace ACS_Yoda_Tweaks
 		[HarmonyPatch]
 		public static class Patch
 		{
+
 			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_GameMain), "OnInit")]
 			public static void MultiEatItem(Wnd_GameMain __instance)

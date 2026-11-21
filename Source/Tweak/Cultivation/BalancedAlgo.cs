@@ -18,12 +18,12 @@ namespace ACS_Yoda_Tweaks
 
 		private static bool HasAdventureCommand(Npc npc)
 		{
-			return npc.CheckCommand("GoMapExplore")?.Any(x => x != null) == true;
+			return npc.CheckCommand("GoMapExplore")?.Any(x => x != null && x.IsValid()) == true;
 		}
 
 		private static bool HasCraftingCommand(Npc npc)
 		{
-			return npc.CheckCommand("MakeItem")?.Any(x => x != null) == true;
+			return npc.CheckCommand("MakeItem")?.Any(x => x != null && x.IsValid()) == true;
 		}
 
 
@@ -40,8 +40,7 @@ namespace ACS_Yoda_Tweaks
 
 				try
 				{
-					if (npc.JobEngine.NeedWait()
-					|| (npc.IsRent && !npc.HasSpecialFlag(g_emNpcSpecailFlag.NoLeaveMap))
+					if ((npc.IsRent && !npc.HasSpecialFlag(g_emNpcSpecailFlag.NoLeaveMap))
 					|| (npc.HealthState != g_emNpcHealthState.Normal)
 					|| HasAdventureCommand(npc))
 						return true;
@@ -49,8 +48,11 @@ namespace ACS_Yoda_Tweaks
 					if (npc.Rank == g_emNpcRank.Disciple && npc.CanDoDiscipleWork && npc.GongKind == g_emGongKind.Dao && npc.CanDoMagic()
 						&& npc.PropertyMgr.Practice.PracticeMode == g_emPracticeBehaviourKind.None)
 					{
+						if (IsYodaMachine)
+							Talisman.YoinkTalisman(npc, TaliType.Cultivation);
+
 						if (!npc.PropertyMgr.Practice.TouchNeck)
-							AutoTalismanToggle.Patch.ToggleTalisman(npc, AutoTalismanToggle.TaliType.Cultivation);
+							Talisman.ToggleTalisman(npc, TaliType.Cultivation);
 
 						bool doFun = ShouldDoFun(npc);
 						if (doFun)
@@ -66,28 +68,33 @@ namespace ACS_Yoda_Tweaks
 							}
 							return false;
 						}
+
 						if (npc.PropertyMgr.Practice.TouchNeck)
 						{
-							try
-							{
-								var neck = npc.PropertyMgr.Practice.CurNeck;
-								bool isFreeChanceNeck = neck.Kind == g_emGongBottleNeckType.Chance && neck.ResourceCost?.Any(x => x.kind != g_emPracticeResourceType.Ling) == false && neck.ItemCost?.Any() == false;
-								bool hasMana = npc.PropertyMgr.Practice.CheckResource(g_emPracticeResourceType.Ling, npc.MaxLing * 0.992f);
+							var neck = npc.PropertyMgr.Practice.CurNeck;
+							bool isFreeChanceNeck = neck.Kind == g_emGongBottleNeckType.Chance && neck.ResourceCost?.Any(x => x.kind != g_emPracticeResourceType.Ling) == false && neck.ItemCost?.Any() == false;
+							bool hasMana = npc.PropertyMgr.Practice.CheckResource(g_emPracticeResourceType.Ling, npc.MaxLing * 0.992f);
 
-								if (isFreeChanceNeck && hasMana && npc.MyPractice != null)
-								{
-									var breakRate = npc.PropertyMgr.Practice.GetBrokenRate(0, npc.MyPractice.Key);
-									if (breakRate > 0.5f)
-									{
-										var cmd = npc.AddCommand("BrokenNeck", npc.MyPractice.Key, npc.MyPractice);
-										__result = JobMgr.Instance.CreateJob("JobBrokenNeck", cmd);
-										return false;
-									}
-								}
-							}
-							catch (Exception ex)
+							if (isFreeChanceNeck && hasMana && npc.MyPractice != null)
 							{
-								ShowMessage(ex);
+								var breakRate = npc.PropertyMgr.Practice.GetBrokenRate(0, npc.MyPractice.Key);
+								if (breakRate > 0.25f)
+								{
+									if (IsYodaMachine)
+									{
+										Talisman.YoinkTalisman(npc, TaliType.Breakthrough);
+									}
+
+									if (npc.CheckCommand("EquipItem")?.Any(x => x != null && x.IsValid()) == true)
+									{
+										AddLog("Skipping Breakthrough for {0} because they have an EquipItem command queued", npc.GetName());
+										return true;
+									}
+
+									var cmd = npc.AddCommand("BrokenNeck", npc.MyPractice.Key, npc.MyPractice);
+									__result = JobMgr.Instance.CreateJob("JobBrokenNeck", cmd);
+									return false;
+								}
 							}
 						}
 
@@ -124,11 +131,13 @@ namespace ACS_Yoda_Tweaks
 			public static bool ShouldDoFun(Npc npc)
 			{
 				var baseMental = npc.GetProperty("MindStateBaseValue");
-				if (baseMental >= 50)
+				var stamina = npc.Needs.GetNeedValue(g_emNeedType.Practice);
+				int minStamina = 40;
+				if (baseMental >= 50 && stamina > minStamina)
 				{
 					return false;
 				}
-				return ShouldDoFun(npc.Needs.GetNeedValue(g_emNeedType.MindState), GetMinMindState(npc) + 2, MaxStable + 4) || npc.Needs.GetNeedValue(g_emNeedType.Practice) < 40;
+				return ShouldDoFun(npc.Needs.GetNeedValue(g_emNeedType.MindState), GetMinMindState(npc) + 2, MaxStable + 4) || stamina < minStamina;
 			}
 
 			private static bool ShouldDoFun(float myValue, float minValue, float maxValue)

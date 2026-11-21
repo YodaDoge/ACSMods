@@ -49,7 +49,7 @@ namespace ACS_Yoda_Tweaks
 			new EmptyPrio(false).Info,
 			new ShowManual(false).Info,
 			new PolicyEventTimer(false).Info,
-			new ImmortalSaveLoad(false).Info, 
+			new ImmortalSaveLoad(false).Info,
 			new AutoTalismanToggle(false).Info,
 			new MiracleMaster(true).Info,
 			new NoClickSocial(false).Info
@@ -198,6 +198,21 @@ namespace ACS_Yoda_Tweaks
 				if (!IsYodaMachine)
 					return;
 				GButton gButton = (GButton)context.data;
+
+				if (gButton.name == "pause" && UnityEngine.Input.GetKey(KeyCode.LeftAlt))
+				{
+					var pnl = Wnd_GameMain.Instance.PanelThingInfo;
+					var thing = UILogicMode_Select.Instance.CurSelectThing;
+					if (thing != null)
+					{
+						if (thing is Npc npc)
+							AddLog($"{npc.JobEngine.CurJob?.GetType()?.Name} cmd {npc.JobEngine.CurJob?.CMD?.GetType()?.Name}");
+						else if (thing is ItemThing it)
+							AddLog($"{thing.TagData.CheckTag("_LableTrousers")} {thing.TagData.CheckTag("_WearAble")} {thing.Camp} {thing.Rate}  {thing.def.Item.Equip.NeedSex} ");
+					}
+				}
+
+
 				if (gButton.name == "pause" && UnityEngine.Input.GetKey(KeyCode.LeftControl))
 				{
 					ShowLog();
