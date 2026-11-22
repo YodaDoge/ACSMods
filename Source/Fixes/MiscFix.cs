@@ -52,7 +52,10 @@ namespace ACS_Yoda_Tweaks
 								getingData.cmd.ActDisable = true;
 							}
 							else
+							{
 								__instance.Building.Bag.FinishBegByRemoteStorage();
+								__instance.Building.Step(0.001f); //maybe speeds up reaction of alchemist
+							}
 						}
 						return false;
 					}
@@ -64,6 +67,8 @@ namespace ACS_Yoda_Tweaks
 
 				return true;
 			}
+
+
 
 			[HarmonyPrefix]
 			[HarmonyPatch(typeof(Wnd_GameMain), "ShowMainMenu")]

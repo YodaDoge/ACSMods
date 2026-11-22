@@ -108,6 +108,11 @@ public class MindfulDresser : Mod
 				if (t != null)
 					me.Equip.UnEquipItem(t);
 
+				foreach (var item in Talisman.GetEquipped(me) )
+				{
+					if (Talisman.outerTali.Contains(item.Key.m_spell))
+						me.Equip.UnEquipItem(item.Key);
+				}
 			}
 			catch (Exception ex)
 			{
