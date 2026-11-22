@@ -192,8 +192,9 @@ namespace ACS_Yoda_Tweaks
 		[HarmonyPatch]
 		public static class Patch
 		{
+			[HarmonyPostfix]
 			[HarmonyPatch(typeof(Wnd_GameMain), "__clickGamePlayMenu")]
-			public static void Postfix(EventContext context, Wnd_GameMain __instance)
+			public static void ShowDebugLog(EventContext context, Wnd_GameMain __instance)
 			{
 				if (!IsYodaMachine)
 					return;
@@ -209,6 +210,10 @@ namespace ACS_Yoda_Tweaks
 							AddLog($"{npc.JobEngine.CurJob?.GetType()?.Name} cmd {npc.JobEngine.CurJob?.CMD?.GetType()?.Name}");
 						else if (thing is ItemThing it)
 							AddLog($"{thing.TagData.CheckTag("_LableTrousers")} {thing.TagData.CheckTag("_WearAble")} {thing.Camp} {thing.Rate}  {thing.def.Item.Equip.NeedSex} ");
+						else if (thing is BuildingThing b)
+						{
+							AddLog($"{thing.def.Name} ");
+						}
 					}
 				}
 

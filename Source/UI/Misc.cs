@@ -37,6 +37,15 @@ namespace ACS_Yoda_Tweaks
 				bg.height *= 1.34f;
 				bg.y -= 30;
 				__instance.m_magicbnts.y -= 30;
+
+			}
+
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(UI_NpcInfo), "ConstructFromXML")]
+			public static void BiggerThoughtWindow(UI_NpcInfo __instance, XML xml)
+			{
+				__instance.m_a2hpframe22.width *= 1.5f;
+				__instance.m_a2hproplist.width *= 1.5f;
 			}
 
 			[HarmonyPostfix]

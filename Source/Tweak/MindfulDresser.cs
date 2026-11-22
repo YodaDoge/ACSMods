@@ -161,20 +161,25 @@ public class MindfulDresser : Mod
 					return;
 
 				//TODO: Scraper/facemask if appropiate job is assigned
-				int maxActiveFu = 3 + me.AddActiveFuCount +
-								  (me.IsRealPlayerThing ? RuntimeVar.Var.ExtraFuActive : 0);
-				maxActiveFu = Mathf.Clamp(maxActiveFu, 0, 6);
+				int maxActiveFu = Talisman.GetMaxActiveFu(me);
 				int wornFu = 0;
+				var equipped = Talisman.GetEquipped(me);
+
+				foreach (var fu in equipped.Where(x => me.Equip.CheckActive(x.Value)) )
+				{
+					var result = LookForTalisman(me, fu.Key.m_spell);
+					wornFu++;
+				}
 
 				//TODO: Unequip excess talismans if max active fu is reached
-				foreach (var item in Talisman.outerTali)
+				foreach (var spell in Talisman.outerTali)
 				{
-					var result = LookForTalisman(me, item);
-					if (result == TaliSearchResult.MaxTier || result == TaliSearchResult.Found)
-						wornFu++;
-
 					if (wornFu >= maxActiveFu)
 						break;
+
+					var result = LookForTalisman(me, spell);
+					if (result == TaliSearchResult.MaxTier || result == TaliSearchResult.Found)
+						wornFu++;
 				}
 
 			}

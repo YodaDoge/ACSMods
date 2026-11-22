@@ -31,6 +31,25 @@ namespace ACS_Yoda_Tweaks
 			}
 
 			//JobMakeItem CommandMakeItem => Alch YIeld
+			[HarmonyPrefix]
+			[HarmonyPatch(typeof(JobBase), "OnEnterJob")]
+			public static void EquipAlchemyFu(JobBase __instance, KStateQUnit unit)
+			{
+				if (__instance is JobMakeItem job) //virtual not overriden => must use base class
+				{
+					var npc = __instance.Worker;
+					if (!_info.Enabled || !npc.IsMagicRank)
+						return;
+
+					var building = __instance.CMD.OwnerThing as BuildingThing;
+					if (building.IsAlchemyBuilding())
+					{
+						Talisman.ToggleTalisman(__instance.Worker, TaliType.Alchemy);
+					}
+				}
+			}
+
+
 
 			[HarmonyPrefix]
 			[HarmonyPatch(typeof(CommandMgr), "AddCommand", new[] { typeof(string), typeof(Thing), typeof(object[]) })]
@@ -84,7 +103,7 @@ namespace ACS_Yoda_Tweaks
 				var type = practice.CurNeck.Kind == g_emGongBottleNeckType.Thunder ? TaliType.Battle : TaliType.Breakthrough;
 
 				//AddLog("{0} enter neck type {1}", __instance.Worker.GetName(), practice.CurNeck.Kind);
-				if (practice.CurNeck.Kind == g_emGongBottleNeckType.God)
+				if (practice.CurNeck?.Kind == g_emGongBottleNeckType.God || practice.CurNeck == null) //null = shapeshift
 				{
 					//var kind = (__instance.CMD as CommandBrokenNeck).brokenkind;
 					// age/attainment/xx tribulation

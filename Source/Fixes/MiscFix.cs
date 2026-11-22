@@ -5,9 +5,13 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Xml.Linq;
+using UnityEngine;
 using XiaWorld;
 using XiaWorld.UI.InGame;
 using static CSCallLua;
+using static Panel_ThingInfo;
+using static XiaWorld.ThingsBag;
 
 namespace ACS_Yoda_Tweaks
 {
@@ -28,6 +32,37 @@ namespace ACS_Yoda_Tweaks
 			public static void ShowCorrectSeedInDifficultyWindow(Wnd_GameDIY __instance, UI_WindowGameDiy ___UIInfo)
 			{
 				___UIInfo.m_Evn.m_n239.title = World.Instance.map.Seed;
+			}
+
+			[HarmonyPrefix]
+			[HarmonyPatch(typeof(BuildingProduce), "UpdateTaskBeg")]
+			public static bool AlchemyUseStorage(BuildingProduce __instance, BuildingProduce.BuildingProduceData task)
+			{
+				try
+				{
+					if (__instance.Building.IsAlchemyBuilding())
+					{
+						for (int index = 0; index < task.thingDef.Item.BeMade.CostItems.Count; ++index)
+						{
+							ItemCostData costItem = task.thingDef.Item.BeMade.CostItems[index];
+							ThingsBag.GetingData getingData = __instance.Building.Bag.AddBegItem(costItem.name, costItem.rcount, ThingsBag.emBegType.None, costItem.tag, costItem.minlevel, costItem.maxlevel, GameDefine.ProdeceLinkWork[__instance.Building.def.Building.ProduceKind], task.ID);
+							if (getingData != null)
+							{
+								getingData.cmd.BegType = emBegType.MakeItem;
+								getingData.cmd.ActDisable = true;
+							}
+							else
+								__instance.Building.Bag.FinishBegByRemoteStorage();
+						}
+						return false;
+					}
+				}
+				catch (System.Exception ex)
+				{
+					ShowMessage(ex);
+				}
+
+				return true;
 			}
 
 			[HarmonyPrefix]

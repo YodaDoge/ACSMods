@@ -13,7 +13,8 @@ namespace ACS_Yoda_Tweaks
 		Adventure,
 		Battle,
 		Breakthrough,
-		Outer
+		Outer, 
+		Alchemy
 	}
 
 	public static class Talisman
@@ -156,13 +157,15 @@ namespace ACS_Yoda_Tweaks
 		private static string[] CultivationProbs = new string[] { "MindState", "PracticeSpeed" };
 		private static string[] BattleProps = new string[] { "Shield", "Fabao", "Spell", "Artifact" };
 		private static string[] AdventureProps = new string[] { "FindSpeed", "WorldMapFly" };
+		private static string[] AlchemyProps = new string[] { "DanMake" };//, "DanMake_YieldAddP", "DanMake_YieldAddP", "DanMake_SpeedAddV" };
 
 		static Dictionary<TaliType, string[]> associatedMods = new Dictionary<TaliType, string[]>() {
 		{ TaliType.Cultivation, CultivationProbs },
 		{ TaliType.Battle, BattleProps },
 		{ TaliType.Breakthrough, BCProbs },
 		{ TaliType.Adventure, AdventureProps },
-		{ TaliType.Outer, outerTali}
+		{ TaliType.Outer, outerTali},
+		{ TaliType.Alchemy, AlchemyProps }
 		};
 
 		public static bool? IsFuPositive(ItemThing fuItem, TaliType fuType)
