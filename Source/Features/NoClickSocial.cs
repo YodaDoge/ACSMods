@@ -36,6 +36,9 @@ public class NoClickSocial : Mod
 			try
 			{
 				_target = leftnpc;
+				if (!leftnpc.LikeHuman)
+					return;
+
 				JianghuMgr.Instance.KnowNpcAllData(leftnpc);
 				var targetdata = JianghuMgr.Instance.GetKnowNpcData(leftnpc.JiangHuSeed);
 				targetdata.favour = 100f;
@@ -100,7 +103,8 @@ public class NoClickSocial : Mod
 				HideManualButton(__instance);
 				return;
 			}
-
+			if (!_target.LikeHuman)
+				return;
 			try
 			{
 				var npc = _target;

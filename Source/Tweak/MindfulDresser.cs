@@ -132,9 +132,10 @@ public class MindfulDresser : Mod
 			if (World.Instance.TolSecond - lastWearCheck < checkInterval)
 				return;
 
-			if (me.PropertyMgr.MoodData.MoodList.TryGetValue("BedroomExpect", out var moods) && moods.Any(x => x.IsVaild && x.def.Name == "BedroomExpect8"))
+			if (me.MyBed != null && me.PropertyMgr.MoodData.MoodList.TryGetValue("BedroomExpect", out var moods) && moods.Any(x => x.IsVaild && x.def.Name == "BedroomExpect8"))
 			{
 				BedPriority.Patch.FindFittingBed(me);
+				lastCheckDict[me]++;
 			}
 
 			bool hasValidWearCMD = me.WearCMD > 0 && CommandMgr.Instance.FindCommandByID(me.WearCMD)?.IsValid() == true;

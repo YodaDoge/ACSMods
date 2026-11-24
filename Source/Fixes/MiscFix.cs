@@ -2,6 +2,7 @@
 using HarmonyLib;
 using ModLoaderLite;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -32,6 +33,19 @@ namespace ACS_Yoda_Tweaks
 			public static void ShowCorrectSeedInDifficultyWindow(Wnd_GameDIY __instance, UI_WindowGameDiy ___UIInfo)
 			{
 				___UIInfo.m_Evn.m_n239.title = World.Instance.map.Seed;
+			}
+
+			[HarmonyPostfix]
+			[HarmonyPatch(typeof(Thing), "AddCommandIfNotExist")]
+			public static void AlchemyUseStorage(Thing __instance, string type, object[] param, Command __result)
+			{
+				if (__instance is BuildingThing building && building.IsAlchemyBuilding() && __result is CommandMakeItem cmd)
+				{
+					var npcId = building.ProduceMachine.m_lisProduceList.First().Maker;
+					var npc = ThingMgr.Instance.FindThingByID(npcId) as Npc;
+					if (npc != null)
+						CultivationTweaks.CancelMeditation(npc);
+				}
 			}
 
 			[HarmonyPrefix]

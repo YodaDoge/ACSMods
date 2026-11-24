@@ -13,7 +13,7 @@ namespace ACS_Yoda_Tweaks
 		Adventure,
 		Battle,
 		Breakthrough,
-		Outer, 
+		Outer,
 		Alchemy
 	}
 
@@ -66,6 +66,14 @@ namespace ACS_Yoda_Tweaks
 		{
 			if (Mod.IsYodaMachine)
 			{
+				if (!npc.IsRealPlayerThing)
+					return;
+
+				var practice = npc.PropertyMgr.Practice;
+				bool outerSafe = !npc.IsMagicRank && wantedType != TaliType.Outer;
+				if (outerSafe || practice.GongStateLevel >= g_emGongStageLevel.God || (practice.TouchNeck && practice.NextStage?.Level >= (int)g_emGongStageLevel.God))
+					return;
+
 				if (wantedType == TaliType.Breakthrough)
 				{
 					Talisman.GetFirstFoundSpell(npc, new[] { HeavenSentFu });
@@ -152,7 +160,7 @@ namespace ACS_Yoda_Tweaks
 			}
 		}
 
-		public static string[] TalismanTiers = new string[] { "Item_Spell", "Item_SpellLv2", "Item_SpellLv3",  };
+		public static string[] TalismanTiers = new string[] { "Item_Spell", "Item_SpellLv2", "Item_SpellLv3", };
 		private static string[] BCProbs = new string[] { "MindState" };
 		private static string[] CultivationProbs = new string[] { "MindState", "PracticeSpeed" };
 		private static string[] BattleProps = new string[] { "Shield", "Fabao", "Spell", "Artifact" };

@@ -23,7 +23,23 @@ namespace ACS_Yoda_Tweaks
 
 		private static bool HasCraftingCommand(Npc npc)
 		{
-			return npc.CheckCommand("MakeItem")?.Any(x => x != null && x.IsValid()) == true;
+			var found = npc.CheckCommand("MakeItem")?.Any(x => x != null && x.IsValid()) == true;
+			if (found)
+			{
+				AddLog("Cancel due to crafting command");
+				return true;
+			}
+			else
+			{
+				var job = npc.JobEngine.TryFindJob();
+				if (job is JobMakeItem)
+				{
+					AddLog("Found jobMakeItem");
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 
@@ -48,8 +64,7 @@ namespace ACS_Yoda_Tweaks
 					if (npc.Rank == g_emNpcRank.Disciple && npc.CanDoDiscipleWork && npc.GongKind == g_emGongKind.Dao && npc.CanDoMagic()
 						&& npc.PropertyMgr.Practice.PracticeMode == g_emPracticeBehaviourKind.None)
 					{
-						if (IsYodaMachine)
-							Talisman.YoinkTalisman(npc, TaliType.Cultivation);
+						Talisman.YoinkTalisman(npc, TaliType.Cultivation);
 
 						if (!npc.PropertyMgr.Practice.TouchNeck)
 							Talisman.ToggleTalisman(npc, TaliType.Cultivation);
@@ -78,12 +93,9 @@ namespace ACS_Yoda_Tweaks
 							if (isFreeChanceNeck && hasMana && npc.MyPractice != null)
 							{
 								var breakRate = npc.PropertyMgr.Practice.GetBrokenRate(0, npc.MyPractice.Key);
-								if (breakRate > 0.25f)
+								if (breakRate > 0.33f)
 								{
-									if (IsYodaMachine)
-									{
-										Talisman.YoinkTalisman(npc, TaliType.Breakthrough);
-									}
+									Talisman.YoinkTalisman(npc, TaliType.Breakthrough);
 
 									if (npc.CheckCommand("EquipItem")?.Any(x => x != null && x.IsValid()) == true)
 									{

@@ -32,6 +32,13 @@ namespace ACS_Yoda_Tweaks
 		}
 		private static bool frist = true;
 
+		internal static void CancelMeditation(Npc npc)
+		{
+			npc.JumpOutFromBuilding(true);
+			npc.JobEngine.InterruptJob();
+		}
+
+
 		[HarmonyPatch]
 		public static partial class Patch
 		{
@@ -79,13 +86,10 @@ namespace ACS_Yoda_Tweaks
 				if (!npc.IsPlayerThing || ___magic?.Name != "ClosedDoor" || npc.GongKind == g_emGongKind.God || npc.GongKind == g_emGongKind.Body)
 					return;
 
-				if (__instance.Job.CMD.def.Param == 6 
-						&&		(npc.Needs.GetNeedValue(g_emNeedType.MindState) < GetMinMindState(npc)
+				if (npc.Needs.GetNeedValue(g_emNeedType.MindState) < GetMinMindState(npc)
 								|| npc.PropertyMgr.Practice.TouchNeck)
-								|| HasCraftingCommand(npc))
 				{
-					npc.JumpOutFromBuilding(true);
-					npc.JobEngine.InterruptJob();
+					CancelMeditation(npc);
 				}
 			}
 

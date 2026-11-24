@@ -57,12 +57,14 @@ namespace ACS_Yoda_Tweaks
 			{
 				if (!IsYodaMachine)
 					return;
+				var npc = thing as Npc;
+				if (npc == null || !npc.IsRealPlayerThing)
+					return;
 				try
 				{
-					var npc = thing as Npc;
 					if (type == "GoMapExplore")
 						Talisman.YoinkTalisman(npc, TaliType.Adventure);
-					else if (type == "AbsorbLing" && objs.Contains("ClosedDoor")) 
+					else if (type == "AbsorbLing" && objs.Contains("ClosedDoor"))
 						Talisman.YoinkTalisman(npc, TaliType.Cultivation);
 					else if (type == "BrokenNeck")
 						Talisman.YoinkTalisman(npc, GetBreakType(npc));
